@@ -78,7 +78,7 @@ libdispatch_init(void);
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_CONST DISPATCH_WARN_RESULT DISPATCH_NOTHROW
 mach_port_t
-_dispatch_get_main_queue_port_4CF(void);
+_dispatch_get_main_queue_port_4CF(void);  //used in cf cfrunloop
 
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_NOTHROW

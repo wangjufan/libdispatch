@@ -73,7 +73,7 @@ static void _dispatch_main_queue_drain(void);
 #if DISPATCH_COCOA_COMPAT
 static unsigned int _dispatch_worker_threads;
 static dispatch_once_t _dispatch_main_q_port_pred;
-static mach_port_t main_q_port;
+static mach_port_t main_q_port;  //主线程 接收port
 
 static void _dispatch_main_q_port_init(void *ctxt);
 #endif
@@ -2562,8 +2562,7 @@ _dispatch_main_q_port_init(void *ctxt DISPATCH_UNUSED)
 			&main_q_port);
 	DISPATCH_VERIFY_MIG(kr);
 	(void)dispatch_assume_zero(kr);
-	kr = mach_port_insert_right(mach_task_self(), main_q_port, main_q_port,
-			MACH_MSG_TYPE_MAKE_SEND);
+	kr = mach_port_insert_right(mach_task_self(), main_q_port, main_q_port, MACH_MSG_TYPE_MAKE_SEND);
 	DISPATCH_VERIFY_MIG(kr);
 	(void)dispatch_assume_zero(kr);
 
