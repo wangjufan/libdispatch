@@ -2558,8 +2558,7 @@ _dispatch_main_q_port_init(void *ctxt DISPATCH_UNUSED)
 	kern_return_t kr;
 
 	_dispatch_safe_fork = false;
-	kr = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE,
-			&main_q_port);
+	kr = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &main_q_port);
 	DISPATCH_VERIFY_MIG(kr);
 	(void)dispatch_assume_zero(kr);
 	kr = mach_port_insert_right(mach_task_self(), main_q_port, main_q_port, MACH_MSG_TYPE_MAKE_SEND);
@@ -2568,7 +2567,6 @@ _dispatch_main_q_port_init(void *ctxt DISPATCH_UNUSED)
 
 	_dispatch_program_is_probably_callback_driven = true;
 }
-
 mach_port_t
 _dispatch_get_main_queue_port_4CF(void)
 {
