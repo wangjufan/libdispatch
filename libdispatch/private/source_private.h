@@ -190,25 +190,5 @@ enum {
 #define DISPATCH_VM_PRESSURE DISPATCH_VNODE_ATTRIB
 #endif
 
-__BEGIN_DECLS
-
-#if TARGET_OS_MAC
-/*!
- * @typedef dispatch_mig_callback_t
- *
- * @abstract
- * The signature of a function that handles Mach message delivery and response.
- */
-typedef boolean_t (*dispatch_mig_callback_t)(mach_msg_header_t *message,
-		mach_msg_header_t *reply);
-
-__OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
-DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_NOTHROW
-mach_msg_return_t
-dispatch_mig_server(dispatch_source_t ds, size_t maxmsgsz,
-		dispatch_mig_callback_t callback);
-#endif
-
-__END_DECLS
 
 #endif

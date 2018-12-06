@@ -93,8 +93,9 @@ _dispatch_apply_serial(void *ctxt)
 
 DISPATCH_ALWAYS_INLINE
 static inline void
-_dispatch_apply_f2(dispatch_queue_t dq, dispatch_apply_t da,
-		dispatch_function_t func)
+_dispatch_apply_f2(dispatch_queue_t dq,
+				   dispatch_apply_t da,
+				   dispatch_function_t func)
 {
 	uint32_t i = 0;
 	dispatch_continuation_t head = NULL, tail = NULL;

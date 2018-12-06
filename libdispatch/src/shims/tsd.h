@@ -65,6 +65,9 @@ static inline void
 _dispatch_thread_key_create(pthread_key_t *k, void (*d)(void *))
 {
 	dispatch_assert_zero(pthread_key_create(k, d));
+//	创建一个类型为pthread_key_t类型的变量。
+//
+//	调用pthread_key_create()来创建该变量。该函数有两个参数，第一个参数就是上面声明的pthread_key_t变量，第二个参数是一个清理函数，用来在线程释放该线程存储的时候被调用。
 }
 #endif
 

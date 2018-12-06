@@ -36,12 +36,12 @@ struct dispatch_sema_notify_s {
 	void (*dsn_func)(void *);
 };
 
-#if USE_FUTEX_SEM
-typedef struct {
-	/* Low 32 bits are the count; high bits are the waiter count. */
-	volatile uint64_t dfx_data;
-} dispatch_futex_t;
-#endif  /* USE_FUTEX_SEM */
+//#if USE_FUTEX_SEM
+//typedef struct {
+//	/* Low 32 bits are the count; high bits are the waiter count. */
+//	volatile uint64_t dfx_data;
+//} dispatch_futex_t;
+//#endif  /* USE_FUTEX_SEM */
 
 DISPATCH_CLASS_DECL(semaphore);
 struct dispatch_semaphore_s {
@@ -65,20 +65,25 @@ struct dispatch_semaphore_s {
 	struct dispatch_sema_notify_s *dsema_notify_head;
 	struct dispatch_sema_notify_s *dsema_notify_tail;
 };
+//#define DISPATCH_STRUCT_HEADER(x) \
+//_OS_OBJECT_HEADER( \
+//const struct dispatch_##x##_vtable_s *do_vtable, \
+//do_ref_cnt, \
+//do_xref_cnt); \
+//struct dispatch_##x##_s *volatile do_next; \
+//struct dispatch_queue_s *do_targetq; \
+//void *do_ctxt; \
+//void *do_finalizer; \
+//unsigned int do_suspend_cnt;
 
 DISPATCH_CLASS_DECL(group);
 
+///////////////////////////////////////////////////
 void _dispatch_semaphore_dispose(dispatch_object_t dou);
 size_t _dispatch_semaphore_debug(dispatch_object_t dou, char *buf,
 		size_t bufsiz);
 
-typedef uintptr_t _dispatch_thread_semaphore_t;
-_dispatch_thread_semaphore_t _dispatch_get_thread_semaphore(void);
-void _dispatch_put_thread_semaphore(_dispatch_thread_semaphore_t);
-void _dispatch_thread_semaphore_wait(_dispatch_thread_semaphore_t);
-void _dispatch_thread_semaphore_signal(_dispatch_thread_semaphore_t);
-void _dispatch_thread_semaphore_dispose(_dispatch_thread_semaphore_t);
-
+///////////////////////////////////////////////////
 #if USE_FUTEX_SEM
 int _dispatch_futex_init(dispatch_futex_t *dfx);
 int _dispatch_futex_dispose(dispatch_futex_t *dfx);
@@ -87,3 +92,18 @@ int _dispatch_futex_wait(dispatch_futex_t *dfx, const struct timespec *timeout);
 #endif  /* USE_FUTEX_SEM */
 
 #endif
+
+//DISPATCH_VTABLE_INSTANCE(semaphore,
+//						 .do_type = DISPATCH_SEMAPHORE_TYPE,
+//						 .do_kind = "semaphore",
+//						 .do_dispose = _dispatch_semaphore_dispose,
+//						 .do_debug = _dispatch_semaphore_debug,
+//						 );
+//const struct dispatch_semaphore_vtable_s _dispatch_semaphore_vtable = {
+//	.do_type = DISPATCH_SEMAPHORE_TYPE,
+//	.do_kind = "semaphore",
+//	.do_dispose = _dispatch_semaphore_dispose,
+//	.do_debug = _dispatch_semaphore_debug,
+//};
+
+

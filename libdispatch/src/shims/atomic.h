@@ -56,6 +56,15 @@
 #if __has_builtin(__sync_swap)
 #define dispatch_atomic_xchg(p, n) \
 		((typeof(*(p)))__sync_swap((p), (n)))
+//int old_value = __sync_swap(&value, new_value);
+//__sync_swap is used to atomically swap integers or pointers in memory.
+//
+//Syntax:
+//
+//type __sync_swap(type *ptr, type value, ...)
+//Example of Use:
+//
+//int old_value = __sync_swap(&value, new_value);
 #else
 #define dispatch_atomic_xchg(p, n) \
 		((typeof(*(p)))__sync_lock_test_and_set((p), (n)))
@@ -125,6 +134,7 @@
 #endif
 #undef _dispatch_hardware_pause
 #define _dispatch_hardware_pause() __asm__("pause")
+//An additional function of the PAUSE instruction is to reduce the power consumed by a Pentium 4 processor while executing a spin loop. The Pentium 4 processor can execute a spin-wait loop extremely quickly, causing the processor to consume a lot of power while it waits for the resource it is spinning on to become available. Inserting a pause instruction in a spin-wait loop greatly reduces the processor's power consumption.
 #undef _dispatch_debugger
 #define _dispatch_debugger() __asm__("int3")
 

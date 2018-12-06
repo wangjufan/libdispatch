@@ -56,6 +56,67 @@
 		96BC39BD0F3EBAB100C59689 /* queue_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 96BC39BC0F3EBAB100C59689 /* queue_private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		96C9553B0F3EAEDD000D2CA4 /* once.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C9553A0F3EAEDD000D2CA4 /* once.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		96DF70BE0F38FE3C0074BD99 /* once.c in Sources */ = {isa = PBXBuildFile; fileRef = 96DF70BD0F38FE3C0074BD99 /* once.c */; };
+		BB28EA3A21AD688C005FAFC8 /* semaphore_group.h in Headers */ = {isa = PBXBuildFile; fileRef = BB28EA3821AD688C005FAFC8 /* semaphore_group.h */; };
+		BB28EA3B21AD688C005FAFC8 /* semaphore_group_syn.c in Sources */ = {isa = PBXBuildFile; fileRef = BB28EA3921AD688C005FAFC8 /* semaphore_group_syn.c */; };
+		BB28EA3E21AD68BD005FAFC8 /* semaphore_thread.h in Headers */ = {isa = PBXBuildFile; fileRef = BB28EA3C21AD68BD005FAFC8 /* semaphore_thread.h */; };
+		BB28EA3F21AD68BD005FAFC8 /* semaphore_thread.c in Sources */ = {isa = PBXBuildFile; fileRef = BB28EA3D21AD68BD005FAFC8 /* semaphore_thread.c */; };
+		BB28EA4321AD859E005FAFC8 /* semaphore_port.h in Headers */ = {isa = PBXBuildFile; fileRef = BB28EA4121AD859E005FAFC8 /* semaphore_port.h */; };
+		BB28EA4421AD859E005FAFC8 /* semaphore_port.c in Sources */ = {isa = PBXBuildFile; fileRef = BB28EA4221AD859E005FAFC8 /* semaphore_port.c */; };
+		BB28EA5421AEC85B005FAFC8 /* semaphore_group_dispatch.c in Sources */ = {isa = PBXBuildFile; fileRef = BB28EA5321AEC85B005FAFC8 /* semaphore_group_dispatch.c */; };
+		BB28EA5621AF865C005FAFC8 /* semaphore_group_do.c in Sources */ = {isa = PBXBuildFile; fileRef = BB28EA5521AF865C005FAFC8 /* semaphore_group_do.c */; };
+		BBAFFC6421B4D5F90096FA98 /* 3queue_semaphore.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC6221B4D5F90096FA98 /* 3queue_semaphore.h */; };
+		BBAFFC6821B4DBDC0096FA98 /* 2queue_context.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC6621B4DBDC0096FA98 /* 2queue_context.h */; };
+		BBAFFC6921B4DBDC0096FA98 /* queue_context.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC6721B4DBDC0096FA98 /* queue_context.c */; };
+		BBAFFC6C21B4DD340096FA98 /* 1queue_root.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC6A21B4DD340096FA98 /* 1queue_root.h */; };
+		BBAFFC6D21B4DD340096FA98 /* queue_root.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC6B21B4DD340096FA98 /* queue_root.c */; };
+		BBAFFC7021B4E3DB0096FA98 /* continuation.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC6E21B4E3DB0096FA98 /* continuation.h */; };
+		BBAFFC7121B4E3DB0096FA98 /* continuation.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC6F21B4E3DB0096FA98 /* continuation.c */; };
+		BBAFFC7421B4F2630096FA98 /* queue_init.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC7221B4F2630096FA98 /* queue_init.h */; };
+		BBAFFC7521B4F2630096FA98 /* queue_init.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC7321B4F2630096FA98 /* queue_init.c */; };
+		BBAFFC7821B4F4930096FA98 /* queue_create.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC7621B4F4930096FA98 /* queue_create.h */; };
+		BBAFFC7921B4F4930096FA98 /* queue_create.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC7721B4F4930096FA98 /* queue_create.c */; };
+		BBAFFC7C21B4F4E10096FA98 /* queue_specific.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC7A21B4F4E10096FA98 /* queue_specific.h */; };
+		BBAFFC7D21B4F4E10096FA98 /* queue_specific.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC7B21B4F4E10096FA98 /* queue_specific.c */; };
+		BBAFFC8021B4F50A0096FA98 /* queue_debug.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC7E21B4F50A0096FA98 /* queue_debug.h */; };
+		BBAFFC8121B4F50A0096FA98 /* queue_debug.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC7F21B4F50A0096FA98 /* queue_debug.c */; };
+		BBAFFC8421B4F57F0096FA98 /* queue_async.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC8221B4F57F0096FA98 /* queue_async.h */; };
+		BBAFFC8521B4F57F0096FA98 /* queue_async.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC8321B4F57F0096FA98 /* queue_async.c */; };
+		BBAFFC8821B4F61C0096FA98 /* barrier_sync.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC8621B4F61C0096FA98 /* barrier_sync.h */; };
+		BBAFFC8921B4F61C0096FA98 /* barrier_sync.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC8721B4F61C0096FA98 /* barrier_sync.c */; };
+		BBAFFC8C21B4F6550096FA98 /* queue_sync.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC8A21B4F6550096FA98 /* queue_sync.h */; };
+		BBAFFC8D21B4F6550096FA98 /* queue_sync.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC8B21B4F6550096FA98 /* queue_sync.c */; };
+		BBAFFC9421B4F7480096FA98 /* manager_queue.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC9221B4F7480096FA98 /* manager_queue.h */; };
+		BBAFFC9521B4F7480096FA98 /* manager_queue.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC9321B4F7480096FA98 /* manager_queue.c */; };
+		BBAFFC9821B4F7700096FA98 /* main_queue.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC9621B4F7700096FA98 /* main_queue.h */; };
+		BBAFFC9921B4F7700096FA98 /* main_queue.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC9721B4F7700096FA98 /* main_queue.c */; };
+		BBAFFC9C21B4F7A50096FA98 /* worker_thread.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC9A21B4F7A50096FA98 /* worker_thread.h */; };
+		BBAFFC9D21B4F7A50096FA98 /* worker_thread.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC9B21B4F7A50096FA98 /* worker_thread.c */; };
+		BBAFFCA021B4F7D10096FA98 /* queue_drain.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFC9E21B4F7D10096FA98 /* queue_drain.h */; };
+		BBAFFCA121B4F7D10096FA98 /* queue_drain.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFC9F21B4F7D10096FA98 /* queue_drain.c */; };
+		BBAFFCA421B4F8000096FA98 /* wakeup.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCA221B4F8000096FA98 /* wakeup.h */; };
+		BBAFFCA521B4F8000096FA98 /* wakeup.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCA321B4F8000096FA98 /* wakeup.c */; };
+		BBAFFCA821B4F8250096FA98 /* after.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCA621B4F8250096FA98 /* after.h */; };
+		BBAFFCA921B4F8250096FA98 /* after.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCA721B4F8250096FA98 /* after.c */; };
+		BBAFFCAD21B4F8640096FA98 /* invoke.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCAB21B4F8640096FA98 /* invoke.h */; };
+		BBAFFCAE21B4F8640096FA98 /* invoke.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCAC21B4F8640096FA98 /* invoke.c */; };
+		BBAFFCB121B4F8D80096FA98 /* barrier_async.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCAF21B4F8D80096FA98 /* barrier_async.h */; };
+		BBAFFCB221B4F8D80096FA98 /* barrier_async.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCB021B4F8D80096FA98 /* barrier_async.c */; };
+		BBAFFCBA21B52B300096FA98 /* 0 dispatch_vtables.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCB921B52B300096FA98 /* 0 dispatch_vtables.h */; };
+		BBAFFCC021B6826C0096FA98 /* source_kevent.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCBE21B6826C0096FA98 /* source_kevent.h */; };
+		BBAFFCC121B6826C0096FA98 /* source_kevent.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCBF21B6826C0096FA98 /* source_kevent.c */; };
+		BBAFFCC421B6829D0096FA98 /* source_timer.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCC221B6829D0096FA98 /* source_timer.h */; };
+		BBAFFCC521B6829D0096FA98 /* source_timer.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCC321B6829D0096FA98 /* source_timer.c */; };
+		BBAFFCC821B682CC0096FA98 /* source_mach.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCC621B682CC0096FA98 /* source_mach.h */; };
+		BBAFFCC921B682CC0096FA98 /* source_mach.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCC721B682CC0096FA98 /* source_mach.c */; };
+		BBAFFCCC21B682E70096FA98 /* source_debug.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCCA21B682E70096FA98 /* source_debug.h */; };
+		BBAFFCCD21B682E70096FA98 /* source_debug.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCCB21B682E70096FA98 /* source_debug.c */; };
+		BBAFFCD021B6834D0096FA98 /* source_invoke.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCCE21B6834D0096FA98 /* source_invoke.h */; };
+		BBAFFCD121B6834D0096FA98 /* source_invoke.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCCF21B6834D0096FA98 /* source_invoke.c */; };
+		BBAFFCD421B6836B0096FA98 /* source_handler.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCD221B6836B0096FA98 /* source_handler.h */; };
+		BBAFFCD521B6836B0096FA98 /* source_handler.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCD321B6836B0096FA98 /* source_handler.c */; };
+		BBAFFCD721B687010096FA98 /* source_type.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCD621B687010096FA98 /* source_type.h */; };
+		BBAFFCD921B687890096FA98 /* source_type.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCD821B687890096FA98 /* source_type.c */; };
+		BBAFFCDC21B8CA200096FA98 /* semaphore_group_notifi.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCDB21B8CA200096FA98 /* semaphore_group_notifi.c */; };
 		C913AC0F143BD34800B78976 /* data_private.h in Headers */ = {isa = PBXBuildFile; fileRef = C913AC0E143BD34800B78976 /* data_private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		C93D6165143E190E00EB9023 /* transform.c in Sources */ = {isa = PBXBuildFile; fileRef = C9C5F80D143C1771006DC718 /* transform.c */; };
 		C93D6166143E190F00EB9023 /* transform.c in Sources */ = {isa = PBXBuildFile; fileRef = C9C5F80D143C1771006DC718 /* transform.c */; };
@@ -73,9 +134,7 @@
 		E4407FAF143CC984003A9E80 /* dispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = E4407FAD143CC984003A9E80 /* dispatch.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		E44EBE3E1251659900645D88 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = E44EBE3B1251659900645D88 /* init.c */; };
 		E44EBE5412517EBE00645D88 /* protocol.defs in Sources */ = {isa = PBXBuildFile; fileRef = FC7BED950E8361E600161930 /* protocol.defs */; settings = {ATTRIBUTES = (Client, Server, ); }; };
-		E44EBE5512517EBE00645D88 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = E44EBE3B1251659900645D88 /* init.c */; };
 		E44EBE5612517EBE00645D88 /* protocol.defs in Sources */ = {isa = PBXBuildFile; fileRef = FC7BED950E8361E600161930 /* protocol.defs */; settings = {ATTRIBUTES = (Client, Server, ); }; };
-		E44EBE5712517EBE00645D88 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = E44EBE3B1251659900645D88 /* init.c */; };
 		E454569314746F1B00106147 /* object_private.h in Headers */ = {isa = PBXBuildFile; fileRef = E454569214746F1B00106147 /* object_private.h */; settings = {ATTRIBUTES = (); }; };
 		E454569414746F1B00106147 /* object_private.h in Headers */ = {isa = PBXBuildFile; fileRef = E454569214746F1B00106147 /* object_private.h */; settings = {ATTRIBUTES = (); }; };
 		E49F2423125D3C960057C971 /* resolver.c in Sources */ = {isa = PBXBuildFile; fileRef = E44EBE371251656400645D88 /* resolver.c */; };
@@ -97,8 +156,6 @@
 		E49F24B8125D57FA0057C971 /* source_private.h in Headers */ = {isa = PBXBuildFile; fileRef = FCEF047F0F5661960067401F /* source_private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		E49F24B9125D57FA0057C971 /* benchmark.h in Headers */ = {isa = PBXBuildFile; fileRef = 961B99350F3E83980006BC96 /* benchmark.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		E49F24BA125D57FA0057C971 /* internal.h in Headers */ = {isa = PBXBuildFile; fileRef = FC7BED8F0E8361E600161930 /* internal.h */; settings = {ATTRIBUTES = (); }; };
-		E49F24BB125D57FA0057C971 /* queue_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 96929D950F3EA2170041FF5D /* queue_internal.h */; };
-		E49F24BC125D57FA0057C971 /* object_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 965ECC200F3EAB71004DDD89 /* object_internal.h */; };
 		E49F24BD125D57FA0057C971 /* semaphore_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A5D13AB0F6B280500197CC3 /* semaphore_internal.h */; };
 		E49F24BE125D57FA0057C971 /* source_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = FC0B34780FA2851C0080FFA0 /* source_internal.h */; };
 		E49F24BF125D57FA0057C971 /* io_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A0095A110F274B0000E2A31 /* io_internal.h */; };
@@ -110,7 +167,6 @@
 		E49F24C6125D57FA0057C971 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = FC9C70E7105EC9620074F9CA /* config.h */; };
 		E49F24C8125D57FA0057C971 /* protocol.defs in Sources */ = {isa = PBXBuildFile; fileRef = FC7BED950E8361E600161930 /* protocol.defs */; settings = {ATTRIBUTES = (Client, Server, ); }; };
 		E49F24C9125D57FA0057C971 /* resolver.c in Sources */ = {isa = PBXBuildFile; fileRef = E44EBE371251656400645D88 /* resolver.c */; };
-		E49F24CA125D57FA0057C971 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = E44EBE3B1251659900645D88 /* init.c */; };
 		E49F24CB125D57FA0057C971 /* queue.c in Sources */ = {isa = PBXBuildFile; fileRef = FC7BED8A0E8361E600161930 /* queue.c */; };
 		E49F24CC125D57FA0057C971 /* semaphore.c in Sources */ = {isa = PBXBuildFile; fileRef = 721F5CCE0F15553500FF03A6 /* semaphore.c */; };
 		E49F24CD125D57FA0057C971 /* once.c in Sources */ = {isa = PBXBuildFile; fileRef = 96DF70BD0F38FE3C0074BD99 /* once.c */; };
@@ -239,6 +295,67 @@
 		96BC39BC0F3EBAB100C59689 /* queue_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = queue_private.h; sourceTree = "<group>"; };
 		96C9553A0F3EAEDD000D2CA4 /* once.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = once.h; sourceTree = "<group>"; };
 		96DF70BD0F38FE3C0074BD99 /* once.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = once.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		BB28EA3821AD688C005FAFC8 /* semaphore_group.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore_group.h; sourceTree = "<group>"; };
+		BB28EA3921AD688C005FAFC8 /* semaphore_group_syn.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_group_syn.c; sourceTree = "<group>"; };
+		BB28EA3C21AD68BD005FAFC8 /* semaphore_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore_thread.h; sourceTree = "<group>"; };
+		BB28EA3D21AD68BD005FAFC8 /* semaphore_thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_thread.c; sourceTree = "<group>"; };
+		BB28EA4121AD859E005FAFC8 /* semaphore_port.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore_port.h; sourceTree = "<group>"; };
+		BB28EA4221AD859E005FAFC8 /* semaphore_port.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_port.c; sourceTree = "<group>"; };
+		BB28EA5321AEC85B005FAFC8 /* semaphore_group_dispatch.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_group_dispatch.c; sourceTree = "<group>"; };
+		BB28EA5521AF865C005FAFC8 /* semaphore_group_do.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_group_do.c; sourceTree = "<group>"; };
+		BBAFFC6221B4D5F90096FA98 /* 3queue_semaphore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 3queue_semaphore.h; sourceTree = "<group>"; };
+		BBAFFC6621B4DBDC0096FA98 /* 2queue_context.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 2queue_context.h; sourceTree = "<group>"; };
+		BBAFFC6721B4DBDC0096FA98 /* queue_context.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_context.c; sourceTree = "<group>"; };
+		BBAFFC6A21B4DD340096FA98 /* 1queue_root.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 1queue_root.h; sourceTree = "<group>"; };
+		BBAFFC6B21B4DD340096FA98 /* queue_root.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_root.c; sourceTree = "<group>"; };
+		BBAFFC6E21B4E3DB0096FA98 /* continuation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = continuation.h; sourceTree = "<group>"; };
+		BBAFFC6F21B4E3DB0096FA98 /* continuation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = continuation.c; sourceTree = "<group>"; };
+		BBAFFC7221B4F2630096FA98 /* queue_init.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue_init.h; sourceTree = "<group>"; };
+		BBAFFC7321B4F2630096FA98 /* queue_init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_init.c; sourceTree = "<group>"; };
+		BBAFFC7621B4F4930096FA98 /* queue_create.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue_create.h; sourceTree = "<group>"; };
+		BBAFFC7721B4F4930096FA98 /* queue_create.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_create.c; sourceTree = "<group>"; };
+		BBAFFC7A21B4F4E10096FA98 /* queue_specific.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue_specific.h; sourceTree = "<group>"; };
+		BBAFFC7B21B4F4E10096FA98 /* queue_specific.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_specific.c; sourceTree = "<group>"; };
+		BBAFFC7E21B4F50A0096FA98 /* queue_debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue_debug.h; sourceTree = "<group>"; };
+		BBAFFC7F21B4F50A0096FA98 /* queue_debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_debug.c; sourceTree = "<group>"; };
+		BBAFFC8221B4F57F0096FA98 /* queue_async.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue_async.h; sourceTree = "<group>"; };
+		BBAFFC8321B4F57F0096FA98 /* queue_async.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_async.c; sourceTree = "<group>"; };
+		BBAFFC8621B4F61C0096FA98 /* barrier_sync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = barrier_sync.h; sourceTree = "<group>"; };
+		BBAFFC8721B4F61C0096FA98 /* barrier_sync.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = barrier_sync.c; sourceTree = "<group>"; };
+		BBAFFC8A21B4F6550096FA98 /* queue_sync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue_sync.h; sourceTree = "<group>"; };
+		BBAFFC8B21B4F6550096FA98 /* queue_sync.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_sync.c; sourceTree = "<group>"; };
+		BBAFFC9221B4F7480096FA98 /* manager_queue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = manager_queue.h; sourceTree = "<group>"; };
+		BBAFFC9321B4F7480096FA98 /* manager_queue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = manager_queue.c; sourceTree = "<group>"; };
+		BBAFFC9621B4F7700096FA98 /* main_queue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main_queue.h; sourceTree = "<group>"; };
+		BBAFFC9721B4F7700096FA98 /* main_queue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main_queue.c; sourceTree = "<group>"; };
+		BBAFFC9A21B4F7A50096FA98 /* worker_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = worker_thread.h; sourceTree = "<group>"; };
+		BBAFFC9B21B4F7A50096FA98 /* worker_thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = worker_thread.c; sourceTree = "<group>"; };
+		BBAFFC9E21B4F7D10096FA98 /* queue_drain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = queue_drain.h; sourceTree = "<group>"; };
+		BBAFFC9F21B4F7D10096FA98 /* queue_drain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = queue_drain.c; sourceTree = "<group>"; };
+		BBAFFCA221B4F8000096FA98 /* wakeup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wakeup.h; sourceTree = "<group>"; };
+		BBAFFCA321B4F8000096FA98 /* wakeup.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = wakeup.c; sourceTree = "<group>"; };
+		BBAFFCA621B4F8250096FA98 /* after.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = after.h; sourceTree = "<group>"; };
+		BBAFFCA721B4F8250096FA98 /* after.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = after.c; sourceTree = "<group>"; };
+		BBAFFCAB21B4F8640096FA98 /* invoke.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = invoke.h; sourceTree = "<group>"; };
+		BBAFFCAC21B4F8640096FA98 /* invoke.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = invoke.c; sourceTree = "<group>"; };
+		BBAFFCAF21B4F8D80096FA98 /* barrier_async.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = barrier_async.h; sourceTree = "<group>"; };
+		BBAFFCB021B4F8D80096FA98 /* barrier_async.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = barrier_async.c; sourceTree = "<group>"; };
+		BBAFFCB921B52B300096FA98 /* 0 dispatch_vtables.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "0 dispatch_vtables.h"; sourceTree = "<group>"; };
+		BBAFFCBE21B6826C0096FA98 /* source_kevent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_kevent.h; sourceTree = "<group>"; };
+		BBAFFCBF21B6826C0096FA98 /* source_kevent.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_kevent.c; sourceTree = "<group>"; };
+		BBAFFCC221B6829D0096FA98 /* source_timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_timer.h; sourceTree = "<group>"; };
+		BBAFFCC321B6829D0096FA98 /* source_timer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_timer.c; sourceTree = "<group>"; };
+		BBAFFCC621B682CC0096FA98 /* source_mach.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_mach.h; sourceTree = "<group>"; };
+		BBAFFCC721B682CC0096FA98 /* source_mach.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_mach.c; sourceTree = "<group>"; };
+		BBAFFCCA21B682E70096FA98 /* source_debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_debug.h; sourceTree = "<group>"; };
+		BBAFFCCB21B682E70096FA98 /* source_debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_debug.c; sourceTree = "<group>"; };
+		BBAFFCCE21B6834D0096FA98 /* source_invoke.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_invoke.h; sourceTree = "<group>"; };
+		BBAFFCCF21B6834D0096FA98 /* source_invoke.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_invoke.c; sourceTree = "<group>"; };
+		BBAFFCD221B6836B0096FA98 /* source_handler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_handler.h; sourceTree = "<group>"; };
+		BBAFFCD321B6836B0096FA98 /* source_handler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_handler.c; sourceTree = "<group>"; };
+		BBAFFCD621B687010096FA98 /* source_type.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_type.h; sourceTree = "<group>"; };
+		BBAFFCD821B687890096FA98 /* source_type.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_type.c; sourceTree = "<group>"; };
+		BBAFFCDB21B8CA200096FA98 /* semaphore_group_notifi.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_group_notifi.c; sourceTree = "<group>"; };
 		C913AC0E143BD34800B78976 /* data_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data_private.h; sourceTree = "<group>"; };
 		C927F35F10FD7F1000C5AB8B /* ddt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ddt.xcodeproj; path = tools/ddt/ddt.xcodeproj; sourceTree = "<group>"; };
 		C9C5F80D143C1771006DC718 /* transform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = transform.c; sourceTree = "<group>"; };
@@ -335,17 +452,16 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				BBAFFCBD21B682420096FA98 /* source */,
+				BBAFFCB821B52B1F0096FA98 /* init */,
+				BBAFFC5D21B2B1B90096FA98 /* queue */,
+				BB28EA4021AD7BC7005FAFC8 /* semaphore */,
 				9676A0E00F3E755D00713ADB /* apply.c */,
 				965CD6340F3E806200D4E28D /* benchmark.c */,
 				5AAB45BF10D30B79004407EA /* data.c */,
-				E44EBE3B1251659900645D88 /* init.c */,
 				5A27262510F26F1900751FBC /* io.c */,
 				9661E56A0F3E7DDF00749F3E /* object.c */,
 				E4FC3263145F46C9002FBDDB /* object.m */,
-				96DF70BD0F38FE3C0074BD99 /* once.c */,
-				FC7BED8A0E8361E600161930 /* queue.c */,
-				721F5CCE0F15553500FF03A6 /* semaphore.c */,
-				96A8AA860F41E7A400CD570B /* source.c */,
 				96032E4A0F5CC8C700241C5F /* time.c */,
 				C9C5F80D143C1771006DC718 /* transform.c */,
 				FC7BED950E8361E600161930 /* protocol.defs */,
@@ -364,6 +480,132 @@
 				E49F24DF125D57FA0057C971 /* libdispatch.dylib */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BB28EA4021AD7BC7005FAFC8 /* semaphore */ = {
+			isa = PBXGroup;
+			children = (
+				BBAFFC6221B4D5F90096FA98 /* 3queue_semaphore.h */,
+				5A5D13AB0F6B280500197CC3 /* semaphore_internal.h */,
+				721F5C5C0F15520500FF03A6 /* semaphore.h */,
+				721F5CCE0F15553500FF03A6 /* semaphore.c */,
+				BB28EA3821AD688C005FAFC8 /* semaphore_group.h */,
+				FC5C9C1D0EADABE3006E462D /* group.h */,
+				BB28EA5321AEC85B005FAFC8 /* semaphore_group_dispatch.c */,
+				BB28EA3921AD688C005FAFC8 /* semaphore_group_syn.c */,
+				BBAFFCDB21B8CA200096FA98 /* semaphore_group_notifi.c */,
+				BB28EA5521AF865C005FAFC8 /* semaphore_group_do.c */,
+				BB28EA3C21AD68BD005FAFC8 /* semaphore_thread.h */,
+				BB28EA3D21AD68BD005FAFC8 /* semaphore_thread.c */,
+				BB28EA4121AD859E005FAFC8 /* semaphore_port.h */,
+				BB28EA4221AD859E005FAFC8 /* semaphore_port.c */,
+				96DF70BD0F38FE3C0074BD99 /* once.c */,
+			);
+			path = semaphore;
+			sourceTree = "<group>";
+		};
+		BBAFFC5D21B2B1B90096FA98 /* queue */ = {
+			isa = PBXGroup;
+			children = (
+				BBAFFCB721B520AA0096FA98 /* queue */,
+				BBAFFCB321B4FC510096FA98 /* workqueue */,
+				BBAFFCAA21B4F8330096FA98 /* call manner */,
+				BBAFFC6E21B4E3DB0096FA98 /* continuation.h */,
+				BBAFFC6F21B4E3DB0096FA98 /* continuation.c */,
+				BBAFFC7E21B4F50A0096FA98 /* queue_debug.h */,
+				BBAFFC7F21B4F50A0096FA98 /* queue_debug.c */,
+				BBAFFC9E21B4F7D10096FA98 /* queue_drain.h */,
+				BBAFFC9F21B4F7D10096FA98 /* queue_drain.c */,
+			);
+			path = queue;
+			sourceTree = "<group>";
+		};
+		BBAFFCAA21B4F8330096FA98 /* call manner */ = {
+			isa = PBXGroup;
+			children = (
+				BBAFFC8221B4F57F0096FA98 /* queue_async.h */,
+				BBAFFC8321B4F57F0096FA98 /* queue_async.c */,
+				BBAFFC8A21B4F6550096FA98 /* queue_sync.h */,
+				BBAFFC8B21B4F6550096FA98 /* queue_sync.c */,
+				BBAFFCA621B4F8250096FA98 /* after.h */,
+				BBAFFCA721B4F8250096FA98 /* after.c */,
+				BBAFFCAB21B4F8640096FA98 /* invoke.h */,
+				BBAFFCAC21B4F8640096FA98 /* invoke.c */,
+				BBAFFCAF21B4F8D80096FA98 /* barrier_async.h */,
+				BBAFFCB021B4F8D80096FA98 /* barrier_async.c */,
+				BBAFFC8621B4F61C0096FA98 /* barrier_sync.h */,
+				BBAFFC8721B4F61C0096FA98 /* barrier_sync.c */,
+			);
+			path = "call manner";
+			sourceTree = "<group>";
+		};
+		BBAFFCB321B4FC510096FA98 /* workqueue */ = {
+			isa = PBXGroup;
+			children = (
+				BBAFFCA221B4F8000096FA98 /* wakeup.h */,
+				BBAFFCA321B4F8000096FA98 /* wakeup.c */,
+				BBAFFC9A21B4F7A50096FA98 /* worker_thread.h */,
+				BBAFFC9B21B4F7A50096FA98 /* worker_thread.c */,
+				96929D950F3EA2170041FF5D /* queue_internal.h */,
+				BBAFFC6621B4DBDC0096FA98 /* 2queue_context.h */,
+				BBAFFC6721B4DBDC0096FA98 /* queue_context.c */,
+			);
+			path = workqueue;
+			sourceTree = "<group>";
+		};
+		BBAFFCB721B520AA0096FA98 /* queue */ = {
+			isa = PBXGroup;
+			children = (
+				FC7BED8B0E8361E600161930 /* queue.h */,
+				FC7BED8A0E8361E600161930 /* queue.c */,
+				BBAFFC9221B4F7480096FA98 /* manager_queue.h */,
+				BBAFFC9321B4F7480096FA98 /* manager_queue.c */,
+				BBAFFC9621B4F7700096FA98 /* main_queue.h */,
+				BBAFFC9721B4F7700096FA98 /* main_queue.c */,
+				BBAFFC6A21B4DD340096FA98 /* 1queue_root.h */,
+				BBAFFC6B21B4DD340096FA98 /* queue_root.c */,
+				BBAFFC7621B4F4930096FA98 /* queue_create.h */,
+				BBAFFC7721B4F4930096FA98 /* queue_create.c */,
+				BBAFFC7A21B4F4E10096FA98 /* queue_specific.h */,
+				BBAFFC7B21B4F4E10096FA98 /* queue_specific.c */,
+			);
+			path = queue;
+			sourceTree = "<group>";
+		};
+		BBAFFCB821B52B1F0096FA98 /* init */ = {
+			isa = PBXGroup;
+			children = (
+				965ECC200F3EAB71004DDD89 /* object_internal.h */,
+				BBAFFCB921B52B300096FA98 /* 0 dispatch_vtables.h */,
+				E44EBE3B1251659900645D88 /* init.c */,
+				BBAFFC7221B4F2630096FA98 /* queue_init.h */,
+				BBAFFC7321B4F2630096FA98 /* queue_init.c */,
+			);
+			path = init;
+			sourceTree = "<group>";
+		};
+		BBAFFCBD21B682420096FA98 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				FC0B34780FA2851C0080FFA0 /* source_internal.h */,
+				BBAFFCD621B687010096FA98 /* source_type.h */,
+				BBAFFCD821B687890096FA98 /* source_type.c */,
+				FC7BED8D0E8361E600161930 /* source.h */,
+				96A8AA860F41E7A400CD570B /* source.c */,
+				BBAFFCBE21B6826C0096FA98 /* source_kevent.h */,
+				BBAFFCBF21B6826C0096FA98 /* source_kevent.c */,
+				BBAFFCC221B6829D0096FA98 /* source_timer.h */,
+				BBAFFCC321B6829D0096FA98 /* source_timer.c */,
+				BBAFFCC621B682CC0096FA98 /* source_mach.h */,
+				BBAFFCC721B682CC0096FA98 /* source_mach.c */,
+				BBAFFCCA21B682E70096FA98 /* source_debug.h */,
+				BBAFFCCB21B682E70096FA98 /* source_debug.c */,
+				BBAFFCCE21B6834D0096FA98 /* source_invoke.h */,
+				BBAFFCCF21B6834D0096FA98 /* source_invoke.c */,
+				BBAFFCD221B6836B0096FA98 /* source_handler.h */,
+				BBAFFCD321B6836B0096FA98 /* source_handler.c */,
+			);
+			path = source;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
@@ -483,13 +725,9 @@
 				72CC942F0ECCD8750031B751 /* base.h */,
 				5AAB45C510D30D0C004407EA /* data.h */,
 				FC7BED960E8361E600161930 /* dispatch.h */,
-				FC5C9C1D0EADABE3006E462D /* group.h */,
 				5AAB45C310D30CC7004407EA /* io.h */,
 				961B994F0F3E85C30006BC96 /* object.h */,
 				96C9553A0F3EAEDD000D2CA4 /* once.h */,
-				FC7BED8B0E8361E600161930 /* queue.h */,
-				721F5C5C0F15520500FF03A6 /* semaphore.h */,
-				FC7BED8D0E8361E600161930 /* source.h */,
 				96032E4C0F5CC8D100241C5F /* time.h */,
 			);
 			name = "Public Headers";
@@ -516,10 +754,6 @@
 				FC7BED8F0E8361E600161930 /* internal.h */,
 				E4C1ED6E1263E714000D3C8B /* data_internal.h */,
 				5A0095A110F274B0000E2A31 /* io_internal.h */,
-				965ECC200F3EAB71004DDD89 /* object_internal.h */,
-				96929D950F3EA2170041FF5D /* queue_internal.h */,
-				5A5D13AB0F6B280500197CC3 /* semaphore_internal.h */,
-				FC0B34780FA2851C0080FFA0 /* source_internal.h */,
 				E422A0D412A557B5005E5BDB /* trace.h */,
 				96929D830F3EA1020041FF5D /* shims.h */,
 				FC1832A0109923B3003403D5 /* shims */,
@@ -537,40 +771,70 @@
 			files = (
 				FC7BEDA50E8361E600161930 /* dispatch.h in Headers */,
 				72CC94300ECCD8750031B751 /* base.h in Headers */,
+				BBAFFCC821B682CC0096FA98 /* source_mach.h in Headers */,
 				961B99500F3E85C30006BC96 /* object.h in Headers */,
+				BBAFFC8821B4F61C0096FA98 /* barrier_sync.h in Headers */,
 				FC7BED9A0E8361E600161930 /* queue.h in Headers */,
 				FC7BED9C0E8361E600161930 /* source.h in Headers */,
 				721F5C5D0F15520500FF03A6 /* semaphore.h in Headers */,
+				BBAFFCD421B6836B0096FA98 /* source_handler.h in Headers */,
+				BBAFFCC421B6829D0096FA98 /* source_timer.h in Headers */,
 				FC5C9C1E0EADABE3006E462D /* group.h in Headers */,
+				BB28EA3A21AD688C005FAFC8 /* semaphore_group.h in Headers */,
 				96C9553B0F3EAEDD000D2CA4 /* once.h in Headers */,
+				BBAFFCC021B6826C0096FA98 /* source_kevent.h in Headers */,
+				BBAFFCA821B4F8250096FA98 /* after.h in Headers */,
 				5AAB45C410D30CC7004407EA /* io.h in Headers */,
 				5AAB45C610D30D0C004407EA /* data.h in Headers */,
 				96032E4D0F5CC8D100241C5F /* time.h in Headers */,
+				BBAFFCA421B4F8000096FA98 /* wakeup.h in Headers */,
 				FC7BEDA20E8361E600161930 /* private.h in Headers */,
+				BBAFFC7C21B4F4E10096FA98 /* queue_specific.h in Headers */,
 				C913AC0F143BD34800B78976 /* data_private.h in Headers */,
 				96BC39BD0F3EBAB100C59689 /* queue_private.h in Headers */,
+				BBAFFC9421B4F7480096FA98 /* manager_queue.h in Headers */,
+				BBAFFC6421B4D5F90096FA98 /* 3queue_semaphore.h in Headers */,
+				BBAFFC6C21B4DD340096FA98 /* 1queue_root.h in Headers */,
 				FCEF04800F5661960067401F /* source_private.h in Headers */,
 				961B99360F3E83980006BC96 /* benchmark.h in Headers */,
 				FC7BED9E0E8361E600161930 /* internal.h in Headers */,
 				965ECC210F3EAB71004DDD89 /* object_internal.h in Headers */,
+				BB28EA3E21AD68BD005FAFC8 /* semaphore_thread.h in Headers */,
 				96929D960F3EA2170041FF5D /* queue_internal.h in Headers */,
 				FC0B34790FA2851C0080FFA0 /* source_internal.h in Headers */,
 				5A5D13AC0F6B280500197CC3 /* semaphore_internal.h in Headers */,
+				BBAFFCD021B6834D0096FA98 /* source_invoke.h in Headers */,
+				BBAFFCA021B4F7D10096FA98 /* queue_drain.h in Headers */,
 				E4C1ED6F1263E714000D3C8B /* data_internal.h in Headers */,
 				5A0095A210F274B0000E2A31 /* io_internal.h in Headers */,
+				BBAFFC7021B4E3DB0096FA98 /* continuation.h in Headers */,
+				BBAFFCAD21B4F8640096FA98 /* invoke.h in Headers */,
 				FC1832A8109923C7003403D5 /* tsd.h in Headers */,
 				96929D840F3EA1020041FF5D /* atomic.h in Headers */,
 				96929D850F3EA1020041FF5D /* shims.h in Headers */,
+				BBAFFC9821B4F7700096FA98 /* main_queue.h in Headers */,
+				BB28EA4321AD859E005FAFC8 /* semaphore_port.h in Headers */,
 				FC1832A7109923C7003403D5 /* time.h in Headers */,
 				FC1832A6109923C7003403D5 /* perfmon.h in Headers */,
 				FC9C70E8105EC9620074F9CA /* config.h in Headers */,
 				E422A0D512A557B5005E5BDB /* trace.h in Headers */,
+				BBAFFC7821B4F4930096FA98 /* queue_create.h in Headers */,
 				E4BA743B13A8911B0095BDF1 /* getprogname.h in Headers */,
+				BBAFFC8421B4F57F0096FA98 /* queue_async.h in Headers */,
 				E4BA743F13A8911B0095BDF1 /* malloc_zone.h in Headers */,
+				BBAFFCB121B4F8D80096FA98 /* barrier_async.h in Headers */,
 				E4128ED613BA9A1700ABB2CB /* hw_config.h in Headers */,
+				BBAFFC6821B4DBDC0096FA98 /* 2queue_context.h in Headers */,
+				BBAFFCBA21B52B300096FA98 /* 0 dispatch_vtables.h in Headers */,
+				BBAFFC8C21B4F6550096FA98 /* queue_sync.h in Headers */,
 				E4407FAE143CC984003A9E80 /* dispatch.h in Headers */,
+				BBAFFCCC21B682E70096FA98 /* source_debug.h in Headers */,
+				BBAFFC9C21B4F7A50096FA98 /* worker_thread.h in Headers */,
 				E454569314746F1B00106147 /* object_private.h in Headers */,
 				E4EB4A2714C35ECE00AA0FA9 /* object.h in Headers */,
+				BBAFFC8021B4F50A0096FA98 /* queue_debug.h in Headers */,
+				BBAFFC7421B4F2630096FA98 /* queue_init.h in Headers */,
+				BBAFFCD721B687010096FA98 /* source_type.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,8 +858,6 @@
 				E49F24B8125D57FA0057C971 /* source_private.h in Headers */,
 				E49F24B9125D57FA0057C971 /* benchmark.h in Headers */,
 				E49F24BA125D57FA0057C971 /* internal.h in Headers */,
-				E49F24BC125D57FA0057C971 /* object_internal.h in Headers */,
-				E49F24BB125D57FA0057C971 /* queue_internal.h in Headers */,
 				E49F24BE125D57FA0057C971 /* source_internal.h in Headers */,
 				E49F24BD125D57FA0057C971 /* semaphore_internal.h in Headers */,
 				E4C1ED701263E714000D3C8B /* data_internal.h in Headers */,
@@ -926,22 +1188,53 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBAFFCD121B6834D0096FA98 /* source_invoke.c in Sources */,
 				E43570B9126E93380097AB9F /* provider.d in Sources */,
 				FC7BEDA40E8361E600161930 /* protocol.defs in Sources */,
+				BBAFFCD521B6836B0096FA98 /* source_handler.c in Sources */,
+				BBAFFCA921B4F8250096FA98 /* after.c in Sources */,
+				BBAFFCA121B4F7D10096FA98 /* queue_drain.c in Sources */,
+				BBAFFCAE21B4F8640096FA98 /* invoke.c in Sources */,
+				BBAFFCC121B6826C0096FA98 /* source_kevent.c in Sources */,
+				BBAFFC8921B4F61C0096FA98 /* barrier_sync.c in Sources */,
+				BB28EA3F21AD68BD005FAFC8 /* semaphore_thread.c in Sources */,
 				E49F2499125D48D80057C971 /* resolver.c in Sources */,
 				E44EBE3E1251659900645D88 /* init.c in Sources */,
 				FC7BED990E8361E600161930 /* queue.c in Sources */,
+				BBAFFC9521B4F7480096FA98 /* manager_queue.c in Sources */,
 				721F5CCF0F15553500FF03A6 /* semaphore.c in Sources */,
+				BBAFFC8D21B4F6550096FA98 /* queue_sync.c in Sources */,
+				BBAFFC8121B4F50A0096FA98 /* queue_debug.c in Sources */,
 				96DF70BE0F38FE3C0074BD99 /* once.c in Sources */,
+				BBAFFCC521B6829D0096FA98 /* source_timer.c in Sources */,
 				9676A0E10F3E755D00713ADB /* apply.c in Sources */,
+				BBAFFC7121B4E3DB0096FA98 /* continuation.c in Sources */,
+				BB28EA5421AEC85B005FAFC8 /* semaphore_group_dispatch.c in Sources */,
 				9661E56B0F3E7DDF00749F3E /* object.c in Sources */,
+				BBAFFC7D21B4F4E10096FA98 /* queue_specific.c in Sources */,
+				BB28EA5621AF865C005FAFC8 /* semaphore_group_do.c in Sources */,
 				965CD6350F3E806200D4E28D /* benchmark.c in Sources */,
+				BBAFFCDC21B8CA200096FA98 /* semaphore_group_notifi.c in Sources */,
+				BBAFFC7521B4F2630096FA98 /* queue_init.c in Sources */,
+				BBAFFC6D21B4DD340096FA98 /* queue_root.c in Sources */,
+				BBAFFCD921B687890096FA98 /* source_type.c in Sources */,
+				BBAFFC8521B4F57F0096FA98 /* queue_async.c in Sources */,
+				BBAFFCCD21B682E70096FA98 /* source_debug.c in Sources */,
+				BB28EA4421AD859E005FAFC8 /* semaphore_port.c in Sources */,
 				96A8AA870F41E7A400CD570B /* source.c in Sources */,
+				BBAFFC6921B4DBDC0096FA98 /* queue_context.c in Sources */,
 				96032E4B0F5CC8C700241C5F /* time.c in Sources */,
+				BB28EA3B21AD688C005FAFC8 /* semaphore_group_syn.c in Sources */,
 				5AAB45C010D30B79004407EA /* data.c in Sources */,
 				5A27262610F26F1900751FBC /* io.c in Sources */,
+				BBAFFC9D21B4F7A50096FA98 /* worker_thread.c in Sources */,
+				BBAFFCC921B682CC0096FA98 /* source_mach.c in Sources */,
+				BBAFFCB221B4F8D80096FA98 /* barrier_async.c in Sources */,
 				C9C5F80E143C1771006DC718 /* transform.c in Sources */,
 				E4FC3264145F46C9002FBDDB /* object.m in Sources */,
+				BBAFFC9921B4F7700096FA98 /* main_queue.c in Sources */,
+				BBAFFCA521B4F8000096FA98 /* wakeup.c in Sources */,
+				BBAFFC7921B4F4930096FA98 /* queue_create.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -952,7 +1245,6 @@
 				E43570BA126E93380097AB9F /* provider.d in Sources */,
 				E49F24C8125D57FA0057C971 /* protocol.defs in Sources */,
 				E49F24C9125D57FA0057C971 /* resolver.c in Sources */,
-				E49F24CA125D57FA0057C971 /* init.c in Sources */,
 				E49F24CB125D57FA0057C971 /* queue.c in Sources */,
 				E49F24CC125D57FA0057C971 /* semaphore.c in Sources */,
 				E49F24CD125D57FA0057C971 /* once.c in Sources */,
@@ -975,7 +1267,6 @@
 				E417A38412A472C4004D659D /* provider.d in Sources */,
 				E44EBE5412517EBE00645D88 /* protocol.defs in Sources */,
 				E49F2424125D3C970057C971 /* resolver.c in Sources */,
-				E44EBE5512517EBE00645D88 /* init.c in Sources */,
 				E4EC11AE12514302000DDBD1 /* queue.c in Sources */,
 				E4EC11AF12514302000DDBD1 /* semaphore.c in Sources */,
 				E4EC11B012514302000DDBD1 /* once.c in Sources */,
@@ -998,7 +1289,6 @@
 				E417A38512A472C5004D659D /* provider.d in Sources */,
 				E44EBE5612517EBE00645D88 /* protocol.defs in Sources */,
 				E49F2423125D3C960057C971 /* resolver.c in Sources */,
-				E44EBE5712517EBE00645D88 /* init.c in Sources */,
 				E4EC121A12514715000DDBD1 /* queue.c in Sources */,
 				E4EC121B12514715000DDBD1 /* semaphore.c in Sources */,
 				E4EC121C12514715000DDBD1 /* once.c in Sources */,

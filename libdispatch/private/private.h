@@ -121,11 +121,6 @@ bool _dispatch_is_multithreaded(void);
 #endif
 #endif /* TARGET_OS_MAC */
 
-/* pthreads magic */
-
-DISPATCH_EXPORT DISPATCH_NOTHROW void dispatch_atfork_prepare(void);
-DISPATCH_EXPORT DISPATCH_NOTHROW void dispatch_atfork_parent(void);
-DISPATCH_EXPORT DISPATCH_NOTHROW void dispatch_atfork_child(void);
 
 #if TARGET_OS_MAC
 /*

@@ -24,7 +24,7 @@
 #undef dispatch_once_f
 
 
-struct _dispatch_once_waiter_s {
+struct _dispatch_once_waiter_s {//
 	volatile struct _dispatch_once_waiter_s *volatile dow_next;
 	_dispatch_thread_semaphore_t dow_sema;
 };
@@ -36,22 +36,25 @@ void
 dispatch_once(dispatch_once_t *val, dispatch_block_t block)
 {
 	struct Block_basic *bb = (void *)block;
-
 	dispatch_once_f(val, block, (void *)bb->Block_invoke);
 }
 #endif
 
 DISPATCH_NOINLINE
 void
-dispatch_once_f(dispatch_once_t *val, void *ctxt, dispatch_function_t func)
+dispatch_once_f(dispatch_once_t *val,
+				void *ctxt,
+				dispatch_function_t func)
 {
-	struct _dispatch_once_waiter_s * volatile *vval =
-			(struct _dispatch_once_waiter_s**)val;
+	struct _dispatch_once_waiter_s * volatile *onceFlag = (struct _dispatch_once_waiter_s**)val;
 	struct _dispatch_once_waiter_s dow = { NULL, 0 };
 	struct _dispatch_once_waiter_s *tail, *tmp;
+	
 	_dispatch_thread_semaphore_t sema;
 
-	if (dispatch_atomic_cmpxchg(vval, NULL, &dow)) {
+	if (dispatch_atomic_cmpxchg(onceFlag, NULL, &dow)) {
+		//// 如果 \*onceFlag 的值等于 old, 那么就把dow 写入*lock, 否则不写
+
 		dispatch_atomic_acquire_barrier();
 		_dispatch_client_callout(ctxt, func);
 
@@ -104,32 +107,37 @@ dispatch_once_f(dispatch_once_t *val, void *ctxt, dispatch_function_t func)
 		//
 		// On some CPUs, the most fully synchronizing instruction might
 		// need to be issued.
-
 		dispatch_atomic_maximally_synchronizing_barrier();
 		//dispatch_atomic_release_barrier(); // assumed contained in above
-		tmp = dispatch_atomic_xchg(vval, DISPATCH_ONCE_DONE);
+		tmp = dispatch_atomic_xchg(onceFlag, DISPATCH_ONCE_DONE);//just exchange   tmp == vval
 		tail = &dow;
-		while (tail != tmp) {
+		while (tail != tmp) {//not notifiy self thread
 			while (!tmp->dow_next) {
 				_dispatch_hardware_pause();
 			}
 			sema = tmp->dow_sema;
 			tmp = (struct _dispatch_once_waiter_s*)tmp->dow_next;
 			_dispatch_thread_semaphore_signal(sema);
+			//sem is on just one thread here
+			//
 		}
 	} else {
 		dow.dow_sema = _dispatch_get_thread_semaphore();
 		for (;;) {
-			tmp = *vval;
+			tmp = *onceFlag;
 			if (tmp == DISPATCH_ONCE_DONE) {
 				break;
 			}
 			dispatch_atomic_store_barrier();
-			if (dispatch_atomic_cmpxchg(vval, tmp, &dow)) {
-				dow.dow_next = tmp;
+			if (dispatch_atomic_cmpxchg(onceFlag, tmp, &dow)) {
+				dow.dow_next = tmp;//dow === tmp if in the same thread,  filo
 				_dispatch_thread_semaphore_wait(dow.dow_sema);
-			}
+				//waits on semaphore that itself owns
+				// if this happens on the first thread , no one capture its port's send right
+			}// list will increase timely
 		}
 		_dispatch_put_thread_semaphore(dow.dow_sema);
 	}
 }
+//bool __sync_bool_compare_and_swap (type *ptr, type oldval type newval, ...)
+//这两个函数提供原子的比较和交换，如果*ptr == oldval,就将newval写入*ptr,
