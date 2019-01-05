@@ -50,15 +50,6 @@ struct dispatch_data_s {
 	range_record records[];
 };
 
-typedef dispatch_data_t (*dispatch_transform_t)(dispatch_data_t data);
-
-struct dispatch_data_format_type_s {
-	uint64_t type;
-	uint64_t input_mask;
-	uint64_t output_mask;
-	dispatch_transform_t decode;
-	dispatch_transform_t encode;
-};
 
 void _dispatch_data_dispose(dispatch_data_t data);
 size_t _dispatch_data_debug(dispatch_data_t data, char* buf, size_t bufsiz);

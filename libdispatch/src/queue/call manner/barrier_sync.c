@@ -171,12 +171,14 @@ _dispatch_barrier_sync_f2(dispatch_queue_t dq)
 }
 DISPATCH_NOINLINE
 static void
-_dispatch_barrier_sync_f_invoke(dispatch_queue_t dq, void *ctxt,
+_dispatch_barrier_sync_f_invoke(dispatch_queue_t dq,
+								void *ctxt,
 								dispatch_function_t func)
 {
 	dispatch_atomic_acquire_barrier();
 	_dispatch_function_invoke(dq, ctxt, func);////////////////////////
 	dispatch_atomic_release_barrier();
+	
 	if (slowpath(dq->dq_items_tail)) {
 		return _dispatch_barrier_sync_f2(dq);//////////////////////
 	}

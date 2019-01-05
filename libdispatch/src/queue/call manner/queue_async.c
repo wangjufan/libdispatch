@@ -4,13 +4,9 @@
 #pragma mark dispatch_async
 
 
-DISPATCH_NOINLINE
-static void
-_dispatch_async_f2_slow(dispatch_queue_t dq, dispatch_continuation_t dc)
-{
-	_dispatch_wakeup(dq);
-	_dispatch_queue_push(dq, dc);
-}
+
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 static void
 _dispatch_async_f_redirect_invoke(void *_ctxt)
 {
@@ -36,7 +32,6 @@ _dispatch_async_f_redirect_invoke(void *_ctxt)
 	}
 	_dispatch_release(dq);
 }
-
 
 DISPATCH_NOINLINE
 static void
@@ -76,6 +71,8 @@ _dispatch_async_f_redirect(dispatch_queue_t dq,
 	}
 	_dispatch_queue_push(rq, dc);
 }
+
+/////
 DISPATCH_NOINLINE
 static void
 _dispatch_async_f2(dispatch_queue_t dq, dispatch_continuation_t dc)
@@ -85,13 +82,13 @@ _dispatch_async_f2(dispatch_queue_t dq, dispatch_continuation_t dc)
 	
 	do {
 		if (slowpath(dq->dq_items_tail)
-			|| slowpath(DISPATCH_OBJECT_SUSPENDED(dq))) {
+			|| slowpath(DISPATCH_OBJECT_SUSPENDED(dq))) {//no first 或是 没有启动d队列
 			break;
 		}
 		running = dispatch_atomic_add2o(dq, dq_running, 2);
 		if (slowpath(running > dq->dq_width)) {
 			if (slowpath(dispatch_atomic_sub2o(dq, dq_running, 2) == 0)) {
-				return _dispatch_async_f2_slow(dq, dc);
+				return _dispatch_async_f2_slow(dq, dc);//enqueue and wait for wake up by kernel
 			}
 			break;
 		}
@@ -101,71 +98,11 @@ _dispatch_async_f2(dispatch_queue_t dq, dispatch_continuation_t dc)
 		}
 		locked = dispatch_atomic_sub2o(dq, dq_running, 2) & 1;
 		// We might get lucky and find that the barrier has ended by now
-	} while (!locked);
+	} while (!locked);//阻塞调用  循环机制
+	//发生阻塞调用，等待前置任务执行完毕，通过内核唤醒（_dispatch_async_f2_slow）
 	
 	_dispatch_queue_push(dq, dc);
 }
-
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-
-DISPATCH_NOINLINE
-static void
-_dispatch_async_f_slow(dispatch_queue_t dq, void *ctxt,
-					   dispatch_function_t func)
-{
-	dispatch_continuation_t dc = _dispatch_continuation_alloc_from_heap();
-	
-	dc->do_vtable = (void *)DISPATCH_OBJ_ASYNC_BIT;
-	dc->dc_func = func;
-	dc->dc_ctxt = ctxt;
-	
-	// No fastpath/slowpath hint because we simply don't know
-	if (dq->do_targetq) {
-		return _dispatch_async_f2(dq, dc);
-	}
-	
-	_dispatch_queue_push(dq, dc);
-}
-DISPATCH_NOINLINE
-void
-dispatch_async_f(dispatch_queue_t dq,
-				 void *ctxt,
-				 dispatch_function_t func)
-{
-	dispatch_continuation_t dc;
-	
-	// No fastpath/slowpath hint because we simply don't know
-	if (dq->dq_width == 1) {//
-		return dispatch_barrier_async_f(dq, ctxt, func);
-	}
-	
-	dc = fastpath(_dispatch_continuation_alloc_cacheonly());
-	if (!dc) {
-		return _dispatch_async_f_slow(dq, ctxt, func);
-	}
-	
-	dc->do_vtable = (void *)DISPATCH_OBJ_ASYNC_BIT;
-	dc->dc_func = func;
-	dc->dc_ctxt = ctxt;
-	
-	// No fastpath/slowpath hint because we simply don't know
-	if (dq->do_targetq) {
-		return _dispatch_async_f2(dq, dc);
-	}
-	
-	_dispatch_queue_push(dq, dc);
-}
-
-#ifdef __BLOCKS__
-void
-dispatch_async(dispatch_queue_t dq, void (^work)(void))
-{
-	dispatch_async_f(dq,
-					 _dispatch_Block_copy(work),
-					 _dispatch_call_block_and_release);
-}
-#endif
 
 #pragma mark -
 #pragma mark dispatch_group_async

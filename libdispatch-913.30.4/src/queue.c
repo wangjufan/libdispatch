@@ -4127,8 +4127,7 @@ _dispatch_sync_recurse(dispatch_queue_t dq, void *ctxt,
 	return _dispatch_sync_invoke_and_complete_recurse(dq, ctxt, func, dc_flags);
 }
 
-DISPATCH_NOINLINE
-void
+DISPATCH_NOINLINE void
 dispatch_barrier_sync_f(dispatch_queue_t dq, void *ctxt,
 		dispatch_function_t func)
 {
@@ -4154,9 +4153,9 @@ dispatch_barrier_sync_f(dispatch_queue_t dq, void *ctxt,
 	_dispatch_queue_barrier_sync_invoke_and_complete(dq, ctxt, func);
 }
 
-DISPATCH_NOINLINE
-void
-dispatch_sync_f(dispatch_queue_t dq, void *ctxt, dispatch_function_t func)
+DISPATCH_NOINLINE void dispatch_sync_f(dispatch_queue_t dq,
+									   void *ctxt,
+									   dispatch_function_t func)
 {
 	if (likely(dq->dq_width == 1)) {
 		return dispatch_barrier_sync_f(dq, ctxt, func);

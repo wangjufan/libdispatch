@@ -81,7 +81,7 @@
 
 #define dispatch_atomic_cmpxchg2o(p, f, e, n) \
 		dispatch_atomic_cmpxchg(&(p)->f, (e), (n))
-#define dispatch_atomic_xchg2o(p, f, n) \
+#define dispatch_atomic_xchg2o(p, f, n) \ //int old_value = __sync_swap(&value, new_value);
 		dispatch_atomic_xchg(&(p)->f, (n))
 #define dispatch_atomic_add2o(p, f, v) \
 		dispatch_atomic_add(&(p)->f, (v))

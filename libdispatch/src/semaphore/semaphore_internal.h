@@ -78,10 +78,6 @@ struct dispatch_semaphore_s {
 
 DISPATCH_CLASS_DECL(group);
 
-///////////////////////////////////////////////////
-void _dispatch_semaphore_dispose(dispatch_object_t dou);
-size_t _dispatch_semaphore_debug(dispatch_object_t dou, char *buf,
-		size_t bufsiz);
 
 ///////////////////////////////////////////////////
 #if USE_FUTEX_SEM

@@ -31,26 +31,11 @@ static void _dispatch_queue_cleanup(void *ctxt);
 static void _dispatch_async_f_redirect(dispatch_queue_t dq,
 		dispatch_continuation_t dc);
 
-static inline void _dispatch_queue_wakeup_global2(dispatch_queue_t dq,
-		unsigned int n);
-static inline void _dispatch_queue_wakeup_global(dispatch_queue_t dq);
 static _dispatch_thread_semaphore_t _dispatch_queue_drain(dispatch_queue_t dq);
 static inline _dispatch_thread_semaphore_t
 		_dispatch_queue_drain_one_barrier_sync(dispatch_queue_t dq);
 
 
-#if DISPATCH_COCOA_COMPAT || DISPATCH_LINUX_COMPAT
-static dispatch_queue_t _dispatch_queue_wakeup_main(void);
-static void _dispatch_main_queue_drain(void);
-#endif
-
-#if DISPATCH_COCOA_COMPAT
-static unsigned int _dispatch_worker_threads;
-static dispatch_once_t _dispatch_main_q_port_pred;
-static mach_port_t main_q_port;  //主线程 接收port
-
-static void _dispatch_main_q_port_init(void *ctxt);
-#endif
 
 #if DISPATCH_LINUX_COMPAT
 static dispatch_once_t _dispatch_main_q_eventfd_pred;

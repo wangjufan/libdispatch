@@ -17,6 +17,7 @@ _dispatch_queue_wakeup_global_slow(dispatch_queue_t dq, unsigned int n);
 DISPATCH_NOINLINE
 dispatch_queue_t
 _dispatch_queue_wakeup_main(void);
+
  
 #endif /* wakeup_h */
 

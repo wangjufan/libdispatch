@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- saved from url=(0083)https://apple.github.io/swift-corelibs-libdispatch/post/libdispatch-is-open-source/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>libdispatch is open source!</title>
+    <link href="./libdispatch is open source!_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="./libdispatch is open source!_files/styles.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js" integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js" integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
+    <![endif]-->
+    <link type="application/atom+xml" rel="alternate" href="https://apple.github.io/swift-corelibs-libdispatch/feed.xml" title="Grand Central Dispatch">
+    <link rel="canonical" href="https://apple.github.io/swift-corelibs-libdispatch/post/libdispatch-is-open-source/">
+  </head>
+  <body>
+    
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://apple.github.io/swift-corelibs-libdispatch/">Grand Central Dispatch</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav">
+        <li><a href="https://apple.github.io/swift-corelibs-libdispatch/tutorial/">Tutorial</a></li>
+        <li class="active"><a href="https://apple.github.io/swift-corelibs-libdispatch/news/">News</a></li>
+        <li><a href="https://lists.macosforge.org/mailman/listinfo/libdispatch-dev">Mailing List</a></li>
+        <li><a href="https://github.com/apple/swift-corelibs-libdispatch">Development</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>libdispatch is open source! <small>September 10, 2009</small></h1>
+          <h2 id="welcome-to-the-libdispatch-project">Welcome to the libdispatch project!</h2>
+
+<p>The libdispatch project consists of the user space implementation of the Grand Central Dispatch API as seen in Mac OS X version 10.6 Snow Leopard. The Mac OS X kernel support for GCD may be found in the <a href="https://opensource.apple.com/source/xnu/xnu-1456.1.26/">xnu project</a>. While kernel support provides many performance optimizations on Mac OS X, it is not strictly required for portability to other platforms. However, in order to implement the full API for Grand Central Dispatch, <a href="http://clang.llvm.org/">C compiler</a> support for blocks is required. The <a href="http://compiler-rt.llvm.org/">blocks runtime</a> is available as part of the <a href="http://llvm.org/">LLVM project</a>.</p>
+
+<p>This project is intended to be a resource for developers interested in learning more about libdispatch on Mac OS X. Contributions to this project will be continually evaluated for possible inclusion in future releases of Mac OS X. The sources are available under the terms of the <a href="https://opensource.apple.com/license/apache/">Apache License, Version 2.0</a> in the hope that they might serve as a launching point for porting GCD to other platforms.</p>
+
+<!--more-->
+
+<h2 id="source-code">Source Code</h2>
+
+<p>You can <a href="https://libdispatch.macosforge.org/trac/browser">browse the sources</a> online or check out the latest sources from the repository via <a href="https://svn.macosforge.org/repository/libdispatch/trunk/">Subversion</a> or <a href="git://git.macosforge.org/libdispatch.git">Git</a>.</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<p>We recognize that libdispatch is a new technology and you likely have many questions. Here are some documentation resources for getting started:</p>
+
+<ul>
+  <li><a href="http://developer.apple.com/mac/articles/cocoa/introblocksgcd.html">Introducing Blocks and Grand Central Dispatch</a></li>
+  <li><a href="http://developer.apple.com/mac/library/documentation/General/Conceptual/ConcurrencyProgrammingGuide/Introduction/Introduction.html">Concurrency Programming Guide</a></li>
+  <li><a href="http://developer.apple.com/mac/library/documentation/Performance/Reference/GCD_libdispatch_Ref/Reference/reference.html">Grand Central Dispatch (GCD) Reference</a></li>
+</ul>
+
+<p>Feel free to direct any questions you may have to the new email discussion list:</p>
+
+<ul>
+  <li><a href="https://lists.macosforge.org/mailman/listinfo.cgi/libdispatch-dev">libdispatch-dev@lists.macosforge.org</a></li>
+</ul>
+
+<p>Sincerely,<br>
+The GCD team</p>
+
+        </div>
+      </div>
+    </div>
+    <footer class="sticky-footer">
+      <div class="container">
+        <ul class="list-inline">
+          <li><small class="text-muted">Copyright © 2009–2016 Apple Inc. All rights reserved.</small></li>
+        </ul>
+      </div>
+    </footer>
+    <script src="./libdispatch is open source!_files/jquery.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
+    <script src="./libdispatch is open source!_files/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  
+
+</body></html>

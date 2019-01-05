@@ -77,3 +77,75 @@ dispatch_async_f(dispatch_queue_t queue,
 				 dispatch_function_t work);
 
 #endif /* queue_async_h */
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+DISPATCH_NOINLINE//内核通信 慢
+static void
+_dispatch_async_f2_slow(dispatch_queue_t dq, dispatch_continuation_t dc)
+{
+	_dispatch_wakeup(dq);
+	_dispatch_queue_push(dq, dc);
+}
+
+DISPATCH_NOINLINE //创建继续 慢
+static void
+_dispatch_async_f_slow(dispatch_queue_t dq, void *ctxt,
+					   dispatch_function_t func)
+{
+	dispatch_continuation_t dc = _dispatch_continuation_alloc_from_heap();
+	
+	dc->do_vtable = (void *)DISPATCH_OBJ_ASYNC_BIT;
+	dc->dc_func = func;
+	dc->dc_ctxt = ctxt;
+	
+	// No fastpath/slowpath hint because we simply don't know
+	if (dq->do_targetq) {//b目标队列
+		return _dispatch_async_f2(dq, dc);
+	}
+	
+	_dispatch_queue_push(dq, dc);
+}
+
+DISPATCH_NOINLINE
+void
+dispatch_async_f(dispatch_queue_t dq,
+				 void *ctxt,
+				 dispatch_function_t func)
+{
+	dispatch_continuation_t dc;
+	
+	// No fastpath/slowpath hint because we simply don't know
+	if (dq->dq_width == 1) {//
+		return dispatch_barrier_async_f(dq, ctxt, func);
+	}
+	
+	dc = fastpath(_dispatch_continuation_alloc_cacheonly());
+	if (!dc) {
+		return _dispatch_async_f_slow(dq, ctxt, func);
+	}
+	
+	dc->do_vtable = (void *)DISPATCH_OBJ_ASYNC_BIT;
+	dc->dc_func = func;
+	dc->dc_ctxt = ctxt;
+	
+	// No fastpath/slowpath hint because we simply don't know
+	if (dq->do_targetq) {
+		return _dispatch_async_f2(dq, dc);
+	}
+	
+	_dispatch_queue_push(dq, dc);
+}
+
+#ifdef __BLOCKS__
+void
+dispatch_async(dispatch_queue_t dq, void (^work)(void))
+{
+	dispatch_async_f(dq,
+					 _dispatch_Block_copy(work),
+					 _dispatch_call_block_and_release);
+}
+#endif
+ 

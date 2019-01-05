@@ -10,6 +10,31 @@
 
 #include <stdio.h>
 
+
+#if DISPATCH_COCOA_COMPAT || DISPATCH_LINUX_COMPAT
+static dispatch_queue_t _dispatch_queue_wakeup_main(void);
+static void _dispatch_main_queue_drain(void);
+#endif
+
+#if DISPATCH_COCOA_COMPAT
+static unsigned int _dispatch_worker_threads;
+static dispatch_once_t _dispatch_main_q_port_pred;
+static mach_port_t main_q_port;  //主线程 接收port
+
+static void _dispatch_main_q_port_init(void *ctxt);
+#endif
+
+
+DISPATCH_EXPORT DISPATCH_CONST DISPATCH_WARN_RESULT DISPATCH_NOTHROW
+mach_port_t
+_dispatch_get_main_queue_port_4CF(void);  //used in cf cfrunloop
+
+__OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
+DISPATCH_EXPORT DISPATCH_NOTHROW
+void
+_dispatch_main_queue_callback_4CF(mach_msg_header_t *msg);
+
+
 // 6618342 Contact the team that owns the Instrument DTrace probe before
 //         renaming this symbol
 DISPATCH_CACHELINE_ALIGN

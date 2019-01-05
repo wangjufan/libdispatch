@@ -12,8 +12,8 @@
 
 // 6618342 Contact the team that owns the Instrument DTrace probe before
 //         renaming this symbol
-dispatch_queue_t
-_dispatch_wakeup(dispatch_object_t dou)
+
+dispatch_queue_t _dispatch_wakeup(dispatch_object_t dou)
 {
 	dispatch_queue_t tq;
 	
@@ -36,6 +36,7 @@ _dispatch_wakeup(dispatch_object_t dou)
 #endif
 		return NULL;
 	}
+	
 	dispatch_atomic_acquire_barrier();
 	_dispatch_retain(dou._do);
 	tq = dou._do->do_targetq;

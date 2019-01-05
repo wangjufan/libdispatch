@@ -117,6 +117,10 @@
 		BBAFFCD721B687010096FA98 /* source_type.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCD621B687010096FA98 /* source_type.h */; };
 		BBAFFCD921B687890096FA98 /* source_type.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCD821B687890096FA98 /* source_type.c */; };
 		BBAFFCDC21B8CA200096FA98 /* semaphore_group_notifi.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCDB21B8CA200096FA98 /* semaphore_group_notifi.c */; };
+		BBAFFCDF21B8E9590096FA98 /* semaphore_wait.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCDD21B8E9590096FA98 /* semaphore_wait.h */; };
+		BBAFFCE021B8E9590096FA98 /* semaphore_wait.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCDE21B8E9590096FA98 /* semaphore_wait.c */; };
+		BBAFFCE321B8E9DA0096FA98 /* semaphore_signal.h in Headers */ = {isa = PBXBuildFile; fileRef = BBAFFCE121B8E9DA0096FA98 /* semaphore_signal.h */; };
+		BBAFFCE421B8E9DA0096FA98 /* semaphore_signal.c in Sources */ = {isa = PBXBuildFile; fileRef = BBAFFCE221B8E9DA0096FA98 /* semaphore_signal.c */; };
 		C913AC0F143BD34800B78976 /* data_private.h in Headers */ = {isa = PBXBuildFile; fileRef = C913AC0E143BD34800B78976 /* data_private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		C93D6165143E190E00EB9023 /* transform.c in Sources */ = {isa = PBXBuildFile; fileRef = C9C5F80D143C1771006DC718 /* transform.c */; };
 		C93D6166143E190F00EB9023 /* transform.c in Sources */ = {isa = PBXBuildFile; fileRef = C9C5F80D143C1771006DC718 /* transform.c */; };
@@ -127,7 +131,6 @@
 		E417A38412A472C4004D659D /* provider.d in Sources */ = {isa = PBXBuildFile; fileRef = E43570B8126E93380097AB9F /* provider.d */; };
 		E417A38512A472C5004D659D /* provider.d in Sources */ = {isa = PBXBuildFile; fileRef = E43570B8126E93380097AB9F /* provider.d */; };
 		E422A0D512A557B5005E5BDB /* trace.h in Headers */ = {isa = PBXBuildFile; fileRef = E422A0D412A557B5005E5BDB /* trace.h */; };
-		E422A0D612A557B5005E5BDB /* trace.h in Headers */ = {isa = PBXBuildFile; fileRef = E422A0D412A557B5005E5BDB /* trace.h */; };
 		E43570B9126E93380097AB9F /* provider.d in Sources */ = {isa = PBXBuildFile; fileRef = E43570B8126E93380097AB9F /* provider.d */; };
 		E43570BA126E93380097AB9F /* provider.d in Sources */ = {isa = PBXBuildFile; fileRef = E43570B8126E93380097AB9F /* provider.d */; };
 		E4407FAE143CC984003A9E80 /* dispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = E4407FAD143CC984003A9E80 /* dispatch.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -356,6 +359,13 @@
 		BBAFFCD621B687010096FA98 /* source_type.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = source_type.h; sourceTree = "<group>"; };
 		BBAFFCD821B687890096FA98 /* source_type.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = source_type.c; sourceTree = "<group>"; };
 		BBAFFCDB21B8CA200096FA98 /* semaphore_group_notifi.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_group_notifi.c; sourceTree = "<group>"; };
+		BBAFFCDD21B8E9590096FA98 /* semaphore_wait.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore_wait.h; sourceTree = "<group>"; };
+		BBAFFCDE21B8E9590096FA98 /* semaphore_wait.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_wait.c; sourceTree = "<group>"; };
+		BBAFFCE121B8E9DA0096FA98 /* semaphore_signal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore_signal.h; sourceTree = "<group>"; };
+		BBAFFCE221B8E9DA0096FA98 /* semaphore_signal.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_signal.c; sourceTree = "<group>"; };
+		BBAFFCEE21BA14B90096FA98 /* continuation_push.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = continuation_push.h; sourceTree = "<group>"; };
+		BBAFFCF321BA8F440096FA98 /* transform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = transform.h; sourceTree = "<group>"; };
+		BBAFFCF521BA90A40096FA98 /* apply.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = apply.h; sourceTree = "<group>"; };
 		C913AC0E143BD34800B78976 /* data_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data_private.h; sourceTree = "<group>"; };
 		C927F35F10FD7F1000C5AB8B /* ddt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ddt.xcodeproj; path = tools/ddt/ddt.xcodeproj; sourceTree = "<group>"; };
 		C9C5F80D143C1771006DC718 /* transform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = transform.c; sourceTree = "<group>"; };
@@ -452,10 +462,12 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				BBAFFCF421BA8F4A0096FA98 /* transform */,
 				BBAFFCBD21B682420096FA98 /* source */,
 				BBAFFCB821B52B1F0096FA98 /* init */,
 				BBAFFC5D21B2B1B90096FA98 /* queue */,
 				BB28EA4021AD7BC7005FAFC8 /* semaphore */,
+				BBAFFCF521BA90A40096FA98 /* apply.h */,
 				9676A0E00F3E755D00713ADB /* apply.c */,
 				965CD6340F3E806200D4E28D /* benchmark.c */,
 				5AAB45BF10D30B79004407EA /* data.c */,
@@ -463,7 +475,6 @@
 				9661E56A0F3E7DDF00749F3E /* object.c */,
 				E4FC3263145F46C9002FBDDB /* object.m */,
 				96032E4A0F5CC8C700241C5F /* time.c */,
-				C9C5F80D143C1771006DC718 /* transform.c */,
 				FC7BED950E8361E600161930 /* protocol.defs */,
 				E43570B8126E93380097AB9F /* provider.d */,
 			);
@@ -489,16 +500,20 @@
 				5A5D13AB0F6B280500197CC3 /* semaphore_internal.h */,
 				721F5C5C0F15520500FF03A6 /* semaphore.h */,
 				721F5CCE0F15553500FF03A6 /* semaphore.c */,
+				BBAFFCDD21B8E9590096FA98 /* semaphore_wait.h */,
+				BBAFFCDE21B8E9590096FA98 /* semaphore_wait.c */,
+				BBAFFCE121B8E9DA0096FA98 /* semaphore_signal.h */,
+				BBAFFCE221B8E9DA0096FA98 /* semaphore_signal.c */,
+				BB28EA3C21AD68BD005FAFC8 /* semaphore_thread.h */,
+				BB28EA3D21AD68BD005FAFC8 /* semaphore_thread.c */,
+				BB28EA4121AD859E005FAFC8 /* semaphore_port.h */,
+				BB28EA4221AD859E005FAFC8 /* semaphore_port.c */,
 				BB28EA3821AD688C005FAFC8 /* semaphore_group.h */,
 				FC5C9C1D0EADABE3006E462D /* group.h */,
 				BB28EA5321AEC85B005FAFC8 /* semaphore_group_dispatch.c */,
 				BB28EA3921AD688C005FAFC8 /* semaphore_group_syn.c */,
 				BBAFFCDB21B8CA200096FA98 /* semaphore_group_notifi.c */,
 				BB28EA5521AF865C005FAFC8 /* semaphore_group_do.c */,
-				BB28EA3C21AD68BD005FAFC8 /* semaphore_thread.h */,
-				BB28EA3D21AD68BD005FAFC8 /* semaphore_thread.c */,
-				BB28EA4121AD859E005FAFC8 /* semaphore_port.h */,
-				BB28EA4221AD859E005FAFC8 /* semaphore_port.c */,
 				96DF70BD0F38FE3C0074BD99 /* once.c */,
 			);
 			path = semaphore;
@@ -510,12 +525,8 @@
 				BBAFFCB721B520AA0096FA98 /* queue */,
 				BBAFFCB321B4FC510096FA98 /* workqueue */,
 				BBAFFCAA21B4F8330096FA98 /* call manner */,
-				BBAFFC6E21B4E3DB0096FA98 /* continuation.h */,
-				BBAFFC6F21B4E3DB0096FA98 /* continuation.c */,
 				BBAFFC7E21B4F50A0096FA98 /* queue_debug.h */,
 				BBAFFC7F21B4F50A0096FA98 /* queue_debug.c */,
-				BBAFFC9E21B4F7D10096FA98 /* queue_drain.h */,
-				BBAFFC9F21B4F7D10096FA98 /* queue_drain.c */,
 			);
 			path = queue;
 			sourceTree = "<group>";
@@ -542,8 +553,11 @@
 		BBAFFCB321B4FC510096FA98 /* workqueue */ = {
 			isa = PBXGroup;
 			children = (
+				BBAFFCEF21BA28E60096FA98 /* continuation */,
 				BBAFFCA221B4F8000096FA98 /* wakeup.h */,
 				BBAFFCA321B4F8000096FA98 /* wakeup.c */,
+				BBAFFC9E21B4F7D10096FA98 /* queue_drain.h */,
+				BBAFFC9F21B4F7D10096FA98 /* queue_drain.c */,
 				BBAFFC9A21B4F7A50096FA98 /* worker_thread.h */,
 				BBAFFC9B21B4F7A50096FA98 /* worker_thread.c */,
 				96929D950F3EA2170041FF5D /* queue_internal.h */,
@@ -606,6 +620,26 @@
 				BBAFFCD321B6836B0096FA98 /* source_handler.c */,
 			);
 			path = source;
+			sourceTree = "<group>";
+		};
+		BBAFFCEF21BA28E60096FA98 /* continuation */ = {
+			isa = PBXGroup;
+			children = (
+				E422A0D412A557B5005E5BDB /* trace.h */,
+				BBAFFC6E21B4E3DB0096FA98 /* continuation.h */,
+				BBAFFC6F21B4E3DB0096FA98 /* continuation.c */,
+				BBAFFCEE21BA14B90096FA98 /* continuation_push.h */,
+			);
+			path = continuation;
+			sourceTree = "<group>";
+		};
+		BBAFFCF421BA8F4A0096FA98 /* transform */ = {
+			isa = PBXGroup;
+			children = (
+				C9C5F80D143C1771006DC718 /* transform.c */,
+				BBAFFCF321BA8F440096FA98 /* transform.h */,
+			);
+			path = transform;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
@@ -754,7 +788,6 @@
 				FC7BED8F0E8361E600161930 /* internal.h */,
 				E4C1ED6E1263E714000D3C8B /* data_internal.h */,
 				5A0095A110F274B0000E2A31 /* io_internal.h */,
-				E422A0D412A557B5005E5BDB /* trace.h */,
 				96929D830F3EA1020041FF5D /* shims.h */,
 				FC1832A0109923B3003403D5 /* shims */,
 			);
@@ -806,6 +839,7 @@
 				BBAFFCD021B6834D0096FA98 /* source_invoke.h in Headers */,
 				BBAFFCA021B4F7D10096FA98 /* queue_drain.h in Headers */,
 				E4C1ED6F1263E714000D3C8B /* data_internal.h in Headers */,
+				BBAFFCE321B8E9DA0096FA98 /* semaphore_signal.h in Headers */,
 				5A0095A210F274B0000E2A31 /* io_internal.h in Headers */,
 				BBAFFC7021B4E3DB0096FA98 /* continuation.h in Headers */,
 				BBAFFCAD21B4F8640096FA98 /* invoke.h in Headers */,
@@ -821,6 +855,7 @@
 				BBAFFC7821B4F4930096FA98 /* queue_create.h in Headers */,
 				E4BA743B13A8911B0095BDF1 /* getprogname.h in Headers */,
 				BBAFFC8421B4F57F0096FA98 /* queue_async.h in Headers */,
+				BBAFFCDF21B8E9590096FA98 /* semaphore_wait.h in Headers */,
 				E4BA743F13A8911B0095BDF1 /* malloc_zone.h in Headers */,
 				BBAFFCB121B4F8D80096FA98 /* barrier_async.h in Headers */,
 				E4128ED613BA9A1700ABB2CB /* hw_config.h in Headers */,
@@ -868,7 +903,6 @@
 				E49F24C4125D57FA0057C971 /* time.h in Headers */,
 				E49F24C5125D57FA0057C971 /* perfmon.h in Headers */,
 				E49F24C6125D57FA0057C971 /* config.h in Headers */,
-				E422A0D612A557B5005E5BDB /* trace.h in Headers */,
 				E4BA743C13A8911B0095BDF1 /* getprogname.h in Headers */,
 				E4BA744013A8911B0095BDF1 /* malloc_zone.h in Headers */,
 				E4128ED713BA9A1700ABB2CB /* hw_config.h in Headers */,
@@ -1197,6 +1231,7 @@
 				BBAFFCAE21B4F8640096FA98 /* invoke.c in Sources */,
 				BBAFFCC121B6826C0096FA98 /* source_kevent.c in Sources */,
 				BBAFFC8921B4F61C0096FA98 /* barrier_sync.c in Sources */,
+				BBAFFCE021B8E9590096FA98 /* semaphore_wait.c in Sources */,
 				BB28EA3F21AD68BD005FAFC8 /* semaphore_thread.c in Sources */,
 				E49F2499125D48D80057C971 /* resolver.c in Sources */,
 				E44EBE3E1251659900645D88 /* init.c in Sources */,
@@ -1204,6 +1239,7 @@
 				BBAFFC9521B4F7480096FA98 /* manager_queue.c in Sources */,
 				721F5CCF0F15553500FF03A6 /* semaphore.c in Sources */,
 				BBAFFC8D21B4F6550096FA98 /* queue_sync.c in Sources */,
+				BBAFFCE421B8E9DA0096FA98 /* semaphore_signal.c in Sources */,
 				BBAFFC8121B4F50A0096FA98 /* queue_debug.c in Sources */,
 				96DF70BE0F38FE3C0074BD99 /* once.c in Sources */,
 				BBAFFCC521B6829D0096FA98 /* source_timer.c in Sources */,
