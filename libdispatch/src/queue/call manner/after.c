@@ -25,8 +25,7 @@ _dispatch_after_timer_callback(void *ctxt)
 	dispatch_release(ds);
 }
 
-DISPATCH_NOINLINE
-void
+DISPATCH_NOINLINE void
 dispatch_after_f(dispatch_time_t when,
 				 dispatch_queue_t queue, void *ctxt,
 				 dispatch_function_t func)
