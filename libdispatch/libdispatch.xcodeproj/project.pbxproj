@@ -298,6 +298,7 @@
 		96BC39BC0F3EBAB100C59689 /* queue_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = queue_private.h; sourceTree = "<group>"; };
 		96C9553A0F3EAEDD000D2CA4 /* once.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = once.h; sourceTree = "<group>"; };
 		96DF70BD0F38FE3C0074BD99 /* once.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = once.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		BB1B1EFD21FEDA49001CF491 /* crash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = crash.h; sourceTree = "<group>"; };
 		BB28EA3821AD688C005FAFC8 /* semaphore_group.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore_group.h; sourceTree = "<group>"; };
 		BB28EA3921AD688C005FAFC8 /* semaphore_group_syn.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = semaphore_group_syn.c; sourceTree = "<group>"; };
 		BB28EA3C21AD68BD005FAFC8 /* semaphore_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore_thread.h; sourceTree = "<group>"; };
@@ -444,6 +445,7 @@
 		08FB7794FE84155DC02AAC07 /* libdispatch */ = {
 			isa = PBXGroup;
 			children = (
+				BB1B1EFD21FEDA49001CF491 /* crash.h */,
 				E44DB71E11D2FF080074F2AD /* Build Support */,
 				E4EB4A2914C35F1800AA0FA9 /* OS Object */,
 				FC7BEDAA0E83625200161930 /* Public Headers */,
