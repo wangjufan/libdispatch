@@ -1,0 +1,7829 @@
+%PDF-1.3
+%‚„œ”
+2 0 obj
+<<
+/Length 2101
+>>
+stream
+BT
+/TT2 1 Tf
+15 0 0 15 196.79 592.18 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(MACH Kernel Interface Manual)Tj
+/TT4 1 Tf
+10 0 0 10 203.19 561.68 Tm
+(Robert V. Baron, David Black, William Bolosky)Tj
+-1.168 -1.426 TD
+(Jonathan Chew, Richard P. Draves, David B. Golub)Tj
+0.222 -1.426 TD
+(Ted Lehr, Richard F. Rashid, Avadis Tevanian, Jr.,)Tj
+6.225 -1.426 TD
+(Michael Wayne Young)Tj
+-0.833 -2.852 TD
+(Editor: Mary R. Thompson)Tj
+-1.585 -2.852 TD
+(Department of Computer Science)Tj
+1.419 -1.426 TD
+(Carnegie-Mellon University)Tj
+1.276 -1.426 TD
+(Pittsburgh, PA 15213)Tj
+/TT2 1 Tf
+2.113 -1.426 TD
+(Version of:)Tj
+/TT4 1 Tf
+-0.891 -1.426 TD
+(13 August 1990)Tj
+/TT2 1 Tf
+13 0 0 13 279.63 350.52 Tm
+(Abstract)Tj
+/TT4 1 Tf
+8 0 0 8 72 325.19 Tm
+(MACH)Tj
+10 0 0 10 101.85 325.19 Tm
+0.3504 Tw
+(is an operating system kernel under development at Carnegie-Mellon University to support)Tj
+-2.985 -1.143 TD
+0.058 Tw
+(distributed and parallel computation.)Tj
+8 0 0 8 241.09 313.76 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 268.01 313.76 Tm
+0.0584 Tw
+(is designed to support computing environments consisting of)Tj
+-19.601 -1.143 TD
+0.0662 Tw
+[(networks of uniprocessors and multiprocessors.  This manual describes the interface to the)]TJ
+8 0 0 8 485.77 302.33 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 512.77 302.33 Tm
+(kernel)Tj
+-44.077 -1.143 TD
+0.317 Tw
+[(in detail.  The)]TJ
+8 0 0 8 147.49 290.9 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 177 290.9 Tm
+0.3178 Tw
+(system currently runs on a wide variety of uniprocessor and multiprocessor)Tj
+-10.5 -1.143 TD
+0 Tw
+(architectures.)Tj
+1.112 -10.676 TD
+0.1995 Tw
+(This research was sponsored by the Defense Advanced Research Projects Agency \(DOD\), ARPA)Tj
+-1.112 -1.143 TD
+0.3465 Tw
+(Order No. 4864, monitored by the Space and Naval Warfare Systems Command under contract)Tj
+T*
+0 Tw
+(N00039-84-C-0467.)Tj
+1.112 -2.284 TD
+0.1561 Tw
+(The views and conclusions contained in this document are those of the authors and should not be)Tj
+-1.112 -1.143 TD
+0.315 Tw
+(interpreted as representing official policies, either expressed or implied, of the Defense Advanced)Tj
+T*
+0 Tw
+(Research Projects Agency or of the U.S.  Government.)Tj
+ET
+endstream
+endobj
+3 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+9 0 obj
+<<
+/Length 5463
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(1)Tj
+12 0 0 12 72 711.25 Tm
+(1. Processor allocation primitives)Tj
+11 0 0 11 72 674.43 Tm
+(1.1. Concepts)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 660.17 Tm
+0.4729 Tw
+(The processor allocation interface supports control over processors by user-mode programs.)Tj
+-1.112 -1.426 TD
+0.0468 Tw
+(Application areas include gang scheduling and speedup measurement; both of these require allocating a)Tj
+T*
+0 Tw
+(specific number of processors to an application for the exclusive use of that application.)Tj
+1.112 -2.567 TD
+(This interface introduces three new entities in addition to those already exported by the)Tj
+8 0 0 8 469.98 605.98 Tm
+(MACH)Tj
+10 0 0 10 496.3199 605.98 Tm
+(kernel:)Tj
+/TT6 1 Tf
+-40.39 -1.943 TD
+(ï)Tj
+/TT2 1 Tf
+0.738 0 TD
+(processor)Tj
+/TT4 1 Tf
+5.197 0 TD
+0.0833 Tw
+[(- This corresponds to a hardware processor.  Internally it corresponds to a data)]TJ
+-5.197 -1.143 TD
+0.1467 Tw
+[(structure containing a local run queue.  There is a distinguished processor, known as the)]TJ
+T*
+0.08 Tw
+(master \(until the kernelized system gets rid of it\). There is a privileged port exported by the)Tj
+T*
+0 Tw
+(processor object to privileged servers which allows control of the physical processor.)Tj
+/TT6 1 Tf
+-0.738 -1.715 TD
+(ï)Tj
+/TT2 1 Tf
+0.738 0 TD
+(processor_set)Tj
+/TT4 1 Tf
+7.254 0 TD
+0.1409 Tw
+[(- This is a set of processors.  Internally it corresponds to a data structure)]TJ
+-7.254 -1.143 TD
+0.0004 Tw
+(containing a "global" run queue and an idle queue.  There is a distinguished set known as the)Tj
+T*
+0.0851 Tw
+[(default set to which all tasks, threads, and processors are initially assigned. )-364.9(Two ports are)]TJ
+T*
+0.1465 Tw
+(exported by a processor_set, a name port for obtaining information about the set, and an)Tj
+T*
+0 Tw
+(control port for performing operations on it. Neither of these ports are privileged.)Tj
+/TT6 1 Tf
+-0.738 -1.715 TD
+(ï)Tj
+/TT2 1 Tf
+0.738 0 TD
+(host)Tj
+/TT4 1 Tf
+2.392 0 TD
+0.0035 Tw
+(- This represents the host.  There are two ports exported by this object: a non-privileged)Tj
+-2.392 -1.143 TD
+0 Tw
+(port,)Tj
+/TT8 1 Tf
+2.398 0 TD
+(host)Tj
+/TT4 1 Tf
+2.4004 0 TD
+0.118 Tw
+(, for information queries, and a privileged port,)Tj
+/TT8 1 Tf
+21.6196 0 TD
+0 Tw
+(host_priv)Tj
+/TT4 1 Tf
+5.4009 0 TD
+0.118 Tw
+(, port that grants the)Tj
+-31.8189 -1.143 TD
+0.2124 Tw
+[(right to manipulate physical resources.  Other resource operations \(e.g. making memory)]TJ
+T*
+0.0701 Tw
+[(non-pageable\) will be added in the future.  The non-privileged port should be used to name)]TJ
+T*
+0 Tw
+(the host.)Tj
+-2.78 -1.872 TD
+0.0335 Tw
+(Every processor is always assigned to exactly one processor set; a processor only executes threads that)Tj
+0 -1.426 TD
+0.0124 Tw
+[(are assigned to its processor set.  Every thread is always assigned to exactly one processor set, and only)]TJ
+8 0 0 8 318.12 382.79 Tm
+0 Tw
+(1)Tj
+10 0 0 10 72 379.28 Tm
+0.0621 Tw
+[(executes on processors assigned to that processor set)-443.3(. )-339.9(Each task is also assigned to a processor set,)]TJ
+T*
+0.073 Tw
+(but this assignment is only for the purposes of determining the initial assignment of newly created tasks)Tj
+T*
+0.3019 Tw
+(and threads; tasks inherit their initial assignment from their parent, and threads inherit their initial)Tj
+T*
+0 Tw
+(assignment from the task that contains them.  These assignments may be changed subsequently.)Tj
+1.112 -2.567 TD
+0.3195 Tw
+(The host concept is introduced to isolate authentication concerns from the processor allocation)Tj
+-1.112 -1.426 TD
+0.0384 Tw
+[(interface. )-315.6(The host_priv and processor ports are privileged and only available to privileged servers.  The)]TJ
+T*
+0.0264 Tw
+[(kernel only provides allocation mechanisms for processors; policy is the responsibility of the server\(s\).  In)]TJ
+T*
+0.3413 Tw
+(addition the servers may understand more about the topology of the machine \(e.g. clustering of)Tj
+T*
+0.1073 Tw
+[(processors\) than the kernel \(the kernel makes no distinctions among processors internally\).  Processor)]TJ
+T*
+0.1568 Tw
+(sets are not privileged, and are intended to form a basis for the interfaces exported by the privileged)Tj
+T*
+0.0477 Tw
+[(servers. )-326.3(\(Note that non-privileged users cannot obtain ports for the processors assigned to user-created)]TJ
+T*
+0.0482 Tw
+(processor sets even though they have the processor set control port.\) The use of unprivileged processor)Tj
+T*
+0.1807 Tw
+[(sets exported by the kernel allows users to do scheduling \(i.e.  task and thread assignment\) directly)]TJ
+T*
+0 Tw
+(without having any resource control privileges.)Tj
+1.112 -2.567 TD
+0.0637 Tw
+(This interface will exist on all machines, even uniprocessors; a kernel configuration switch deletes the)Tj
+-1.112 -1.426 TD
+0.0186 Tw
+[(code required to support processor allocation internally and returns failure codes.  On a uniprocessor, the)]TJ
+T*
+(only processor set that exists is the default processor set; its control port is privileged and not available to)Tj
+T*
+0.1633 Tw
+[(most users.  The calls to retrieve information about the processors and the default processor set are)]TJ
+ET
+0 G
+0 J 0 j 0.5 w 10 M []0 d
+1 i 
+72 88.83 m
+180 88.83 l
+S
+BT
+6 0 0 6 80.9 75.13 Tm
+2.6689 Tc
+0 Tw
+[(1t)2668.9(m)]TJ
+8 0 0 8 84.24 72 Tm
+0 Tc
+[(Unix)-1112(system calls are an exception; they may force a thread to the master processor)]TJ
+/TT2 1 Tf
+-1.53 -4.5 TD
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+10 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT6 11 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+14 0 obj
+<<
+/Length 5614
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(2)Tj
+/TT4 1 Tf
+-23.122 -3.6 TD
+(useful even on such machines.)Tj
+/TT2 1 Tf
+11 0 0 11 72 675.89 Tm
+(1.2. Functionality)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 661.63 Tm
+0.0372 Tw
+(This interface supports partitioning of the processing capability of a multiprocessor among applications)Tj
+-1.112 -1.426 TD
+0.0089 Tw
+[(in a fixed fashion.  The granularity of this division is at the processor level.  Processor sets are assembled)]TJ
+T*
+0.1896 Tw
+(by assigning processors to sets; a processor assigned to a set will only run threads that have been)Tj
+T*
+0.0186 Tw
+[(assigned to that set.  Binding threads to individual processors is accomplished by creating processor sets)]TJ
+T*
+0.152 Tw
+[(containing exactly one processor.  The master processor must always be assigned to the default set.)]TJ
+T*
+0.008 Tw
+(Future versions of)Tj
+8 0 0 8 155.05 590.33 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 181.47 590.33 Tm
+0.0074 Tw
+(intend to remove the need for a master processor. At that time the the default set)Tj
+-10.947 -1.426 TD
+0 Tw
+(must always be assigned at least one processor.)Tj
+1.112 -2.567 TD
+0.0222 Tw
+(Binding of threads to individual processors can be achieved by assigning the threads to processor sets)Tj
+-1.112 -1.426 TD
+0.1632 Tw
+[(that contain exactly one processor. )-440.8(A kernel configuration switch is available to keep threads on the)]TJ
+T*
+0.077 Tw
+(same processor in most situations where at most)Tj
+/TT10 1 Tf
+22.568 0 TD
+0 Tw
+(n)Tj
+/TT4 1 Tf
+0.911 0 TD
+0.0776 Tw
+(threads are assigned to a processor set to which at)Tj
+-23.479 -1.426 TD
+0 Tw
+(least)Tj
+/TT10 1 Tf
+2.39 0 TD
+(n)Tj
+/TT4 1 Tf
+0.834 0 TD
+(processors are assigned.)Tj
+-2.112 -2.567 TD
+0.0591 Tw
+(All of the primitives except two are implemented via the ipc interface, and are therefore available over)Tj
+-1.112 -1.426 TD
+0.0623 Tw
+[(the network.  This allows a long-term scheduler for a multiprocessor to reside on another machine.  The)]TJ
+T*
+0.033 Tw
+(two primitives that are implemented as traps are)Tj
+/TT8 1 Tf
+21.826 0 TD
+0 Tw
+(host_self)Tj
+/TT4 1 Tf
+5.71 0 TD
+(and)Tj
+/TT8 1 Tf
+1.978 0 TD
+(host_priv_self)Tj
+/TT4 1 Tf
+8.4014 0 TD
+0.032 Tw
+(. The latter is only a)Tj
+-37.9154 -1.426 TD
+0 Tw
+(trap pending implementation of an authorization/authentication mechanisms.)Tj
+/TT2 1 Tf
+11 0 0 11 72 402.35 Tm
+(1.3. Uses)Tj
+/TT6 1 Tf
+10 0 0 10 92.42 382.92 Tm
+(ï)Tj
+/TT4 1 Tf
+0.738 0 TD
+0.059 Tw
+[(Gang Scheduling - A gang scheduler can be written externally to the kernel. )-338(The scheduler)]TJ
+0 -1.143 TD
+0.298 Tw
+(can be implemented by shuffling processors among processor sets, thus avoiding any)Tj
+T*
+0 Tw
+(interaction with application use of task and thread control primitives.)Tj
+/TT6 1 Tf
+-0.738 -1.715 TD
+(ï)Tj
+/TT4 1 Tf
+0.738 0 TD
+0.0631 Tw
+(Speedup Measurement - A single processor set of)Tj
+/TT10 1 Tf
+23.016 0 TD
+0 Tw
+(k)Tj
+/TT4 1 Tf
+0.842 0 TD
+0.064 Tw
+(processors is sufficient to measure the)Tj
+-23.858 -1.143 TD
+0.1282 Tw
+[(performance of a parallel application on that many processors.  The application may have)]TJ
+T*
+0 Tw
+(more than)Tj
+/TT10 1 Tf
+4.78 0 TD
+(k)Tj
+/TT4 1 Tf
+0.778 0 TD
+(threads.)Tj
+/TT6 1 Tf
+-6.296 -1.715 TD
+(ï)Tj
+/TT4 1 Tf
+0.738 0 TD
+0.2085 Tw
+(User-Mode Scheduling - Assigning a single processor to each of several processor sets)Tj
+0 -1.143 TD
+0.023 Tw
+(allows user applications complete control over the threads that execute on these processors.)Tj
+T*
+0.2133 Tw
+(In addition to the)Tj
+/TT2 1 Tf
+8.526 0 TD
+0 Tw
+(assign)Tj
+/TT4 1 Tf
+3.66 0 TD
+0.214 Tw
+(primitives, the existing)Tj
+/TT2 1 Tf
+10.756 0 TD
+0 Tw
+(suspend)Tj
+/TT4 1 Tf
+4.604 0 TD
+(and)Tj
+/TT2 1 Tf
+2.16 0 TD
+(resume)Tj
+/TT4 1 Tf
+4.049 0 TD
+0.214 Tw
+(primitives are of)Tj
+-33.755 -1.143 TD
+0 Tw
+(potential utility.)Tj
+/TT6 1 Tf
+-0.738 -1.715 TD
+(ï)Tj
+/TT4 1 Tf
+0.738 0 TD
+0.1835 Tw
+(Application binding - Portions of an application can be bound to dedicated processors to)Tj
+0 -1.143 TD
+0.0782 Tw
+[(optimize performance characteristics.  Users may choose among many alternatives ranging)]TJ
+T*
+0.0768 Tw
+(from one processor set with all the dedicated processors and corresponding threads to one)Tj
+T*
+0 Tw
+(processor set for each dedicated processor.)Tj
+/TT6 1 Tf
+-0.738 -1.715 TD
+(ï)Tj
+/TT4 1 Tf
+0.738 0 TD
+0.073 Tw
+(Load Balancing for Non-Uniform Memory Access \(NUMA\) Multiprocessors - Assigning each)Tj
+0 -1.143 TD
+0.243 Tw
+(cluster of processors \(i.e. processors with identical memory access characteristics\) to a)Tj
+T*
+0.1026 Tw
+[(separate processor_set allows the kernel to perform load balancing only within clusters.  A)]TJ
+T*
+0.3132 Tw
+[(user-mode load balancer can then perform load balancing across clusters.  Additional)]TJ
+T*
+0 Tw
+(primitives to make load information available efficiently to support this are under design.)Tj
+-1.668 -2.567 TD
+0.0435 Tw
+(It should be noted that Speedup Measurement and Application Binding of Ada applications will usually)Tj
+-1.112 -1.426 TD
+0 Tw
+(require assigning a group of)Tj
+/TT10 1 Tf
+12.673 0 TD
+(k)Tj
+/TT4 1 Tf
+0.778 0 TD
+(threads to)Tj
+/TT10 1 Tf
+4.725 0 TD
+(n)Tj
+/TT4 1 Tf
+0.834 0 TD
+(processors, where)Tj
+/TT10 1 Tf
+8.447 0 TD
+(k)Tj
+/TT4 1 Tf
+0.778 0 TD
+(>)Tj
+/TT10 1 Tf
+0.862 0 TD
+(n)Tj
+/TT4 1 Tf
+0.834 0 TD
+(> 1, for best performance.  This is due)Tj
+-29.931 -1.426 TD
+0.074 Tw
+(to the synchronous nature of Adaís rendezvous, and is also true of applications structured using remote)Tj
+T*
+0.1308 Tw
+[(procedure call.  This functionality is not supported by a simpler interface that can only bind threads to)]TJ
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+15 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT6 11 0 R
+/TT8 12 0 R
+/TT10 16 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+18 0 obj
+<<
+/Length 233
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(3)Tj
+/TT4 1 Tf
+-23.122 -3.6 TD
+(dedicated processors.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+19 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+21 0 obj
+<<
+/Length 1645
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(4)Tj
+12 0 0 12 72 711.25 Tm
+(host_self)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(host_t host_self\(\))Tj
+T*
+(host_priv_t host_priv_self\(\))Tj
+/TT2 1 Tf
+12 0 0 12 72 615.79 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 600.8 Tm
+(host_self)Tj
+/TT4 1 Tf
+5.771 0 TD
+0.093 Tw
+[(returns send rights to the host port for the host on which the call is executed. )-372(This port)]TJ
+-6.883 -1.426 TD
+0 Tw
+(can only be used to obtain information about the host.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(host_priv_self)Tj
+/TT4 1 Tf
+8.883 0 TD
+0.2044 Tw
+(returns send rights to the privileged host port for the host on which the call is)Tj
+-9.995 -1.426 TD
+0.0204 Tw
+[(executed. )-297.6(This port is used to control physical resources on that host. It is needed for the operations that)]TJ
+T*
+0.1496 Tw
+(wire-down memory pagaes and the call that returns the processor ports which in turn allow control of)Tj
+T*
+0.1255 Tw
+[(specific processors.  Currently, this port is only returned if the caller is the Unix super-user. Otherwise)]TJ
+/TT8 1 Tf
+T*
+0 Tw
+(PORT_NULL)Tj
+/TT4 1 Tf
+5.678 0 TD
+(is returned.)Tj
+/TT2 1 Tf
+12 0 0 12 72 483.97 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 469.71 Tm
+(host_processors, host_info, host_kernel_version)Tj
+/TT2 1 Tf
+12 0 0 12 72 449.85 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 434.86 Tm
+(Availability limited.)Tj
+/TT8 1 Tf
+8.724 0 TD
+(host_priv_self)Tj
+/TT4 1 Tf
+8.678 0 TD
+(should be replaced by a real authentication mechanism.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+22 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+24 0 obj
+<<
+/Length 2525
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(5)Tj
+12 0 0 12 72 711.25 Tm
+(host_processors)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t host_processors\(host_priv, processor_list, processor_count\))Tj
+2.4 -1.031 TD
+4.8 Tw
+(host_priv_t host_priv;)Tj
+T*
+0 Tw
+[(processor_array_t )-1200(*processor_list; )-4200(/* out, ptr to array */)]TJ
+T*
+[(int )-9600(*processor_count; )-3600(/* out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(host_priv)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Privileged host port for the desired host.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_list)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.285 Tw
+(The set of processors existing on)Tj
+/TT8 1 Tf
+16.66 0 TD
+0 Tw
+(host_priv)Tj
+/TT4 1 Tf
+5.4009 0 TD
+0.284 Tw
+(, no particular ordering is)Tj
+-22.0609 -1.143 TD
+0 Tw
+(guaranteed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_count)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+(The number of threads in the)Tj
+/TT8 1 Tf
+13.118 0 TD
+(processor_list.)Tj
+/TT2 1 Tf
+12 0 0 12 72 515.78 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 500.79 Tm
+(host_processors)Tj
+/TT4 1 Tf
+9.279 0 TD
+0.0005 Tw
+(gets send rights to the processor port for each processor existing on)Tj
+/TT8 1 Tf
+30.409 0 TD
+0 Tw
+(host_priv.)Tj
+/TT4 1 Tf
+-40.8 -1.426 TD
+0.0355 Tw
+(This is the privileged port that allows its holder to control a processor.)Tj
+/TT8 1 Tf
+31.364 0 TD
+0 Tw
+(processor_list)Tj
+/TT4 1 Tf
+8.714 0 TD
+0.036 Tw
+(is an array that)Tj
+-40.078 -1.426 TD
+0.0467 Tw
+(is created as a result of this call. The caller may wish to)Tj
+/TT8 1 Tf
+25.338 0 TD
+0 Tw
+(vm_deallocate)Tj
+/TT4 1 Tf
+8.124 0 TD
+0.046 Tw
+(this array when the data is no)Tj
+-33.462 -1.426 TD
+0 Tw
+(longer needed.)Tj
+/TT2 1 Tf
+12 0 0 12 72 438.15 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 419.43 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(host_priv)Tj
+/TT4 1 Tf
+5.678 0 TD
+(is not a privileged host port.)Tj
+/TT8 1 Tf
+-14.574 -1.626 TD
+(KERN_INVALID_ADDRESS)Tj
+8.896 -1.143 TD
+(processor_count)Tj
+/TT4 1 Tf
+9.278 0 TD
+(points to inaccessible memory.)Tj
+/TT2 1 Tf
+12 0 0 12 72 343.87 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 329.61 Tm
+(processor_start, processor_exit, processor_info, processor_control)Tj
+/TT2 1 Tf
+12 0 0 12 72 309.75 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 294.76 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+25 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+27 0 obj
+<<
+/Length 2581
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(6)Tj
+12 0 0 12 72 711.25 Tm
+(host_processor_sets)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(host_processor_sets\(host, processor_set_list, processor_set_count\))Tj
+2.4 -1.031 TD
+9.6 Tw
+(host_t host;)Tj
+T*
+0 Tw
+[(processor_set_array_t )-600(*processor_set_list; /* out, ptr to array */)]TJ
+T*
+[(int )-11400(*processor_set_count; )-4200(/* out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 589.44 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 570.72 Tm
+(host)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.1401 Tw
+[(The host for which the list of processor sets is requested. )-418.9(Either the host)]TJ
+0 -1.143 TD
+0 Tw
+(port or the privileged host port may be used.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_set_list)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.084 Tw
+(The set of processor_sets currently existing on)Tj
+/TT8 1 Tf
+21.541 0 TD
+0 Tw
+(host)Tj
+/TT4 1 Tf
+2.4004 0 TD
+0.085 Tw
+(; no particular ordering)Tj
+-23.9414 -1.143 TD
+0 Tw
+(is guaranteed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_set_count)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+(The number of processor_sets in the)Tj
+/TT8 1 Tf
+16.563 0 TD
+(processor_set_list.)Tj
+/TT2 1 Tf
+12 0 0 12 72 472.3 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 457.31 Tm
+(host_processor_sets)Tj
+/TT4 1 Tf
+11.723 0 TD
+0.0459 Tw
+(gets send rights to the name port for each processor_set currently assigned)Tj
+-12.835 -1.426 TD
+0 Tw
+(to)Tj
+/TT8 1 Tf
+1.258 0 TD
+[(host.)-424(host_processor_set_priv)]TJ
+/TT4 1 Tf
+17.648 0 TD
+0.1456 Tw
+(can be used to obtain the object ports from these if desired.)Tj
+/TT8 1 Tf
+-18.906 -1.426 TD
+0 Tw
+(processor_set_list)Tj
+/TT4 1 Tf
+11.335 0 TD
+0.2575 Tw
+(is an array that is created as a result of this call. The caller may wish to)Tj
+/TT8 1 Tf
+-11.335 -1.426 TD
+0 Tw
+(vm_deallocate)Tj
+/TT4 1 Tf
+8.078 0 TD
+(this array when the data is no longer needed.)Tj
+/TT2 1 Tf
+12 0 0 12 72 394.67 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 375.95 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(host)Tj
+/TT4 1 Tf
+2.678 0 TD
+(is not a host.)Tj
+/TT2 1 Tf
+12 0 0 12 72 328.08 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 313.09 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 293.23 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 278.97 Tm
+2.744 Tw
+(host_processor_set_priv, processor_set_create, processor_set_tasks,)Tj
+-1.112 -1.426 TD
+0 Tw
+(processor_set_threads)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+28 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+30 0 obj
+<<
+/Length 1424
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(7)Tj
+12 0 0 12 72 711.25 Tm
+(host_processor_set_priv)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -1.489 TD
+(kern_return_t host_processor_set_priv\(host_priv, set_name, set\);)Tj
+4.8 -1.031 TD
+7.2 Tw
+(host_priv_t host_priv;)Tj
+T*
+1.8 Tw
+(processor_set_name_t set_name;)Tj
+T*
+4.8 Tw
+(processor_set_t *set;)Tj
+/TT2 1 Tf
+12 0 0 12 72 620.37 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 601.65 Tm
+(host_priv)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The privileged host port for the host on which this processor set resides.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(set_name)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The name port for this set.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Returns the control port for this set.)Tj
+/TT2 1 Tf
+12 0 0 12 72 548.95 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 533.96 Tm
+0.0655 Tw
+(This call allows a privileged application to obtain the control port for an existing processor set from its)Tj
+-1.112 -1.426 TD
+0 Tw
+(name port.  The privileged host port is required.)Tj
+/TT2 1 Tf
+12 0 0 12 72 499.84 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 484.85 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 464.99 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 450.73 Tm
+(host_ports, processor_set_default, processor_set_create)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+31 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+33 0 obj
+<<
+/Length 4666
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(8)Tj
+12 0 0 12 72 711.25 Tm
+(host_info)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.062 TD
+(/* the definition of host_info_t from mach.h - sys/host_info.h is */)Tj
+T*
+[(typedef int )-2400(*host_info_t; )-6000(/* variable length array of int */)]TJ
+T*
+(/* two  interpretations of info are: */)Tj
+1.8 -2.062 TD
+(struct host_basic_info {)Tj
+3 -1.031 TD
+[(int )-7200(max_cpus; )-3600(/* maximum possible cpus for)]TJ
+21 -1.031 TD
+(which kernel is configured */)Tj
+-21 -1.031 TD
+[(int )-7200(avail_cpus; )-2400(/* number of cpus now available */)]TJ
+T*
+[(vm_size_t )-3600(memory_size; )-1800(/* size of memory in bytes */)]TJ
+T*
+[(cpu_type_t )-3000(cpu_type; )-3600(/* cpu type */)]TJ
+T*
+[(cpu_subtype_t )-1200(cpu_subtype; )-1800(/* cpu subtype */)]TJ
+-3 -1.031 TD
+(};)Tj
+-1.8 -1.031 TD
+[(typedef struct host_basic_info )-5400(*host_basic_info_t;)]TJ
+0 -3.093 TD
+(struct host_sched_info {)Tj
+4.8 -1.031 TD
+[(int )-7200(min_timeout; )-1800(/* minimum timeout in milliseconds */)]TJ
+T*
+[(int )-7200(min_quantum; )-1800(/* minimum quantum in milliseconds */)]TJ
+-4.8 -1.031 TD
+(};)Tj
+T*
+(typedef struct host_sched_info *host_sched_info_t)Tj
+0 -3.551 TD
+(kern_return_t host_info\(host, flavor, host_info, host_infoCnt\))Tj
+4.8 -1.031 TD
+5.4 Tw
+(host_t host;)Tj
+T*
+7.2 Tw
+(int flavor;)Tj
+T*
+0 Tw
+[(host_info_t )-2400(host_info; )-3000(/* in and out */)]TJ
+T*
+[(unsigned int )-1800(*host_infoCnt; )-600(/* in and out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 352.31 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 333.59 Tm
+(host)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The host for which information is to be obtained)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(flavor)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.3495 Tw
+[(The type of statistics that are wanted.  Currently)]TJ
+/TT8 1 Tf
+24.6 0 TD
+0 Tw
+(HOST_BASIC_INFO,)Tj
+-24.6 -1.143 TD
+(HOST_PROCESSOR_SLOTS,)Tj
+/TT4 1 Tf
+12.878 0 TD
+(and)Tj
+/TT8 1 Tf
+1.946 0 TD
+(HOST_SCHED_INFO)Tj
+/TT4 1 Tf
+9.278 0 TD
+(are implemented.)Tj
+/TT8 1 Tf
+-32.998 -1.626 TD
+(host_info)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Statistics about the host specified by)Tj
+/TT8 1 Tf
+16.453 0 TD
+(host.)Tj
+-25.349 -1.626 TD
+(host_infoCnt)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.5045 Tw
+(Size of the info structure. Should be)Tj
+/TT8 1 Tf
+19.651 0 TD
+0 Tw
+(HOST_BASIC_INFO_COUNT)Tj
+/TT4 1 Tf
+13.382 0 TD
+(for)Tj
+/TT8 1 Tf
+-33.033 -1.143 TD
+(HOST_BASIC_INFO.)Tj
+/TT4 1 Tf
+10.796 0 TD
+0.32 Tw
+(Should be the max number of cpus returned by)Tj
+/TT8 1 Tf
+-10.796 -1.143 TD
+0 Tw
+(HOST_BASIC_INFO)Tj
+/TT4 1 Tf
+10.442 0 TD
+(for)Tj
+/TT8 1 Tf
+2.609 0 TD
+(HOST_PROCESSOR_SLOTS.)Tj
+/TT4 1 Tf
+15.483 0 TD
+1.163 Tw
+(Should be)Tj
+/TT8 1 Tf
+-28.534 -1.143 TD
+0 Tw
+(HOST_SCHED_INFO_COUNT)Tj
+/TT4 1 Tf
+12.878 0 TD
+(for)Tj
+/TT8 1 Tf
+1.445 0 TD
+(HOST_SCHED_INFO.)Tj
+/TT2 1 Tf
+12 0 0 12 72 218.91 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 203.92 Tm
+0.0564 Tw
+(Returns the selected information array for a host, as specified by)Tj
+/TT8 1 Tf
+29.467 0 TD
+0 Tw
+[(flavor.)-335(host_info)]TJ
+/TT4 1 Tf
+10.27 0 TD
+0.057 Tw
+(is an array of)Tj
+-40.849 -1.426 TD
+0.0121 Tw
+(integers that is supplied by the caller, and filled with specified information.)Tj
+/TT8 1 Tf
+33.228 0 TD
+0 Tw
+(host_infoCnt)Tj
+/TT4 1 Tf
+7.49 0 TD
+0.012 Tw
+(is supplied as)Tj
+-40.718 -1.426 TD
+0.0624 Tw
+(the maximum number of integers in)Tj
+/TT8 1 Tf
+16.325 0 TD
+0 Tw
+(host_info.)Tj
+/TT4 1 Tf
+6.341 0 TD
+0.063 Tw
+(On return, it contains the actual number of integers in)Tj
+/TT8 1 Tf
+-22.666 -1.426 TD
+0 Tw
+(host_info.)Tj
+/TT4 1 Tf
+6.556 0 TD
+(The host may be specified by either the host port or the privileged host port.)Tj
+-5.444 -2.567 TD
+0.318 Tw
+(Basic information is defined by)Tj
+/TT8 1 Tf
+15.429 0 TD
+0 Tw
+(HOST_BASIC_INFO.)Tj
+/TT4 1 Tf
+10.196 0 TD
+0.3174 Tw
+(The size of this information is defined by)Tj
+/TT8 1 Tf
+-26.737 -1.426 TD
+0 Tw
+(HOST_BASIC_INFO_COUNT.)Tj
+/TT4 1 Tf
+14.59 0 TD
+0.4172 Tw
+(Processor slots of the active \(available\) processors is defined by)Tj
+/TT8 1 Tf
+-14.59 -1.426 TD
+0 Tw
+(HOST_PROCESSOR_SLOTS.)Tj
+/TT4 1 Tf
+13.26 0 TD
+0.0513 Tw
+(The size of this information should be obtained from the)Tj
+/TT8 1 Tf
+25.414 0 TD
+0 Tw
+(max_cpus)Tj
+/TT4 1 Tf
+5.129 0 TD
+0.051 Tw
+(field of)Tj
+-43.803 -1.426 TD
+0.031 Tw
+(the structure returned by)Tj
+/TT8 1 Tf
+11.296 0 TD
+0 Tw
+(HOST_BASIC_INFO.)Tj
+/TT4 1 Tf
+10.218 0 TD
+0.0312 Tw
+(Additional information of interest to schedulers is defined)Tj
+-21.514 -1.426 TD
+0 Tw
+(by)Tj
+/TT8 1 Tf
+1.334 0 TD
+(HOST_SCHED_INFO.)Tj
+/TT4 1 Tf
+9.878 0 TD
+(The size of this information is defined by)Tj
+/TT8 1 Tf
+18.119 0 TD
+(HOST_SCHED_INFO_COUNT.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+34 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+36 0 obj
+<<
+/Length 1365
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(9)Tj
+12 0 0 12 72 711.25 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 692.53 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(host)Tj
+/TT4 1 Tf
+2.678 0 TD
+(is not a host or)Tj
+/TT8 1 Tf
+6.837 0 TD
+(flavor)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is not recognized.)Tj
+/TT8 1 Tf
+-22.289 -1.626 TD
+(MIG_ARRAY_TOO_LARGE)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.2188 Tw
+(Returned info array is too large for)Tj
+/TT8 1 Tf
+16.982 0 TD
+0 Tw
+[(host_info.)-496(host_info)]TJ
+/TT4 1 Tf
+12.392 0 TD
+0.218 Tw
+(is filled as)Tj
+-29.374 -1.143 TD
+0.165 Tw
+(much as possible.)Tj
+/TT8 1 Tf
+9.219 0 TD
+0 Tw
+(host_infoCnt)Tj
+/TT4 1 Tf
+7.644 0 TD
+0.166 Tw
+(is set to the number of elements that)Tj
+-16.863 -1.143 TD
+0 Tw
+(would be returned if there were enough room.)Tj
+/TT2 1 Tf
+12 0 0 12 72 594.11 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 579.12 Tm
+0.2187 Tw
+[(Availability limited.  Systems without this call support a host_info call with an incompatible calling)]TJ
+-1.112 -1.426 TD
+0 Tw
+(sequence.)Tj
+/TT2 1 Tf
+12 0 0 12 72 545 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 530.74 Tm
+(host_ports, host_kernel_version, host_processors, processor_info)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+37 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+39 0 obj
+<<
+/Length 2150
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(10)Tj
+12 0 0 12 72 711.25 Tm
+(host_kernel_version)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t host_kernel_version\(host, version\))Tj
+4.8 -1.031 TD
+(host_t host;)Tj
+T*
+[(kernel_version_t *version; )-7800(/* out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(host)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.017 Tw
+[(The host for which information is being requested.  Either the host port or the)]TJ
+0 -1.143 TD
+0 Tw
+(privileged host port may be used.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(version)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Character string describing the kernel version executing on)Tj
+/TT8 1 Tf
+26.344 0 TD
+(host.)Tj
+/TT2 1 Tf
+12 0 0 12 72 543.47 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 528.48 Tm
+(host_kernel_version)Tj
+/TT4 1 Tf
+11.737 0 TD
+0.0587 Tw
+(returns the version string compiled into the kernel executing on)Tj
+/TT8 1 Tf
+28.655 0 TD
+0 Tw
+(host)Tj
+/TT4 1 Tf
+2.736 0 TD
+0.058 Tw
+(at the)Tj
+-44.24 -1.426 TD
+0.051 Tw
+[(time it was built.  This describes the version of the kernel.  The constant)]TJ
+/TT8 1 Tf
+32.724 0 TD
+0 Tw
+(KERNEL_VERSION_MAX)Tj
+/TT4 1 Tf
+11.13 0 TD
+(should)Tj
+-43.854 -1.426 TD
+(be used to dimension storage for the returned string if the)Tj
+/TT8 1 Tf
+25.68 0 TD
+(kernel_version_t)Tj
+/TT4 1 Tf
+9.878 0 TD
+(declaration is not used.)Tj
+/TT2 1 Tf
+12 0 0 12 72 480.1 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 461.38 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(host)Tj
+/TT4 1 Tf
+2.678 0 TD
+(was not a host.)Tj
+/TT8 1 Tf
+-11.574 -1.626 TD
+(KERN_INVALID_ADDRESS)Tj
+8.896 -1.143 TD
+(version)Tj
+/TT4 1 Tf
+4.478 0 TD
+(points to inaccessible memory.)Tj
+/TT2 1 Tf
+12 0 0 12 72 385.82 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 370.83 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 350.97 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 336.71 Tm
+(host_info, host_processors, host_ports, processor_info)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+40 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+44 0 obj
+<<
+/Length 3808
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(11)Tj
+12 0 0 12 72 711.25 Tm
+(processor_assign)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t processor_assign\(processor, processor_set, wait\))Tj
+4.8 -1.031 TD
+2.4 Tw
+(processor_t processor;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+T*
+3.6 Tw
+(boolean_t wait;)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t processor_get_assignment\(processor, assigned_set_name\))Tj
+4.8 -1.031 TD
+2.4 Tw
+(processor_t processor;)Tj
+T*
+0 Tw
+(processor_set_name_t assigned_set_name;)Tj
+/TT2 1 Tf
+12 0 0 12 72 564.24 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 545.52 Tm
+(processor)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor to be assigned.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor set to assign it to.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(wait)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Whether to wait for the assignment to complete.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(assigned_set_name)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+(Name port for processor set that processor is currently assigned to)Tj
+/TT2 1 Tf
+12 0 0 12 72 465.13 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 450.14 Tm
+(processor_assign)Tj
+/TT4 1 Tf
+10.011 0 TD
+(assigns)Tj
+/TT8 1 Tf
+3.801 0 TD
+(processor)Tj
+/TT4 1 Tf
+5.811 0 TD
+0.133 Tw
+(to the the set)Tj
+/TT8 1 Tf
+6.592 0 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+7.8013 0 TD
+0.134 Tw
+[(. )-410(After the assignment is)]TJ
+-35.1283 -1.426 TD
+0.1111 Tw
+[(completed, the processor only executes threads that are assigned to that processor set.  Any previous)]TJ
+T*
+0.1373 Tw
+[(assignment of the processor is nullified.  The master processor cannot be reassigned.  All processors)]TJ
+T*
+0.1734 Tw
+[(take clock interrupts at all times.  The wait argument indicates whether the caller should wait for the)]TJ
+T*
+0.0298 Tw
+[(assignment to be completed or should return immediately.  Dedicated kernel threads are used to perform)]TJ
+T*
+0.346 Tw
+(processor assignment, so setting)Tj
+/TT8 1 Tf
+16.279 0 TD
+0 Tw
+(wait)Tj
+/TT4 1 Tf
+3.024 0 TD
+(to)Tj
+/TT8 1 Tf
+1.458 0 TD
+(FALSE)Tj
+/TT4 1 Tf
+3.624 0 TD
+0.3451 Tw
+(allows assignment requests to be queued and)Tj
+-24.385 -1.426 TD
+0.2184 Tw
+(performed faster, especially if the kernel has more than one dedicated internal thread for processor)Tj
+T*
+0.1866 Tw
+[(assignment. )-465.4(Redirection of other device interrupts away from processors assigned to other than the)]TJ
+T*
+0.2025 Tw
+[(default processor set is machine-dependent.  Intermediaries that interpose on ports must be sure to)]TJ
+T*
+0 Tw
+(interpose on both ports involved in this call if they interpose on either.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(processor_get_assignment)Tj
+/TT4 1 Tf
+14.708 0 TD
+0.0296 Tw
+[(Obtains the current assignment of a processor. )-306.4(The name port of the)]TJ
+-15.82 -1.426 TD
+0 Tw
+(processor set is returned.)Tj
+/TT2 1 Tf
+12 0 0 12 72 262.01 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 243.29 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The assignment has been performed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor)Tj
+/TT4 1 Tf
+5.783 0 TD
+0.105 Tw
+(is not a processor, or)Tj
+/TT8 1 Tf
+10.14 0 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+8.183 0 TD
+0.104 Tw
+(is not a processor_set)Tj
+-24.106 -1.143 TD
+0 Tw
+(on the same host as)Tj
+/TT8 1 Tf
+9.283 0 TD
+(processor)Tj
+/TT4 1 Tf
+5.4009 0 TD
+(.)Tj
+/TT2 1 Tf
+12 0 0 12 72 183.99 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 169 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 149.14 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 134.15 Tm
+1.5366 Tw
+(processor_set_create, processor_set_info, task_assign, thread_assign)Tj
+/TT4 1 Tf
+45.4166 0 TD
+0 Tw
+(,)Tj
+/TT8 1 Tf
+-46.5286 -1.426 TD
+(host_processor_set_priv)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+45 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+47 0 obj
+<<
+/Length 2924
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(12)Tj
+12 0 0 12 72 711.25 Tm
+(processor_control)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t processor_start\(processor\))Tj
+4.8 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t processor_exit\(processor\))Tj
+4.8 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t processor_control\(processor, cmd, count\))Tj
+4.8 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+T*
+0 Tw
+[(int )-12000(*cmd; )-600(/* array of ints */)]TJ
+T*
+12 Tw
+(int count;)Tj
+/TT2 1 Tf
+12 0 0 12 72 539.04 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 520.32 Tm
+(processor)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Specifies the processor.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(cmd)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Contains the command to be applied to the processor.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(count)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Specifies the length of the command as a number of ints.)Tj
+/TT2 1 Tf
+12 0 0 12 72 467.62 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 452.63 Tm
+0.0424 Tw
+[(Some multiprocessors may allow privileged software to control processors.  The)]TJ
+/TT8 1 Tf
+36.088 0 TD
+0 Tw
+(processor_start,)Tj
+-37.2 -1.426 TD
+(processor_exit)Tj
+/TT4 1 Tf
+8.4014 0 TD
+0.257 Tw
+(, and)Tj
+/TT8 1 Tf
+3.0146 0 TD
+0 Tw
+(processor_control)Tj
+/TT4 1 Tf
+10.735 0 TD
+0.2578 Tw
+[(operations implement this.  The interpretation of the)]TJ
+-22.151 -1.426 TD
+0.055 Tw
+(command in)Tj
+/TT8 1 Tf
+5.834 0 TD
+0 Tw
+(cmd)Tj
+/TT4 1 Tf
+2.133 0 TD
+0.0541 Tw
+[(is machine dependent. )-331.9(A newly started processor is assigned to the default processor)]TJ
+-7.967 -1.426 TD
+0.0761 Tw
+[(set. )-353.9(An exited processor is removed from the processor set to which it was assigned and ceases to be)]TJ
+T*
+0 Tw
+(active.)Tj
+/TT2 1 Tf
+12 0 0 12 72 375.73 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 357.01 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The operation was performed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_FAILURE)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.0727 Tw
+[(The operation was not performed.  A likely reason is that it is not supported)]TJ
+0 -1.143 TD
+0 Tw
+(on this processor.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor)Tj
+/TT4 1 Tf
+5.678 0 TD
+(is not a processor.)Tj
+/TT8 1 Tf
+-14.574 -1.626 TD
+(KERN_INVALID_ADDRESS)Tj
+8.896 -1.143 TD
+(data)Tj
+/TT4 1 Tf
+2.678 0 TD
+(points to inaccessible memory.)Tj
+/TT2 1 Tf
+12 0 0 12 72 253.76 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 239.5 Tm
+(processor_info, host_processors)Tj
+/TT2 1 Tf
+12 0 0 12 72 219.64 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 204.65 Tm
+0.0417 Tw
+[(Availability limited.  All of these operations are machine-dependent.  They may do nothing.  The ability)]TJ
+-1.112 -1.426 TD
+0 Tw
+(to restart an exited processor is also machine-dependent.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+48 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+50 0 obj
+<<
+/Length 3577
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(13)Tj
+12 0 0 12 72 711.25 Tm
+(processor_info)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(/* the definition of processor_info_t from mach.h - sys/processor_info.h is */)Tj
+0 -2.062 TD
+[(typedef int )-2400(*processor_info_t; )-3000(/* variable length array of int */)]TJ
+T*
+(/* one interpretation of info is */)Tj
+1.8 -2.062 TD
+(struct processor_basic_info {)Tj
+3 -1.031 TD
+[(cpu_type_t )-3000(cpu_type; )-3600(/* cpu type */)]TJ
+T*
+[(cpu_subtype_t )-1200(cpu_subtype; )-1800(/* cpu subtype */)]TJ
+T*
+[(boolean_t )-3600(running; )-4200(/* is processor running? */)]TJ
+T*
+[(int )-7200(slot_num; )-3600(/* slot number */)]TJ
+T*
+[(boolean_t )-3600(is_master; )-3000(/* is this the master processor */)]TJ
+-3 -1.031 TD
+(};)Tj
+-1.8 -1.031 TD
+[(typedef struct processor_basic_info )-7200(*processor_basic_info_t;)]TJ
+0 -4.124 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(processor_info\(processor, flavor, host, processor_info, processor_infoCnt\))Tj
+4.8 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+T*
+12 Tw
+(int flavor;)Tj
+T*
+10.2 Tw
+(host_t *host;)Tj
+T*
+0 Tw
+[(processor_info_t )-4200(processor_info; /* in and out */)]TJ
+T*
+[(unsigned int )-6600(*processor_infoCnt; )-2400(/* in and out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 403.86 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 385.14 Tm
+(processor)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor for which information is to be obtained)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(flavor)Tj
+/TT4 1 Tf
+8.896 0 TD
+1.1692 Tw
+[(The type of information that is wanted.  Currently only)]TJ
+/TT8 1 Tf
+0 -1.143 TD
+0 Tw
+(PROCESSOR_BASIC_INFO)Tj
+/TT4 1 Tf
+12.278 0 TD
+(is implemented.)Tj
+/TT8 1 Tf
+-21.174 -1.626 TD
+(host)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.1775 Tw
+[(The host on which the processor resides.  This is the non-privileged host)]TJ
+0 -1.143 TD
+0 Tw
+(port.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_info)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Information about the processor specified by)Tj
+/TT8 1 Tf
+19.954 0 TD
+(processor.)Tj
+-28.85 -1.626 TD
+(processor_infoCnt)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.1291 Tw
+(Size of the info structure. Should be)Tj
+/TT8 1 Tf
+17.025 0 TD
+0 Tw
+(PROCESSOR_BASIC_INFO_COUNT)Tj
+/TT4 1 Tf
+16.008 0 TD
+(for)Tj
+-33.033 -1.143 TD
+(flavor)Tj
+/TT8 1 Tf
+2.723 0 TD
+(PROCESSOR_BASIC_INFO.)Tj
+/TT2 1 Tf
+12 0 0 12 72 254.2 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 239.21 Tm
+0.0359 Tw
+(Returns the selected information array for a processor, as specified by)Tj
+/TT8 1 Tf
+31.74 0 TD
+0 Tw
+[(flavor.)-313(processor_info)]TJ
+/TT4 1 Tf
+13.226 0 TD
+(is)Tj
+-46.078 -1.426 TD
+0.6591 Tw
+(an array of integers that is supplied by the caller, and filled with specified information.)Tj
+/TT8 1 Tf
+T*
+0 Tw
+(processor_infoCnt)Tj
+/TT4 1 Tf
+10.5 0 TD
+0.0213 Tw
+(is supplied as the maximum number of integers in)Tj
+/TT8 1 Tf
+22.478 0 TD
+0 Tw
+(processor_info.)Tj
+/TT4 1 Tf
+9.299 0 TD
+0.021 Tw
+(On return,)Tj
+-42.277 -1.426 TD
+0 Tw
+(it contains the actual number of integers in)Tj
+/TT8 1 Tf
+19.065 0 TD
+(processor_info.)Tj
+/TT4 1 Tf
+-17.953 -2.567 TD
+0.0605 Tw
+(Basic information is defined by)Tj
+/TT8 1 Tf
+14.142 0 TD
+0 Tw
+(PROCESSOR_BASIC_INFO.)Tj
+/TT4 1 Tf
+13.278 0 TD
+0.061 Tw
+(The size of this information is defined by)Tj
+/TT8 1 Tf
+-28.532 -1.426 TD
+0 Tw
+(PROCESSOR_BASIC_INFO_COUNT.)Tj
+/TT4 1 Tf
+16.875 0 TD
+0.059 Tw
+(Machines which require more configuration information beyond the)Tj
+-16.875 -1.426 TD
+0 Tw
+(slot number are expected to define additional \(machine-dependent\) flavors.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+51 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+53 0 obj
+<<
+/Length 1303
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(14)Tj
+12 0 0 12 72 711.25 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 692.53 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor)Tj
+/TT4 1 Tf
+5.678 0 TD
+(is not a processor or)Tj
+/TT8 1 Tf
+9.337 0 TD
+(flavor)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is not recognized.)Tj
+/TT8 1 Tf
+-27.789 -1.626 TD
+(MIG_ARRAY_TOO_LARGE)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.0078 Tw
+(Returned info array is too large for)Tj
+/TT8 1 Tf
+15.506 0 TD
+0 Tw
+[(processor_info.)-286(processor_info)]TJ
+/TT4 1 Tf
+17.972 0 TD
+(is)Tj
+-33.478 -1.143 TD
+0.134 Tw
+(filled as much as possible.)Tj
+/TT8 1 Tf
+13.03 0 TD
+0 Tw
+(processor_infoCnt)Tj
+/TT4 1 Tf
+10.611 0 TD
+0.133 Tw
+(is set to the number of)Tj
+-23.641 -1.143 TD
+0 Tw
+(elements that would be returned if there were enough room.)Tj
+/TT2 1 Tf
+12 0 0 12 72 594.11 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 579.12 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 559.26 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 545 Tm
+1.8293 Tw
+(processor_start, processor_exit, processor_control, host_processors)Tj
+-1.112 -1.426 TD
+0 Tw
+(host_info)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+54 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+56 0 obj
+<<
+/Length 2607
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(15)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_create)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t processor_set_create\(host, new_set, new_name\))Tj
+4.8 -1.031 TD
+10.2 Tw
+(host_t host;)Tj
+T*
+4.8 Tw
+(processor_set_t *new_set;)Tj
+T*
+1.8 Tw
+(processor_set_name_t *new_name;)Tj
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(host)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.0858 Tw
+[(The host on which the new set is to be created.  Either the host port or the)]TJ
+0 -1.143 TD
+0 Tw
+(privileged host port may be used.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(new_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Port used for performing operations on the new set.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(new_name)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Port used to identify the new set and obtain information about it.)Tj
+/TT2 1 Tf
+12 0 0 12 72 527.21 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 512.22 Tm
+(processor_set_create)Tj
+/TT4 1 Tf
+12.385 0 TD
+0.1074 Tw
+(creates a new processor set and returns the two ports associated with it.)Tj
+-13.497 -1.426 TD
+0.122 Tw
+(The port returned in)Tj
+/TT8 1 Tf
+9.548 0 TD
+0 Tw
+(new_set)Tj
+/TT4 1 Tf
+4.6 0 TD
+0.1216 Tw
+[(is the actual port representing the set.  It is used to perform operations)]TJ
+-14.148 -1.426 TD
+0.0181 Tw
+[(such as assigning processors, tasks, or threads.  The port returned in)]TJ
+/TT8 1 Tf
+31.177 0 TD
+0 Tw
+(new_name)Tj
+/TT4 1 Tf
+5.097 0 TD
+0.019 Tw
+(identifies the set, and is)Tj
+-36.274 -1.426 TD
+0 Tw
+(used to obtain information about the set.)Tj
+/TT2 1 Tf
+12 0 0 12 72 449.58 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 430.86 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(host)Tj
+/TT4 1 Tf
+2.678 0 TD
+(was not a host.)Tj
+/TT8 1 Tf
+-11.574 -1.626 TD
+(KERN_INVALID_ADDRESS)Tj
+8.896 -1.143 TD
+(new_set)Tj
+/TT4 1 Tf
+4.478 0 TD
+(and/or)Tj
+/TT8 1 Tf
+3.113 0 TD
+(new_name)Tj
+/TT4 1 Tf
+5.078 0 TD
+(point to inaccessible memory.)Tj
+/TT8 1 Tf
+-21.565 -1.626 TD
+(KERN_FAILURE)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The operating system does not support processor allocation.)Tj
+/TT2 1 Tf
+12 0 0 12 72 339.04 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 324.05 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 304.19 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 289.93 Tm
+0.6293 Tw
+(processor_set_destroy, processor_set_info, processor_assign, task_assign,)Tj
+-1.112 -1.426 TD
+0 Tw
+(thread_assign)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+57 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+59 0 obj
+<<
+/Length 1640
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(16)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_default)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t processor_set_default\(host, default_set\);)Tj
+4.8 -1.031 TD
+10.2 Tw
+(host_t host;)Tj
+T*
+4.8 Tw
+(processor_set_t *default_set;)Tj
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(host)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.0476 Tw
+[(Specifies the host whose default processor set is requested.  Either the host)]TJ
+0 -1.143 TD
+0 Tw
+(port or the privileged host port may be used.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(default_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Returns the name port for the default processor set.)Tj
+/TT2 1 Tf
+12 0 0 12 72 543.47 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 528.48 Tm
+0.0486 Tw
+(The default processor set is used by all threads, tasks, and processors that are not explicitly assigned)Tj
+-1.112 -1.426 TD
+0.019 Tw
+(to other sets.)Tj
+/TT8 1 Tf
+6.116 0 TD
+0 Tw
+(processor_set_default)Tj
+/TT4 1 Tf
+12.897 0 TD
+0.0196 Tw
+(returns a port that can be used to obtain information about this)Tj
+-19.013 -1.426 TD
+0.0818 Tw
+[(set \(e.g. how many threads are assigned to it\).  This port cannot be used to perform operations on that)]TJ
+T*
+0 Tw
+(set.)Tj
+/TT2 1 Tf
+12 0 0 12 72 465.84 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 450.85 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 430.99 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 416.73 Tm
+(processor_set_info, thread_assign, task_assign)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+60 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+62 0 obj
+<<
+/Length 1730
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(17)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_destroy)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t processor_set_destroy\(processor_set\))Tj
+4.8 -1.031 TD
+4.8 Tw
+(processor_set_t processor_set;)Tj
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Specifies the processor_set to be exited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 571.16 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 556.17 Tm
+0.1152 Tw
+[(Destroys the specified processor set.  Any assigned processors, tasks, or threads are reassigned to)]TJ
+-1.112 -1.426 TD
+0.2134 Tw
+[(the default set.  The object port for the processor set is required \(not the name port\).  The default)]TJ
+T*
+0 Tw
+(processor set cannot be destroyed.)Tj
+/TT2 1 Tf
+12 0 0 12 72 507.79 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 489.07 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The set was destroyed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_FAILURE)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.0893 Tw
+(An attempt was made to destroy the default processor set, or the operating)Tj
+0 -1.143 TD
+0 Tw
+(system does not support processor allocation.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.078 0 TD
+(is not a processor set.)Tj
+/TT2 1 Tf
+12 0 0 12 72 413.51 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 398.52 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 378.66 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 364.4 Tm
+(processor_set_create, processor_assign, task_assign, thread_assign)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+63 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+65 0 obj
+<<
+/Length 3057
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(18)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_info)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(/* the definition of processor_set_info_ from mach/processor_info.h  */)Tj
+0 -2.062 TD
+[(typedef int )-2400(*processor_set_info_t; )-600(/* variable length array of int */)]TJ
+T*
+(/* one interpretation of info is */)Tj
+1.8 -2.062 TD
+(struct processor_set_basic_info {)Tj
+3 -1.031 TD
+[(int )-7200(processor_count; )-4200(/* number of processors */)]TJ
+T*
+[(int )-7200(task_count; )-7200(/* number of tasks */)]TJ
+T*
+[(int )-7200(thread_count; )-6000(/* number of threads */)]TJ
+T*
+[(int )-7200(load_average; )-6000(/* scaled load average */)]TJ
+T*
+[(int )-7200(mach_factor; )-6600(/* scaled mach factor */)]TJ
+-3 -1.031 TD
+(};)Tj
+-1.8 -1.031 TD
+[(typedef struct processor_set_basic_info )-4800(*processor_set_basic_info_t;)]TJ
+0 -2.062 TD
+(/* another interpretation of info is */)Tj
+T*
+(struct processor_set_sched_info {)Tj
+4.8 -1.031 TD
+[(int )-7200(policies; )-3600(/* allowed policies */)]TJ
+T*
+[(int )-7200(max_priority; )-1200(/* max priority for new threads */)]TJ
+-4.8 -1.031 TD
+(};)Tj
+0 -2.062 TD
+(typedef struct processor_set_sched_info *processor_set_sched_info_t;)Tj
+0 -3.093 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(processor_set_info\(processor_set, flavor, host, processor_set_info,)Tj
+2.4 -1.031 TD
+(processor_set_infoCnt\))Tj
+2.4 -1.031 TD
+1.8 Tw
+(processor_set_name_t processor_set;)Tj
+T*
+12 Tw
+(int flavor;)Tj
+T*
+10.2 Tw
+(host_t *host;)Tj
+T*
+0 Tw
+[(processor_set_info_t )-1800(processor_set_info; )-2400(/* in and out */)]TJ
+T*
+[(unsigned int )-6600(*processor_set_infoCnt; /* in and out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 300.76 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 282.04 Tm
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.335 Tw
+[(The processor_set for which information is to be obtained.  Either the)]TJ
+0 -1.143 TD
+0 Tw
+(processor set name port or the processor set control port may be used.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(flavor)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The type of information that is wanted.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(host)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.0399 Tw
+[(The host on which the processor set resides.  This is the non-privileged host)]TJ
+0 -1.143 TD
+0 Tw
+(port.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_set_info)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+(Information about the processor set specified by)Tj
+/TT8 1 Tf
+21.566 0 TD
+(processor_set.)Tj
+-30.462 -1.626 TD
+(processor_set_infoCnt)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.0113 Tw
+(Size of the info structure. Should be)Tj
+/TT8 1 Tf
+16.2 0 TD
+0 Tw
+(PROCESSOR_SET_BASIC_INFO_COUNT)Tj
+/TT4 1 Tf
+-16.2 -1.143 TD
+3.283 Tw
+(for flavor)Tj
+/TT8 1 Tf
+10.734 0 TD
+0 Tw
+(PROCESSOR_SET_BASIC_INFO)Tj
+/TT4 1 Tf
+17.96 0 TD
+3.282 Tw
+(, and)Tj
+/TT8 1 Tf
+-28.694 -1.143 TD
+0 Tw
+(PROCESSOR_SET_SCHED_INFO_COUNT)Tj
+/TT4 1 Tf
+24.294 0 TD
+6.016 Tw
+(for flavor)Tj
+/TT8 1 Tf
+-24.294 -1.143 TD
+0 Tw
+(PROCESSOR_SET_SCHED_INFO.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+66 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+68 0 obj
+<<
+/Length 3223
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(19)Tj
+12 0 0 12 72 711.25 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 696.26 Tm
+0.7502 Tw
+(Returns the selected information array for a processor_set, as specified by)Tj
+/TT8 1 Tf
+41.488 0 TD
+0 Tw
+(flavor.)Tj
+-42.6 -1.426 TD
+(processor_set_info)Tj
+/TT4 1 Tf
+11.254 0 TD
+0.1768 Tw
+(is an array of integers that is supplied by the caller, and filled with specified)Tj
+-11.254 -1.426 TD
+0 Tw
+(information.)Tj
+/TT8 1 Tf
+6.896 0 TD
+(processor_set_infoCnt)Tj
+/TT4 1 Tf
+13.436 0 TD
+0.5575 Tw
+(is supplied as the maximum number of integers in)Tj
+/TT8 1 Tf
+-20.332 -1.426 TD
+0 Tw
+(processor_set_info.)Tj
+/TT4 1 Tf
+12.833 0 TD
+1.1555 Tw
+(On return, it contains the actual number of integers in)Tj
+/TT8 1 Tf
+-12.833 -1.426 TD
+0 Tw
+(processor_set_info.)Tj
+/TT4 1 Tf
+1.112 -2.567 TD
+0.279 Tw
+(Basic information is defined by)Tj
+/TT8 1 Tf
+15.234 0 TD
+0 Tw
+(PROCESSOR_SET_BASIC_INFO.)Tj
+/TT4 1 Tf
+16.114 0 TD
+0.2782 Tw
+(The size of this information is)Tj
+-32.46 -1.426 TD
+0 Tw
+(defined by)Tj
+/TT8 1 Tf
+4.892 0 TD
+(PROCESSOR_SET_BASIC_INFO_COUNT.)Tj
+/TT4 1 Tf
+18.878 0 TD
+(The)Tj
+/TT8 1 Tf
+2.001 0 TD
+(load_average)Tj
+/TT4 1 Tf
+7.479 0 TD
+(and)Tj
+/TT8 1 Tf
+1.947 0 TD
+(mach_factor)Tj
+/TT4 1 Tf
+6.879 0 TD
+(arguments)Tj
+-42.076 -1.426 TD
+0.07 Tw
+(are scaled by the constant)Tj
+/TT8 1 Tf
+12.301 0 TD
+0 Tw
+(LOAD_SCALE)Tj
+/TT4 1 Tf
+6.348 0 TD
+0.0694 Tw
+(\(i.e. the integer value returned is the actual value multiplied by)Tj
+/TT8 1 Tf
+-18.649 -1.426 TD
+0 Tw
+(LOAD_SCALE.)Tj
+/TT4 1 Tf
+1.112 -2.567 TD
+0.07 Tw
+(Scheduling information is defined by)Tj
+/TT8 1 Tf
+16.691 0 TD
+0 Tw
+(PROCESSOR_SET_SCHED_INFO.)Tj
+/TT4 1 Tf
+15.696 0 TD
+0.0704 Tw
+(The size of this information is)Tj
+-33.499 -1.426 TD
+0.274 Tw
+(given by)Tj
+/TT8 1 Tf
+4.55 0 TD
+0 Tw
+(PROCESSOR_SET_SCHED_INFO_COUNT.)Tj
+/TT4 1 Tf
+19.704 0 TD
+0.273 Tw
+(Some machines may define machine-dependent)Tj
+-24.254 -1.426 TD
+0 Tw
+(information flavors.)Tj
+/TT2 1 Tf
+12 0 0 12 72 496.72 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 478 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.078 0 TD
+(is not a processor set or)Tj
+/TT8 1 Tf
+10.949 0 TD
+(flavor)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is not recognized.)Tj
+/TT8 1 Tf
+-31.801 -1.626 TD
+(MIG_ARRAY_TOO_LARGE)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+1.0498 Tw
+(Returned info array is too large for)Tj
+/TT8 1 Tf
+22.8 0 TD
+0 Tw
+(processor_set_info.)Tj
+-22.8 -1.143 TD
+(processor_set_info)Tj
+/TT4 1 Tf
+12.82 0 TD
+1.7418 Tw
+(is filled as much as possible.)Tj
+/TT8 1 Tf
+-12.82 -1.143 TD
+0 Tw
+(processor_set_infoCnt)Tj
+/TT4 1 Tf
+12.964 0 TD
+0.0867 Tw
+(is set to the number of elements that would be)Tj
+-12.964 -1.143 TD
+0 Tw
+(returned if there were enough room.)Tj
+/TT2 1 Tf
+12 0 0 12 72 368.15 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 353.16 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 333.3 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 319.04 Tm
+0.337 Tw
+[(processor_set_create, processor_set_default, processor_assign, )323(task_assign,)]TJ
+-1.112 -1.426 TD
+0 Tw
+(thread_assign)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+69 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+71 0 obj
+<<
+/Length 2137
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(20)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_tasks)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t processor_set_tasks\(processor_set, task_list, task_count\))Tj
+4.8 -1.031 TD
+(processor_set_t processor_set;)Tj
+T*
+[(task_array_t )-1800(*task_list; )-2400(/* out, ptr to array */)]TJ
+T*
+[(int )-7200(*task_count; )-1800(/* out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor_set to be affected.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(task_list)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.389 Tw
+(The set of tasks currently assigned to)Tj
+/TT8 1 Tf
+19.564 0 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+7.8013 0 TD
+0.389 Tw
+(; no particular)Tj
+-27.3653 -1.143 TD
+0 Tw
+(ordering is guaranteed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(task_count)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The number of tasks in the)Tj
+/TT8 1 Tf
+12.117 0 TD
+(task_list.)Tj
+/TT2 1 Tf
+12 0 0 12 72 527.21 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 512.22 Tm
+(processor_set_tasks)Tj
+/TT4 1 Tf
+11.96 0 TD
+0.2816 Tw
+(gets send rights to the kernel port for each task currently assigned to)Tj
+/TT8 1 Tf
+-13.072 -1.426 TD
+0 Tw
+[(processor_set.)-339(task_list)]TJ
+/TT4 1 Tf
+14.478 0 TD
+0.061 Tw
+(is an array that is created as a result of this call. The caller may wish to)Tj
+/TT8 1 Tf
+-14.478 -1.426 TD
+0 Tw
+(vm_deallocate)Tj
+/TT4 1 Tf
+8.078 0 TD
+(this array when the data is no longer needed.)Tj
+/TT2 1 Tf
+12 0 0 12 72 463.84 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 445.12 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.078 0 TD
+(is not a processor_set.)Tj
+/TT2 1 Tf
+12 0 0 12 72 397.25 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 382.26 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 362.4 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 348.14 Tm
+(task_assign, thread_assign, processor_set_threads)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+72 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+75 0 obj
+<<
+/Length 2230
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(21)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_threads)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t processor_set_threads\(processor_set, thread_list, thread_count\))Tj
+4.8 -1.031 TD
+(processor_set_t processor_set;)Tj
+T*
+[(thread_array_t )-600(*thread_list; )-1200(/* out, ptr to array */)]TJ
+T*
+[(int )-7200(*thread_count; )-600(/* out */)]TJ
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor_set to be affected.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(thread_list)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.2776 Tw
+(The set of threads currently assigned to)Tj
+/TT8 1 Tf
+19.786 0 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+7.8013 0 TD
+0.278 Tw
+(; no particular)Tj
+-27.5873 -1.143 TD
+0 Tw
+(ordering is guaranteed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(thread_count)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The number of threads in the)Tj
+/TT8 1 Tf
+13.118 0 TD
+(thread_list.)Tj
+/TT2 1 Tf
+12 0 0 12 72 527.21 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 512.22 Tm
+(processor_set_threads)Tj
+/TT4 1 Tf
+12.991 0 TD
+0.1123 Tw
+(gets send rights to the kernel port for each thread currently assigned to)Tj
+/TT8 1 Tf
+-14.103 -1.426 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+7.8013 0 TD
+(.)Tj
+/TT8 1 Tf
+0.9487 0 TD
+(thread_list)Tj
+/TT4 1 Tf
+6.936 0 TD
+0.0587 Tw
+(is an array that is created as a result of this call. The caller may wish)Tj
+-15.686 -1.426 TD
+0 Tw
+(to)Tj
+/TT8 1 Tf
+1.112 0 TD
+(vm_deallocate)Tj
+/TT4 1 Tf
+8.078 0 TD
+(this array when the data is no longer needed.)Tj
+/TT2 1 Tf
+12 0 0 12 72 463.84 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 445.12 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.078 0 TD
+(is not a processor_set.)Tj
+/TT2 1 Tf
+12 0 0 12 72 397.25 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 382.26 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 362.4 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 348.14 Tm
+(thread_assign, thread_assign, processor_set_threads)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+76 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+78 0 obj
+<<
+/Length 3521
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(22)Tj
+12 0 0 12 72 711.25 Tm
+(task_assign)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(task_assign\(task, processor_set, assign_threads\))Tj
+4.8 -1.031 TD
+(task_t task;)Tj
+T*
+(processor_set_t processor_set;)Tj
+T*
+3.6 Tw
+(boolean_t assign_threads;)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t)Tj
+0 -1.031 TD
+(task_assign_default\(task, assign_threads\))Tj
+4.8 -1.031 TD
+5.4 Tw
+(task_t task;)Tj
+T*
+3.6 Tw
+(boolean_t assign_threads;)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t)Tj
+0 -1.031 TD
+(task_get_assignment\(task, processor_set\))Tj
+4.8 -1.031 TD
+5.4 Tw
+(task_t task;)Tj
+T*
+1.8 Tw
+(processor_set_name_t *processor_set;)Tj
+/TT2 1 Tf
+12 0 0 12 72 487.49 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 468.77 Tm
+(task)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The task to be affected.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor set to assign it to, or the processor set to which it is assigned.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(assign_threads)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.0406 Tw
+(Boolean indicating whether this assignment applies to existing threads in the)Tj
+0 -1.143 TD
+0 Tw
+(task.)Tj
+/TT2 1 Tf
+12 0 0 12 72 404.64 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 389.65 Tm
+(task_assign)Tj
+/TT4 1 Tf
+6.997 0 TD
+(assigns)Tj
+/TT8 1 Tf
+3.787 0 TD
+(task)Tj
+/TT4 1 Tf
+2.797 0 TD
+0.119 Tw
+(the the set)Tj
+/TT8 1 Tf
+5.305 0 TD
+0 Tw
+(processor_set.)Tj
+/TT4 1 Tf
+9.194 0 TD
+0.1186 Tw
+(This assignment is for the purposes of)Tj
+-29.192 -1.426 TD
+0.0072 Tw
+(determining the initial assignment of newly created threads in)Tj
+/TT8 1 Tf
+27.411 0 TD
+0 Tw
+(task.)Tj
+/TT4 1 Tf
+3.286 0 TD
+0.008 Tw
+(Any previous assignment of the task)Tj
+-30.697 -1.426 TD
+0.036 Tw
+[(is nullified.  Existing threads within the task are also reassigned if)]TJ
+/TT8 1 Tf
+29.444 0 TD
+0 Tw
+(assign_threads)Tj
+/TT4 1 Tf
+8.714 0 TD
+0.035 Tw
+[(is TRUE.  They are)]TJ
+-38.158 -1.426 TD
+0 Tw
+(not affected if it is FALSE.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(task_assign_default)Tj
+/TT4 1 Tf
+11.759 0 TD
+0.0813 Tw
+(is a variant of)Tj
+/TT8 1 Tf
+6.551 0 TD
+0 Tw
+(task_assign)Tj
+/TT4 1 Tf
+6.96 0 TD
+0.082 Tw
+(that assigns the task to the default processor)Tj
+-26.382 -1.426 TD
+0.2007 Tw
+[(set on that taskís host.  This variant exists because the control port for the default processor set is)]TJ
+T*
+0 Tw
+(privileged and not ususally available to users.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(task_get_assignment)Tj
+/TT4 1 Tf
+11.678 0 TD
+(returns the current assignment of the task.)Tj
+/TT2 1 Tf
+12 0 0 12 72 247.15 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 228.43 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The assignment has been performed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(task)Tj
+/TT4 1 Tf
+2.742 0 TD
+0.0635 Tw
+(is not a task, or)Tj
+/TT8 1 Tf
+7.376 0 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+8.141 0 TD
+0.063 Tw
+(is not a processor_set on the same)Tj
+-18.259 -1.143 TD
+0 Tw
+(host as)Tj
+/TT8 1 Tf
+3.502 0 TD
+(task)Tj
+/TT4 1 Tf
+2.4004 0 TD
+(.)Tj
+/TT2 1 Tf
+12 0 0 12 72 169.13 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 154.14 Tm
+(Availability limited)Tj
+/TT2 1 Tf
+12 0 0 12 72 134.28 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 119.29 Tm
+0.5366 Tw
+(processor_set_create, processor_set_info, processor_assign, thread_assign)Tj
+/TT4 1 Tf
+45.4171 0 TD
+0 Tw
+(,)Tj
+/TT8 1 Tf
+-46.5291 -1.426 TD
+(host_processor_set_priv)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+79 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+81 0 obj
+<<
+/Length 3408
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(23)Tj
+12 0 0 12 72 711.25 Tm
+(thread_assign)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t thread_assign\(thread, processor_set\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+-4.8 -2.52 TD
+(kern_return_t thread_assign_default\(thread\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t thread_get_assignment\(thread, processor_set\))Tj
+4.8 -1.031 TD
+9 Tw
+(thread_t thread;)Tj
+T*
+1.8 Tw
+(processor_set_name_t *processor_set;)Tj
+/TT2 1 Tf
+12 0 0 12 72 528.73 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 510.01 Tm
+(thread)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The thread to be assigned.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor set to assign it to.)Tj
+/TT2 1 Tf
+12 0 0 12 72 473.57 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 458.58 Tm
+(thread_assign)Tj
+/TT4 1 Tf
+8.147 0 TD
+(assigns)Tj
+/TT8 1 Tf
+3.737 0 TD
+(thread)Tj
+/TT4 1 Tf
+3.947 0 TD
+0.0685 Tw
+(the the set)Tj
+/TT8 1 Tf
+5.153 0 TD
+0 Tw
+(processor_set.)Tj
+/TT4 1 Tf
+9.092 0 TD
+0.068 Tw
+(After the assignment is completed,)Tj
+-31.188 -1.426 TD
+0.0815 Tw
+[(the thread only executes on processors assigned to the designated processor set.  If there are no such)]TJ
+T*
+0.0001 Tc
+0.0029 Tw
+(processors, then the thread is unable to execute.  Any previous assignment of the thread is nullified.  Unix)Tj
+T*
+0 Tc
+0 Tw
+(system call compatibility code may temporarily force threads to execute on the master processor.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(thread_assign_default)Tj
+/TT4 1 Tf
+13.072 0 TD
+0.194 Tw
+(is a variant of)Tj
+/TT8 1 Tf
+7.001 0 TD
+0 Tw
+(thread_assign)Tj
+/TT4 1 Tf
+8.272 0 TD
+0.1943 Tw
+(that assigns the thread to the default)Tj
+-29.457 -1.426 TD
+0.0458 Tw
+[(processor set.  This variant exists because the control port for the default processor set is privileged and)]TJ
+T*
+0 Tw
+(therefore not available to most users.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(thread_get_assignment)Tj
+/TT4 1 Tf
+13.058 0 TD
+0.181 Tw
+(returns the name of the processor set to which the thread is currently)Tj
+-14.17 -1.426 TD
+0 Tw
+[(assigned. )-278(This port can only be used to obtain information about the processor set.)]TJ
+/TT2 1 Tf
+12 0 0 12 72 301.82 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 283.1 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The assignment has been performed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(thread)Tj
+/TT4 1 Tf
+3.99 0 TD
+0.112 Tw
+(is not a thread, or)Tj
+/TT8 1 Tf
+8.62 0 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+8.19 0 TD
+0.112 Tw
+(is not a processor_set on the)Tj
+-20.8 -1.143 TD
+0 Tw
+(same host as)Tj
+/TT8 1 Tf
+6.225 0 TD
+(thread.)Tj
+-15.121 -1.626 TD
+(KERN_INVALID_ADDRESS)Tj
+8.896 -1.143 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.411 0 TD
+0.3337 Tw
+(points to inaccessible memory \(thread_get_assignment)Tj
+-8.411 -1.143 TD
+0 Tw
+(only\).)Tj
+/TT2 1 Tf
+12 0 0 12 72 184.68 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 169.69 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 149.83 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 134.84 Tm
+0.9366 Tw
+(processor_set_create, processor_set_info, processor_assign, task_assign)Tj
+/TT4 1 Tf
+45.4169 0 TD
+0 Tw
+(,)Tj
+/TT8 1 Tf
+-46.5289 -1.426 TD
+(host_processor_set_priv)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+82 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+84 0 obj
+<<
+/Length 4299
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(24)Tj
+12 0 0 12 72 711.25 Tm
+(2. Scheduling primitives)Tj
+11 0 0 11 72 674.43 Tm
+(2.1. Introduction)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 660.17 Tm
+(This section of the manual describes primitives that control three aspects of thread scheduling.)Tj
+1.112 -1.872 TD
+(1.)Tj
+/TT2 1 Tf
+1.112 0 TD
+(Priority)Tj
+/TT4 1 Tf
+3.83 0 TD
+0.0515 Tw
+[(- These primitives export priorities for individual threads.  The notion of scheduling)]TJ
+-3.83 -1.143 TD
+0 Tw
+(policies is introduced, along with support for fixed-priority threads.  threads.)Tj
+-1.112 -1.715 TD
+(2.)Tj
+/TT2 1 Tf
+1.112 0 TD
+(Handoff)Tj
+/TT4 1 Tf
+4.055 0 TD
+(- Handoff Scheduling \(specify thread to run next\) and related mechanisms.)Tj
+-5.167 -1.715 TD
+(3.)Tj
+/TT2 1 Tf
+1.112 0 TD
+(Wiring)Tj
+/TT4 1 Tf
+3.389 0 TD
+(- Lock data and threads into memory to prevent paging and swapping.)Tj
+-5.613 -2.567 TD
+0.3296 Tw
+(The priority primitives are connected with the processor set managment primitives and rely on)Tj
+-1.112 -1.426 TD
+0.0392 Tw
+[(presentation of processor set control ports to enforce protection.  The overriding model is that a task that)]TJ
+T*
+0.304 Tw
+(has rights to a processor set control port may exercise complete control over scheduling on that)Tj
+T*
+0 Tw
+(processor set.)Tj
+/TT2 1 Tf
+11 0 0 11 72 490.45 Tm
+(2.2. Priority)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 476.19 Tm
+(The priority primitives:)Tj
+1.112 -1.872 TD
+[(1.)-278(Export priorities for individual threads to users.)]TJ
+0 -1.715 TD
+[(2.)-278(Support fixed priorities for real-time and other uses.)]TJ
+T*
+[(3.)-278(Produce a clean interface for users as well as kernel clients.)]TJ
+-2.224 -1.872 TD
+0.0976 Tw
+[(Threads have both a priority and a maximum priority:  priority cannot exceed maximum priority, but the)]TJ
+0 -1.426 TD
+0.0223 Tw
+[(maximum priority can be reset by presenting the appropriate processor_set object port.  Since the default)]TJ
+T*
+0.1744 Tw
+(processor setís object port is privileged, ordinary users who do not do their own processor allocation)Tj
+T*
+0.2227 Tw
+(cannot raise thread priorities above their initial maximum. Initial priority is inherited from the task at)Tj
+T*
+0.0165 Tw
+(creation \(of both threads and tasks\), and the initial maximum priority is inherited from the processor set at)Tj
+T*
+0 Tw
+(thread creation.)Tj
+1.112 -2.567 TD
+0.073 Tw
+(Scheduling policy can be set on a per thread basis; the current implementation has two policies, time)Tj
+-1.112 -1.426 TD
+0.0988 Tw
+[(sharing and fixed priority.  For fixed priority, a quantum can be specified \(again on a per thread basis\);)]TJ
+T*
+0.0146 Tw
+[(this is the quantum that the thread will receive before being eligible for preemption at the same priority.  A)]TJ
+T*
+0 Tw
+(processor set may forbid scheduling policies other than time sharing.)Tj
+1.112 -2.567 TD
+0.0854 Tw
+(The ranges of priority correspond to scheduler internals, but Unix interfaces will continue to deal with)Tj
+-1.112 -1.426 TD
+0.0526 Tw
+[(Unix priorities.  Two notions of priority are supported; a base priority and a scheduled priority.  The base)]TJ
+T*
+0.0234 Tw
+(priority ranges from 0 to 31 and is the priority assigned to the thread by the user or user-mode scheduler.)Tj
+T*
+0.0125 Tw
+(The scheduled priority also has the same range; it is identical to the base priority for fixed priority threads,)Tj
+T*
+0.0341 Tw
+[(but for timesharing threads it is the base priority plus some increment derived from usage.  In both cases)]TJ
+T*
+0.0905 Tw
+[(low numbers are the highest priorities.  The traditional Unix priority \(range 0-127\) can be obtained from)]TJ
+T*
+0 Tw
+(these numbers \(range 0-31\) by multiplying by 4.)Tj
+1.112 -2.567 TD
+0.1947 Tw
+(Preemption normally occurs when a thread becomes runnable at a higher priority than a currently)Tj
+-1.112 -1.426 TD
+0.0306 Tw
+[(running thread and there are no idle processors in the processor set. )-308.4(It may take as long as a \(machine-)]TJ
+T*
+0.325 Tw
+(dependent\) clock interrupt period for a multiprocessor kernel to notice that preemption is needed)Tj
+T*
+0.0592 Tw
+[(\(interprocessor interrupts are not used for preemption events\).  There is one major exception to this rule)]TJ
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+85 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+87 0 obj
+<<
+/Length 4690
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(25)Tj
+/TT4 1 Tf
+-22.844 -3.6 TD
+0.0001 Tw
+(that delays preemption of time-sharing threads.  The reason for this is that time-sharing threads have their)Tj
+0 -1.426 TD
+0.0385 Tw
+(priority recalculated as they run; if these new priorities were always put into effect immediately, the result)Tj
+T*
+0.1839 Tw
+[(would be additional \(unneeded\) context switches.  To avoid this, running timesharing threads usually)]TJ
+T*
+0.0065 Tw
+(delay preemption due to this priority recalculation until the end of their current quantum \(typically 1/10 of a)Tj
+T*
+0 Tw
+(second\).)Tj
+1.112 -2.567 TD
+0.2373 Tw
+[(The policy for threads defaults to time sharing in the absence of explicit specification.  Similarly,)]TJ
+-1.112 -1.426 TD
+0 Tw
+(processor sets default to only allowing time sharing.)Tj
+1.112 -2.567 TD
+0.1781 Tw
+(I/O drivers may prioritize requests placed by fixed priority threads according to the priorities of the)Tj
+-1.112 -1.426 TD
+0.02 Tw
+[(threads; this behavior is machine-dependent.  Any such prioritizing applies only to I/O explicitly requested)]TJ
+T*
+0.0525 Tw
+(by a fixed priority thread; implicit I/O \(e.g. that requested by an external memory manager on behalf of a)Tj
+T*
+0.1438 Tw
+(thread\) will only be prioritized according to the thread that actually requested it \(e.g. the thread in the)Tj
+T*
+0.101 Tw
+[(external memory manager\).  As a result, systems that care about the priority of implicitly requested I/O)]TJ
+T*
+0.0786 Tw
+[(should provide their own external memory managers to perform that I/O.  The notion of priority may not)]TJ
+T*
+0 Tw
+(be meaningful to some potential future policies \(e.g. round-robin\).)Tj
+1.112 -2.567 TD
+0.0112 Tw
+(The timesharing policy must be allowed to simplify the semantics and implementation of the thread and)Tj
+-1.112 -1.426 TD
+0.1355 Tw
+[(task assign operations.  Assignment of a thread whose policy is forbidden by the target processor set)]TJ
+T*
+0.0871 Tw
+(succeeds, but its policy is reset to timesharing; the policy for newly created threads similarly defaults to)Tj
+T*
+0.1863 Tw
+[(timesharing. )-463.7(This avoids the need to introduce a notion of default policy for processor sets and the)]TJ
+T*
+0.0277 Tw
+(additional logic needed to make sure the default policy is permitted and at least one policy is permitted at)Tj
+T*
+0.0279 Tw
+[(all times. )-306.1(Timesharing can still be avoided on user-created and managed processor sets by resetting the)]TJ
+T*
+0 Tw
+(threadís policy after creation or assignment; a real-time scheduler will surely want to do this in any case.)Tj
+1.112 -2.567 TD
+0.1298 Tw
+(When a thread is assigned to a processor set, its priorities \(both actual and max\) will be reduced if)Tj
+-1.112 -1.426 TD
+0.1175 Tw
+[(either is above the target setís maximum priority. )-396.5(In addition its scheduling policy will be reset to time)]TJ
+T*
+0.0897 Tw
+[(sharing if the target processor set does not permit its current policy.  Default values of priority and max)]TJ
+T*
+0 Tw
+(priority are 12 for historical reasons.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(processor_set_max_priority)Tj
+/TT4 1 Tf
+16.087 0 TD
+0.209 Tw
+(may be used as a boot-time mechanism to clear out high-level)Tj
+-17.199 -1.426 TD
+0.1671 Tw
+(priorities for a real-time subsystem by indicating the max_priority for time sharing threads and setting)Tj
+T*
+0 Tw
+(change_threads to TRUE.)Tj
+/TT2 1 Tf
+11 0 0 11 72 233.82 Tm
+(2.3. Handoff Scheduling)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 219.56 Tm
+0.1427 Tw
+(Handoff scheduling refers to the technique of transferring the processor from one thread to another)Tj
+-1.112 -1.426 TD
+0.2299 Tw
+[(with as little operating system involvement as possible.  The kernel already uses this technique for)]TJ
+T*
+0.1833 Tw
+(message operations. The primitive)Tj
+/TT8 1 Tf
+16.295 0 TD
+0 Tw
+(thread_switch)Tj
+/TT4 1 Tf
+8.262 0 TD
+0.184 Tw
+(makes it and related operations available to the)Tj
+-24.557 -1.426 TD
+0.1423 Tw
+[(user. )-421.7(These primitives allow the user to take advantage of knowledge about which threads should or)]TJ
+T*
+0.0278 Tw
+(should not be run to influence operating system scheduling decisions without requiring the user to write a)Tj
+T*
+0 Tw
+(complete scheduler.)Tj
+1.112 -2.567 TD
+0.0357 Tw
+(This call is independent of the priority manipulation calls; they are motivated by situations encountered)Tj
+-1.112 -1.426 TD
+0.117 Tw
+(in doing locking on multiprogrammed systems.)Tj
+/TT8 1 Tf
+21.937 0 TD
+0 Tw
+(thread_switch)Tj
+/TT4 1 Tf
+8.195 0 TD
+0.1178 Tw
+(is a trap that operates on the thread)Tj
+-30.132 -1.426 TD
+0 Tw
+(that invokes it.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+88 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+90 0 obj
+<<
+/Length 4777
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(26)Tj
+/TT4 1 Tf
+-21.732 -3.6 TD
+(Two options to)Tj
+/TT8 1 Tf
+6.781 0 TD
+(thread_switch)Tj
+/TT4 1 Tf
+8.078 0 TD
+(are supported:)Tj
+-13.747 -1.872 TD
+(1.)Tj
+/TT2 1 Tf
+1.112 0 TD
+(WAIT)Tj
+/TT4 1 Tf
+2.917 0 TD
+0.0833 Tw
+(- option_time is a time period during which the current thread should be suspended)Tj
+-2.917 -1.143 TD
+0.064 Tw
+[(internally. )-342(An internal mechanism will be used that cannot be released by thread_resume;)]TJ
+T*
+0.0369 Tw
+(thread_abort must be used to abort this wait. This option is designed for situations in which)Tj
+T*
+0 Tw
+(there is a significant minimum time for which the thread should be blocked.)Tj
+-1.112 -1.715 TD
+(2.)Tj
+/TT2 1 Tf
+1.112 0 TD
+(DEPRESS)Tj
+/TT4 1 Tf
+5.159 0 TD
+0.102 Tw
+(- option_time is a time_period during which the current threadís priority should)Tj
+-5.159 -1.143 TD
+0.0034 Tw
+[(be reduced to the lowest possible value. )-280.6(Priority is restored by expiration of the timeout, the)]TJ
+T*
+0.085 Tw
+(scheduler choosing to run the thread again, or a call to)Tj
+/TT8 1 Tf
+25.337 0 TD
+0 Tw
+(thread_abort)Tj
+/TT4 1 Tf
+7.2012 0 TD
+0.448 Tw
+[(. Experience )363(with)]TJ
+-32.5382 -1.143 TD
+0.2734 Tw
+(parallel applications at CMU indicates that a primitive that only context switches \(and)Tj
+T*
+0.0372 Tw
+(implicitly surrenders the remainder of the quantum\) is not sufficient; two threads performing)Tj
+T*
+0.2046 Tw
+[(this operation can hog the processor to the exclusion of threads that should run.  It is)]TJ
+T*
+0.0588 Tw
+(necessary to severely depress the priority of the threads that should not be run so that the)Tj
+T*
+0.1535 Tw
+(other threads will be run even if their priority is below that of the waiting threads due to)Tj
+T*
+0.081 Tw
+[(actions of the timesharing scheduler.  The advantage of using depression over blocking is)]TJ
+T*
+0.1425 Tw
+(that an explicit unblock operation is not needed to resume the thread before the timeout)Tj
+T*
+0.1574 Tw
+[(expires. )-434.6(Implementors should be warned that large number of threads spinning through)]TJ
+T*
+0.4613 Tw
+(thread_switch or thread_switch with the DEPRESS option can effectively thrash a)Tj
+T*
+0 Tw
+(multiprocessor scheduler.)Tj
+-2.224 -2.567 TD
+0.0276 Tw
+(The specification of the next thread to run is designed to handle situations in which the user is keeping)Tj
+-1.112 -1.426 TD
+0.1013 Tw
+[(explicit or implicit scheduling information that can be taken advantage of by the kernel.  An example of)]TJ
+T*
+0.0361 Tw
+(explicit information is tagging locks with the identity of the thread that holds them \(this is easy to do if the)Tj
+T*
+0.0034 Tw
+(hardware supports an atomic compare and swap if 0 operation\).  An example of implicit information is that)Tj
+T*
+0.0073 Tw
+(in a functionally partitioned program with one thread per component, knowing the component that is being)Tj
+T*
+0 Tw
+(waited for immediately identified the thread that should run.)Tj
+1.112 -2.567 TD
+0.1803 Tw
+(The current quantum is transferred to the new thread by)Tj
+/TT8 1 Tf
+26.815 0 TD
+0 Tw
+(thread_switch)Tj
+/TT4 1 Tf
+8.258 0 TD
+0.18 Tw
+(only if both thread and)Tj
+-36.185 -1.426 TD
+0.0926 Tw
+[(new_thread are time-sharing threads.  If either or both are fixed-priority threads, the new_thread gets a)]TJ
+T*
+0 Tw
+(new quantum.)Tj
+1.112 -2.567 TD
+0.396 Tw
+[(Fixed priority threads do not get special treatment for any of these calls.  This means that)]TJ
+-1.112 -1.426 TD
+0.046 Tw
+(thread_switch will run the new thread regardless of its priority, and can be used to implement the implicit)Tj
+T*
+0.2262 Tw
+(priority elevation required when a critical section is accessed by both low and high priority threads.)Tj
+T*
+0 Tw
+(Similarly, the calls involving depression operate identically on both fixed priority and time sharing threads.)Tj
+/TT2 1 Tf
+11 0 0 11 72 248.96 Tm
+(2.4. Wiring)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 234.7 Tm
+0.215 Tw
+(There are two wiring primitives:)Tj
+/TT8 1 Tf
+15.189 0 TD
+0 Tw
+(vm_wire)Tj
+/TT4 1 Tf
+4.693 0 TD
+(and)Tj
+/TT8 1 Tf
+2.161 0 TD
+(thread_wire)Tj
+/TT4 1 Tf
+6.6011 0 TD
+(.)Tj
+/TT8 1 Tf
+1.2629 0 TD
+(vm_wire)Tj
+/TT4 1 Tf
+4.693 0 TD
+0.2152 Tw
+(allows the user to keep)Tj
+-35.712 -1.426 TD
+0.044 Tw
+(memory from pagefaulting on specified types of access.)Tj
+/TT8 1 Tf
+25.307 0 TD
+0 Tw
+(thread_wire)Tj
+/TT4 1 Tf
+6.922 0 TD
+0.044 Tw
+(causes a threadís internal kernel)Tj
+-32.229 -1.426 TD
+0.0098 Tw
+(state to be non-pageable so that thread will always be able to execute immediately when run. The system)Tj
+T*
+0 Tw
+(has an overall limit on wired down memory; these calls fail if the requested wiring would exceed that limit.)Tj
+1.112 -2.567 TD
+(NOTE: These calls have not been implemented yet.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+91 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+93 0 obj
+<<
+/Length 2530
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(27)Tj
+12 0 0 12 72 711.25 Tm
+(task_priority)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t task_priority\(task, priority, change_threads\))Tj
+4.8 -1.031 TD
+5.4 Tw
+(task_t task;)Tj
+T*
+7.2 Tw
+(int priority;)Tj
+T*
+3.6 Tw
+(boolean_t change_threads;)Tj
+/TT2 1 Tf
+12 0 0 12 72 599.75 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 581.03 Tm
+(task)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Task to set priority for.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(priority)Tj
+/TT4 1 Tf
+8.896 0 TD
+(New priority.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(change_threads)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Change priority of existing threads if TRUE.)Tj
+/TT2 1 Tf
+12 0 0 12 72 528.33 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 513.34 Tm
+0.1612 Tw
+(The priority of a task is used only for creation of new threads; a new threadís priority is set to the)Tj
+-1.112 -1.426 TD
+0.206 Tw
+(enclosing taskís priority.)Tj
+/TT8 1 Tf
+11.51 0 TD
+0 Tw
+(task_priority)Tj
+/TT4 1 Tf
+8.284 0 TD
+0.2066 Tw
+[(changes this task priority. )-485.4(It also sets the priorities of all)]TJ
+-19.794 -1.426 TD
+0.098 Tw
+(threads in the task to this new priority if)Tj
+/TT8 1 Tf
+18.445 0 TD
+0 Tw
+(change_threads)Tj
+/TT4 1 Tf
+8.776 0 TD
+0.0974 Tw
+[(is TRUE.  Existing threads are not affected)]TJ
+-27.221 -1.426 TD
+0.1567 Tw
+[(otherwise. )-433.3(If this priority change violates the maximum priority of some threads, as many threads as)]TJ
+T*
+0 Tw
+(possible will be changed and an error code will be returned.)Tj
+/TT2 1 Tf
+12 0 0 12 72 436.44 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 417.72 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(task)Tj
+/TT4 1 Tf
+2.678 0 TD
+(is not a task, or)Tj
+/TT8 1 Tf
+7.059 0 TD
+(priority)Tj
+/TT4 1 Tf
+5.078 0 TD
+(is not a valid priority.)Tj
+/TT8 1 Tf
+-23.711 -1.626 TD
+[(KERN_FAILURE)-1694.8(change_threads)]TJ
+/TT4 1 Tf
+17.726 0 TD
+0.1525 Tw
+(was TRUE and the attempt to change the priority of at)Tj
+-8.83 -1.143 TD
+0.4241 Tw
+(least one existing thread failed because the new priority would have)Tj
+T*
+0 Tw
+(exceeded that threadís maximum priority.)Tj
+/TT2 1 Tf
+12 0 0 12 72 330.73 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 315.74 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 295.88 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 281.62 Tm
+(thread_priority, processor_set_max_priority)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+94 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+96 0 obj
+<<
+/Length 4456
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(28)Tj
+12 0 0 12 72 711.25 Tm
+(thread_priority)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t thread_priority\(thread, priority, set_max\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+7.2 Tw
+(int priority;)Tj
+T*
+3.6 Tw
+(boolean_t set_max)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t thread_max_priority\(thread, processor_set, priority\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+T*
+7.2 Tw
+(int priority;)Tj
+/TT2 1 Tf
+12 0 0 12 72 553.93 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 535.21 Tm
+(thread)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The thread whose priority is to be changed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(priority)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The new priority to change it to.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(set_max)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Also set threadís maximum priority if TRUE.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.3304 Tw
+(The control port for the processor set to which the thread is currently)Tj
+0 -1.143 TD
+0 Tw
+(assigned.)Tj
+/TT2 1 Tf
+12 0 0 12 72 454.82 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 439.83 Tm
+0.394 Tw
+(Threads have three priorities associated with them by the system, a)Tj
+/TT8 1 Tf
+34.512 0 TD
+0 Tw
+(priority)Tj
+/TT4 1 Tf
+4.8008 0 TD
+0.393 Tw
+(, a)Tj
+/TT8 1 Tf
+2.1752 0 TD
+0 Tw
+(maximum)Tj
+-42.6 -1.426 TD
+(priority)Tj
+/TT4 1 Tf
+4.8008 0 TD
+0.006 Tw
+(, and a)Tj
+/TT8 1 Tf
+3.3532 0 TD
+(scheduled priority.)Tj
+/TT4 1 Tf
+11.974 0 TD
+0.0062 Tw
+(The scheduled priority is used to make scheduling decisions)Tj
+-20.128 -1.426 TD
+0.0834 Tw
+[(about the thread.  It is determined from the priority by the policy \(for timesharing, this means adding an)]TJ
+T*
+0.0124 Tw
+[(increment derived from cpu usage\).  The priority can be set under user control, but may never exceed the)]TJ
+T*
+0.2624 Tw
+[(maximum priority.  Changing the maximum priority requires presentation of the control port for the)]TJ
+T*
+0.0105 Tw
+(threadís processor set; since the control port for the default processor set is privileged, users cannot raise)Tj
+T*
+0.1357 Tw
+[(their maximum priority to unfairly compete with other users on that set. )-413.3(Newly created threads obtain)]TJ
+T*
+0 Tw
+(their priority from their task and their max priority from the thread.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(thread_priority)Tj
+/TT4 1 Tf
+9.452 0 TD
+0.1747 Tw
+(changes the priority and optionally the maximum priority of)Tj
+/TT8 1 Tf
+27.694 0 TD
+0 Tw
+(thread.)Tj
+/TT4 1 Tf
+4.653 0 TD
+(Priorities)Tj
+-42.911 -1.426 TD
+0.0878 Tw
+[(range from 0 to 31, where lower numbers denote higher priorities.  If the new priority is higher than the)]TJ
+T*
+0.0646 Tw
+[(priority of the current thread, preemption may occur as a result of this call.  The maximum priority of the)]TJ
+T*
+0.004 Tw
+(thread is also set if)Tj
+/TT8 1 Tf
+8.635 0 TD
+0 Tw
+(set_max)Tj
+/TT4 1 Tf
+4.482 0 TD
+0.0032 Tw
+[(is TRUE. )-280.8(This call will fail if)]TJ
+/TT8 1 Tf
+12.526 0 TD
+0 Tw
+(priority)Tj
+/TT4 1 Tf
+5.081 0 TD
+0.003 Tw
+(is greater than the current maximum)Tj
+-30.724 -1.426 TD
+0 Tw
+(priority of the thread.  As a result, this call can only lower the value of a threadís maximum priority.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(thread_max_priority)Tj
+/TT4 1 Tf
+12.167 0 TD
+0.4898 Tw
+[(changes the maximum priority of the thread.  Because it requires)]TJ
+-13.279 -1.426 TD
+0.0245 Tw
+(presentation of the corresponding processor set port, this call can reset the maximum priority to any legal)Tj
+T*
+0 Tw
+(value.)Tj
+/TT2 1 Tf
+12 0 0 12 72 183.25 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 164.53 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Operation completed successfully)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(thread)Tj
+/TT4 1 Tf
+4.14 0 TD
+0.262 Tw
+(is not a thread, or)Tj
+/TT8 1 Tf
+9.37 0 TD
+0 Tw
+(processor_set)Tj
+/TT4 1 Tf
+8.34 0 TD
+0.2611 Tw
+(is not a control port for a)Tj
+-21.85 -1.143 TD
+0 Tw
+(processor set, or)Tj
+/TT8 1 Tf
+7.725 0 TD
+(priority)Tj
+/TT4 1 Tf
+5.078 0 TD
+(is out of range \(not in 0..31\).)Tj
+/TT8 1 Tf
+-21.699 -1.626 TD
+(KERN_FAILURE)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.4818 Tw
+(The requested operation would violate the threadís maximum priority)Tj
+0 -1.143 TD
+0.1835 Tw
+(\(thread_priority\) or the thread is not assigned to the processor set whose)Tj
+T*
+0 Tw
+(control port was presented.)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+97 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+99 0 obj
+<<
+/Length 415
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(29)Tj
+12 0 0 12 72 711.25 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 696.26 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 676.4 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 662.14 Tm
+(thread_policy, task_priority, processor_set_priority)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+100 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+102 0 obj
+<<
+/Length 3058
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(30)Tj
+12 0 0 12 72 711.25 Tm
+(thread_policy)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t thread_policy\(thread, policy, data\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+7.2 Tw
+(int policy;)Tj
+T*
+(int data;)Tj
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(thread)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Thread to set policy for.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(policy)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Policy to set.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(data)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Policy-specific data.)Tj
+/TT2 1 Tf
+12 0 0 12 72 538.64 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 523.65 Tm
+(thread_policy)Tj
+/TT4 1 Tf
+8.24 0 TD
+0.162 Tw
+(changes the scheduling policy for)Tj
+/TT8 1 Tf
+15.873 0 TD
+0 Tw
+(thread)Tj
+/TT4 1 Tf
+4.04 0 TD
+(to)Tj
+/TT8 1 Tf
+1.275 0 TD
+[(policy.)-441(data)]TJ
+/TT4 1 Tf
+7.482 0 TD
+0.163 Tw
+(is policy-dependent)Tj
+-38.022 -1.426 TD
+0.5241 Tw
+[(scheduling information. )-802.9(There are currently two supported policies:)]TJ
+/TT8 1 Tf
+34.73 0 TD
+0 Tw
+(POLICY_TIMESHARE)Tj
+/TT4 1 Tf
+10.402 0 TD
+(and)Tj
+/TT8 1 Tf
+-45.132 -1.426 TD
+(POLICY_FIXEDPRI)Tj
+/TT4 1 Tf
+9.313 0 TD
+0.0351 Tw
+(defined in <mach/policy.h>; this file is included by mach.h.)Tj
+/TT8 1 Tf
+26.643 0 TD
+0 Tw
+(data)Tj
+/TT4 1 Tf
+2.714 0 TD
+0.036 Tw
+(is meaningless for)Tj
+-38.67 -1.426 TD
+0.0001 Tw
+(timesharing, but is the quantum to be used \(in milliseconds\) for the fixed priority policy.  To be meaningful,)Tj
+T*
+0.0105 Tw
+(this quantum must be a multiple of the basic system quantum \(min_quantum\) which can be obtained from)Tj
+/TT8 1 Tf
+T*
+0 Tw
+(host_info.)Tj
+/TT4 1 Tf
+6.556 0 TD
+(The system will always round up to the next multiple of the quantum.)Tj
+-5.444 -2.567 TD
+0.2096 Tw
+(Processor sets may restrict the allowed policies, so this call will fail if the processor set to which)Tj
+/TT8 1 Tf
+-1.112 -1.426 TD
+0 Tw
+(thread)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is currently assigned does not permit)Tj
+/TT8 1 Tf
+16.562 0 TD
+(policy.)Tj
+/TT2 1 Tf
+12 0 0 12 72 392.56 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 373.84 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(thread)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is not a thread, or)Tj
+/TT8 1 Tf
+8.06 0 TD
+(policy)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is not a recognized policy.)Tj
+/TT8 1 Tf
+-24.712 -1.626 TD
+(KERN_FAILURE)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.165 Tw
+(The processor set to which)Tj
+/TT8 1 Tf
+13.052 0 TD
+0 Tw
+(thread)Tj
+/TT4 1 Tf
+4.043 0 TD
+0.1642 Tw
+(is currently assigned does not permit)Tj
+/TT8 1 Tf
+-17.095 -1.143 TD
+0 Tw
+(policy.)Tj
+/TT2 1 Tf
+12 0 0 12 72 298.28 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 283.29 Tm
+(Availability limited.  Fixed priority not supported on all systems.)Tj
+/TT2 1 Tf
+12 0 0 12 72 263.43 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 249.17 Tm
+(task_policy, processor_set_policy, host_info)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+103 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+106 0 obj
+<<
+/Length 2606
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(31)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_max_priority)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(processor_set_max_priority\(processor_set, priority, change_threads\))Tj
+4.8 -1.031 TD
+4.8 Tw
+(processor_set_t task;)Tj
+T*
+12 Tw
+(int priority;)Tj
+T*
+8.4 Tw
+(boolean_t change_threads;)Tj
+/TT2 1 Tf
+12 0 0 12 72 599.75 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 581.03 Tm
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Processor set to set maximum priority for.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(priority)Tj
+/TT4 1 Tf
+8.896 0 TD
+(New priority.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(change_threads)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Change maximum priority of existing threads if TRUE.)Tj
+/TT2 1 Tf
+12 0 0 12 72 528.33 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 513.34 Tm
+0.0428 Tw
+(The priority of a processor set is used only for newly created threads \(threadís maximum priority is set)Tj
+-1.112 -1.426 TD
+0.1179 Tw
+(to processor setís\) and the assignment of threads to the set \(threadís maximum priority is reduced if it)Tj
+T*
+1.6004 Tw
+(exceeds the setís maximum priority, threadís priority is similarly reduced\).)Tj
+/TT8 1 Tf
+T*
+0 Tw
+(processor_set_max_priority)Tj
+/TT4 1 Tf
+15.944 0 TD
+0.0658 Tw
+[(changes this priority.  It also sets the maximum priority of all threads)]TJ
+-15.944 -1.426 TD
+0.049 Tw
+(assigned to the processor set to this new priority if)Tj
+/TT8 1 Tf
+22.944 0 TD
+0 Tw
+(change_threads)Tj
+/TT4 1 Tf
+8.727 0 TD
+0.049 Tw
+[(is TRUE.  If this maximum priority)]TJ
+-31.671 -1.426 TD
+0 Tw
+(is less than the priorities of any of these threads, their priorities will also be set to this new value.)Tj
+/TT2 1 Tf
+12 0 0 12 72 422.18 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 403.46 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(task)Tj
+/TT4 1 Tf
+2.678 0 TD
+(is not a task, or)Tj
+/TT8 1 Tf
+7.059 0 TD
+(priority)Tj
+/TT4 1 Tf
+5.078 0 TD
+(is not a valid priority.)Tj
+/TT2 1 Tf
+12 0 0 12 72 355.59 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 340.6 Tm
+0.3082 Tw
+[(Availability limited.  This call was referred to as)]TJ
+/TT8 1 Tf
+23.725 0 TD
+0 Tw
+(processor_set_priority)Tj
+/TT4 1 Tf
+13.787 0 TD
+0.309 Tw
+(in some previous)Tj
+-38.624 -1.426 TD
+0 Tw
+(documentation.)Tj
+/TT2 1 Tf
+12 0 0 12 72 306.48 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 292.22 Tm
+(thread_priority, task_priority, thread_assign)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+107 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+109 0 obj
+<<
+/Length 3143
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(32)Tj
+12 0 0 12 72 711.25 Tm
+(processor_set_policy_enable)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(processor_set_policy_enable\(processor_set, policy\))Tj
+4.8 -1.031 TD
+(processor_set_t processor_set;)Tj
+T*
+7.2 Tw
+(int policy;)Tj
+-4.8 -2.52 TD
+0 Tw
+(kern_return_t)Tj
+0 -1.031 TD
+(processor_set_policy_disable\(processor_set, policy, change_threads\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+T*
+7.2 Tw
+(int change_threads;)Tj
+/TT2 1 Tf
+12 0 0 12 72 523 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 504.28 Tm
+(processor_set)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The processor set whose allowed policies are to be changed.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(policy)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The policy to enable or disable)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(change_threads)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.4188 Tw
+(Reset the policies of any threads with the newly-disallowed policy to)Tj
+0 -1.143 TD
+0 Tw
+(timesharing.)Tj
+/TT2 1 Tf
+12 0 0 12 72 440.15 Tm
+(Description)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 425.16 Tm
+0.1112 Tw
+[(Processor sets may restrict the scheduling policies to be used for threads assigned to them.  These)]TJ
+-1.112 -1.426 TD
+0.1594 Tw
+[(two calls provide the mechanism for designating permitted and forbidden policies.  The current set of)]TJ
+T*
+0.0462 Tw
+(permitted policies can be obtained from)Tj
+/TT8 1 Tf
+18.008 0 TD
+0 Tw
+(processor_set_info.)Tj
+/TT4 1 Tf
+12.05 0 TD
+0.047 Tw
+(Timesharing may not be forbidden by)Tj
+-30.058 -1.426 TD
+0.0973 Tw
+[(any processor_set.  This is a compromise to reduce the complexity of the assign operation; any thread)]TJ
+T*
+0.3172 Tw
+[(whose policy is forbidden by the target processor set has its policy reset to timesharing.  If the)]TJ
+/TT8 1 Tf
+T*
+0 Tw
+(change_threads)Tj
+/TT4 1 Tf
+8.731 0 TD
+0.053 Tw
+(argument to)Tj
+/TT8 1 Tf
+5.72 0 TD
+0 Tw
+(processor_set_policy_disable)Tj
+/TT4 1 Tf
+17.131 0 TD
+0.053 Tw
+(is true, threads currently assigned)Tj
+-31.582 -1.426 TD
+0 Tw
+(to this processor set and using the newly disabled policy will have their policy reset to timesharing.)Tj
+1.112 -2.567 TD
+(<mach/policy.h> contains the allowed policies; it is included by mach.h.)Tj
+/TT2 1 Tf
+12 0 0 12 72 294.07 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 275.35 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Operation completed successfully)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(processor_set)Tj
+/TT4 1 Tf
+8.169 0 TD
+0.091 Tw
+(is not a processor set, or)Tj
+/TT8 1 Tf
+11.773 0 TD
+0 Tw
+(policy)Tj
+/TT4 1 Tf
+3.969 0 TD
+0.0904 Tw
+(is not a valid policy, or)Tj
+-23.911 -1.143 TD
+0 Tw
+(an attempt was made to disable timesharing.)Tj
+/TT2 1 Tf
+12 0 0 12 72 216.05 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 201.06 Tm
+(Availability limited.  Not all policies \(e.g. fixed priority\) are supported by all systems.)Tj
+/TT2 1 Tf
+12 0 0 12 72 181.2 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 166.94 Tm
+(thread_policy, task_policy)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+110 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+112 0 obj
+<<
+/Length 5301
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(33)Tj
+12 0 0 12 72 711.25 Tm
+(thread_switch)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t thread_switch\(new_thread, option, time\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t new_thread;)Tj
+T*
+7.2 Tw
+(int option;)Tj
+T*
+(int time;)Tj
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(new_thread)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Thread to context switch to.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(option)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Specifies options associated with context switch.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(time)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Time duration for options)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(thread)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Thread to be affected.)Tj
+/TT2 1 Tf
+12 0 0 12 72 522.38 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 507.39 Tm
+(thread_switch)Tj
+/TT4 1 Tf
+8.167 0 TD
+0.0897 Tw
+(provides low-level access to the schedulerís context switching code.)Tj
+/TT8 1 Tf
+31.521 0 TD
+0 Tw
+(new_thread)Tj
+/TT4 1 Tf
+-40.8 -1.426 TD
+0.072 Tw
+[(is a hint that implements handoff scheduling.  The operating system will attempt to switch directly to the)]TJ
+T*
+0.0028 Tw
+(new thread \(bypassing the normal logic that selects the next thread to run\) if possible.  Since this is a hint,)Tj
+T*
+0.053 Tw
+(it may be incorrect; it is ignored if it doesnít specify a thread on the same host as the current thread or if)Tj
+T*
+0.0307 Tw
+[(that thread canít be switched to \(not runnable or already running on another processor\).  In this case, the)]TJ
+T*
+0.0083 Tw
+(normal logic to select the next thread to run is used; the current thread may continue running if there is no)Tj
+T*
+0 Tw
+(other appropriate thread to run.)Tj
+1.112 -2.567 TD
+0.481 Tw
+(Options for)Tj
+/TT8 1 Tf
+6.131 0 TD
+0 Tw
+(option)Tj
+/TT4 1 Tf
+4.359 0 TD
+0.4811 Tw
+[(are defined in <mach/thread_switch.h>.  Three options are recognized:)]TJ
+/TT8 1 Tf
+-11.602 -1.426 TD
+0 Tw
+(SWITCH_OPTION_NONE)Tj
+/TT4 1 Tf
+11.166 0 TD
+0.088 Tw
+(No options, the time argument is ignored.)Tj
+/TT8 1 Tf
+19.546 0 TD
+0 Tw
+(SWITCH_OPTION_WAIT)Tj
+/TT4 1 Tf
+11.165 0 TD
+0.087 Tw
+(The thread)Tj
+-41.877 -1.426 TD
+1.0772 Tw
+(is blocked for the specified)Tj
+/TT8 1 Tf
+17.448 0 TD
+0 Tw
+(time.)Tj
+/TT4 1 Tf
+5.712 0 TD
+1.078 Tw
+(This can be aborted by)Tj
+/TT8 1 Tf
+15.84 0 TD
+0 Tw
+(thread_abort.)Tj
+-39 -1.426 TD
+(SWITCH_OPTION_DEPRESS)Tj
+/TT4 1 Tf
+13.038 0 TD
+0.1591 Tw
+(The threadís priority is depressed to the lowest possible value for)Tj
+/TT8 1 Tf
+30.762 0 TD
+0 Tw
+(time.)Tj
+/TT4 1 Tf
+-43.8 -1.426 TD
+0.001 Tw
+(This is aborted by)Tj
+/TT8 1 Tf
+8.174 0 TD
+0 Tw
+(thread_abort)Tj
+/TT4 1 Tf
+7.2012 0 TD
+0.0014 Tw
+(, or by the scheduler choosing to run the thread again.  A consequence)Tj
+-15.3752 -1.426 TD
+0.0332 Tw
+(of this is that a depressed thread must be queued \(on a run queue\) waiting for the scheduler to choose it)Tj
+T*
+0.2369 Tw
+[(to run; once chosen, the depression is aborted.  This depression is independent of operations that)]TJ
+T*
+0.076 Tw
+(change the threadís priority \(e.g.)Tj
+/TT8 1 Tf
+14.998 0 TD
+0 Tw
+(thread_priority)Tj
+/TT4 1 Tf
+9.354 0 TD
+0.076 Tw
+[(will not abort the depression\).  The minimum time)]TJ
+-24.352 -1.426 TD
+0 Tw
+(and units of time can be obtained as the min_timeout value from)Tj
+/TT8 1 Tf
+28.681 0 TD
+(host_info.)Tj
+-27.569 -2.567 TD
+(thread_switch)Tj
+/TT4 1 Tf
+8.106 0 TD
+0.0288 Tw
+(is an optimized trap that affects the current thread.)Tj
+/TT8 1 Tf
+23.134 0 TD
+0 Tw
+(thread_depress_abort)Tj
+/TT4 1 Tf
+12.307 0 TD
+0.029 Tw
+(is an)Tj
+-44.659 -1.426 TD
+0 Tw
+(rpc to the kernel that may affect any thread.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(thread_switch)Tj
+/TT4 1 Tf
+8.136 0 TD
+0.0579 Tw
+(is often called when the current thread can proceed no further for some reason; the)Tj
+-9.248 -1.426 TD
+0.0833 Tw
+[(various options and arguments allow information about this reason to be transmitted to the kernel.  The)]TJ
+/TT8 1 Tf
+T*
+0 Tw
+(new_thread)Tj
+/TT4 1 Tf
+6.437 0 TD
+0.1589 Tw
+(argument \(handoff scheduling\) is useful when the identity of the thread that must make)Tj
+-6.437 -1.426 TD
+0.098 Tw
+[(progress before the current thread runs again is known.  The)]TJ
+/TT8 1 Tf
+28.202 0 TD
+0 Tw
+(WAIT)Tj
+/TT4 1 Tf
+2.776 0 TD
+0.0985 Tw
+(option is used when the amount of)Tj
+-30.978 -1.426 TD
+0.0233 Tw
+(time that the current thread must wait before it can do anything useful can be estimated and is fairly long.)Tj
+T*
+0 Tw
+(The)Tj
+/TT8 1 Tf
+2.027 0 TD
+(DEPRESS)Tj
+/TT4 1 Tf
+4.504 0 TD
+0.0261 Tw
+(option is used when the amount of time that must be waited is fairly short, especially when)Tj
+-6.531 -1.426 TD
+0 Tw
+(the identity of the thread that is being waited for is not known.)Tj
+1.112 -2.567 TD
+0.145 Tw
+(Users should beware of calling)Tj
+/TT8 1 Tf
+14.618 0 TD
+0 Tw
+(thread_switch)Tj
+/TT4 1 Tf
+8.222 0 TD
+0.144 Tw
+(with an invalid hint \(e.g.)Tj
+/TT8 1 Tf
+11.869 0 TD
+0 Tw
+(THREAD_NULL)Tj
+/TT4 1 Tf
+7.022 0 TD
+0.144 Tw
+(\) and no)Tj
+-42.843 -1.426 TD
+0.0175 Tw
+[(option. )-294.5(Because the time-sharing scheduler varies the priority of threads based on usage, this may result)]TJ
+T*
+0.0314 Tw
+[(in a waste of cpu time if the thread that must be run is of lower priority.  The use of the DEPRESS option)]TJ
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+113 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+115 0 obj
+<<
+/Length 1656
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(34)Tj
+/TT4 1 Tf
+-22.844 -3.6 TD
+(in this situation is highly recommended.)Tj
+/TT8 1 Tf
+1.112 -2.567 TD
+(thread_switch)Tj
+/TT4 1 Tf
+8.192 0 TD
+0.114 Tw
+[(ignores policies.  Users relying on the preemption semantics of a fixed time policy)]TJ
+-9.304 -1.426 TD
+0.136 Tw
+(should be aware that)Tj
+/TT8 1 Tf
+10.105 0 TD
+0 Tw
+(thread_switch)Tj
+/TT4 1 Tf
+8.214 0 TD
+0.1355 Tw
+(ignores these semantics; it will run the specified)Tj
+/TT8 1 Tf
+22.481 0 TD
+0 Tw
+(new_thread)Tj
+/TT4 1 Tf
+-40.8 -1.426 TD
+(indepent of its priority and the priority of any other threads that could be run instead.)Tj
+/TT2 1 Tf
+12 0 0 12 72 638.66 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 619.94 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+0.127 Tw
+(The call succeeded.)Tj
+/TT8 1 Tf
+9.957 0 TD
+0 Tw
+(thread_restore_priority)Tj
+/TT4 1 Tf
+14.205 0 TD
+0.128 Tw
+(always succeeds, and)Tj
+-24.162 -1.143 TD
+0 Tw
+(does not have a defined return value as a result.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(thread)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is not a thread, or)Tj
+/TT8 1 Tf
+8.06 0 TD
+(option)Tj
+/TT4 1 Tf
+3.878 0 TD
+(is not a recognized option.)Tj
+/TT8 1 Tf
+-24.712 -1.626 TD
+[(KERN_FAILURE)-1694.8(kern_depress_abort)]TJ
+/TT4 1 Tf
+19.974 0 TD
+(failed because the thread was not depressed.)Tj
+/TT2 1 Tf
+12 0 0 12 72 544.38 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 529.39 Tm
+(Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 509.53 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 495.27 Tm
+(host_info)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+116 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+118 0 obj
+<<
+/Length 2654
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(35)Tj
+12 0 0 12 72 711.25 Tm
+(thread_wire)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t thread_wire\(host_priv, thread, wired\))Tj
+4.8 -1.031 TD
+2.4 Tw
+(host_priv_t host_priv;)Tj
+T*
+4.2 Tw
+(thread_t thread;)Tj
+T*
+3.6 Tw
+(boolean_t wired;)Tj
+/TT2 1 Tf
+12 0 0 12 72 610.06 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 591.34 Tm
+(host_priv)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The privileged host port for the threadís host.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(thread)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The thread to be affected)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(wired)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Make thread unswappable if TRUE, swappable if FALSE.)Tj
+/TT2 1 Tf
+12 0 0 12 72 538.64 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 523.65 Tm
+(thread_wire)Tj
+/TT4 1 Tf
+6.95 0 TD
+0.0726 Tw
+[(allows privileged to restrict the swappability of threads.  A unswappable thread has its)]TJ
+-8.062 -1.426 TD
+0.1144 Tw
+[(kernel stack wired \(made non-pageable\) so it cannot be swapped out.  This counts against the limit of)]TJ
+T*
+0.05 Tw
+(wired memory maintained by the kernel \(see)Tj
+/TT8 1 Tf
+20.301 0 TD
+0 Tw
+(vm_wire)Tj
+/TT4 1 Tf
+4.2007 0 TD
+0.051 Tw
+[(\). )-329(The number of pages that is consumed can be)]TJ
+-24.5017 -1.426 TD
+0 Tw
+(obtained from)Tj
+/TT8 1 Tf
+6.392 0 TD
+(vm_wire_statistics)Tj
+/TT4 1 Tf
+10.8018 0 TD
+(.)Tj
+/TT2 1 Tf
+12 0 0 12 72 461.01 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 442.29 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(host_priv)Tj
+/TT4 1 Tf
+5.778 0 TD
+0.1 Tw
+(is not the privileged host port for)Tj
+/TT8 1 Tf
+15.207 0 TD
+0 Tw
+(thread)Tj
+/TT4 1 Tf
+3.6006 0 TD
+0.1 Tw
+(ís host, or)Tj
+/TT8 1 Tf
+4.9134 0 TD
+0 Tw
+(thread)Tj
+/TT4 1 Tf
+3.979 0 TD
+(is)Tj
+-33.478 -1.143 TD
+(not a thread.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_RESOURCE_SHORTAGE)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.1314 Tw
+(Some kernel resource limit, most likely that on the amount of memory that)Tj
+T*
+0 Tw
+(can be wired down, has been exceeded.)Tj
+/TT2 1 Tf
+12 0 0 12 72 343.87 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 328.88 Tm
+0.309 Tw
+(Statistics interface to obtain wire limit and count against that limit \()Tj
+/TT8 1 Tf
+32.5797 0 TD
+0 Tw
+(vm_wire_statistics)Tj
+/TT4 1 Tf
+10.8018 0 TD
+0.309 Tw
+(\) not)Tj
+-44.4934 -1.426 TD
+0 Tw
+(available yet.  Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 294.76 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 280.5 Tm
+(vm_wire, vm_wire_statistics, host_priv_self)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+119 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+121 0 obj
+<<
+/Length 4626
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(36)Tj
+12 0 0 12 72 711.25 Tm
+(vm_wire)Tj
+/TT8 1 Tf
+10 0 0 10 72 696.36 Tm
+(#include <mach.h>)Tj
+0 -2.52 TD
+(kern_return_t vm_wire \(host_priv, task, start, end, prot\))Tj
+4.8 -1.031 TD
+2.4 Tw
+(host_priv_t host_priv;)Tj
+T*
+5.4 Tw
+(task_t task;)Tj
+T*
+1.8 Tw
+(vm_address_t start,end;)Tj
+T*
+3.6 Tw
+(vm_prot_t prot;)Tj
+/TT2 1 Tf
+12 0 0 12 72 599.75 Tm
+0 Tw
+(Arguments)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 581.03 Tm
+(host_priv)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The privileged host port for the host on which task resides)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(task)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The task whose memory is to be affected)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(start,end)Tj
+/TT4 1 Tf
+8.896 0 TD
+(First and last addresses of the memory region to be affected.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(prot)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Types of accesses that must not cause page faults.)Tj
+/TT2 1 Tf
+12 0 0 12 72 512.07 Tm
+(Description)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 497.08 Tm
+(vm_wire)Tj
+/TT4 1 Tf
+4.535 0 TD
+0.0578 Tw
+[(allows privileged applications to control memory pageability.  The semantics of a successful)]TJ
+/TT8 1 Tf
+-5.647 -1.426 TD
+0 Tw
+(vm_wire)Tj
+/TT4 1 Tf
+4.54 0 TD
+0.062 Tw
+(operation are that memory in the range from)Tj
+/TT8 1 Tf
+20.337 0 TD
+0 Tw
+(start)Tj
+/TT4 1 Tf
+3.339 0 TD
+(to)Tj
+/TT8 1 Tf
+1.173 0 TD
+(end)Tj
+/TT4 1 Tf
+2.139 0 TD
+(in)Tj
+/TT8 1 Tf
+1.117 0 TD
+(task)Tj
+/TT4 1 Tf
+2.739 0 TD
+0.061 Tw
+(will not cause page faults)Tj
+-35.384 -1.426 TD
+0.2102 Tw
+(for any accesses included in)Tj
+/TT8 1 Tf
+13.891 0 TD
+0 Tw
+(prot)Tj
+/TT4 1 Tf
+2.4004 0 TD
+0.211 Tw
+[(. )-489(Data memory can be made non-pageable \(wired\) with a)]TJ
+/TT8 1 Tf
+28.1086 0 TD
+0 Tw
+(prot)Tj
+/TT4 1 Tf
+-44.4 -1.426 TD
+0.243 Tw
+(argument of)Tj
+/TT8 1 Tf
+6.1 0 TD
+0 Tw
+(VM_PROT_READ|VM_PROT_WRITE.)Tj
+/TT4 1 Tf
+17.242 0 TD
+0.2425 Tw
+(A special case is that)Tj
+/TT8 1 Tf
+10.883 0 TD
+0 Tw
+(VM_PROT_NONE)Tj
+/TT4 1 Tf
+7.72 0 TD
+0.242 Tw
+(makes the)Tj
+-41.945 -1.426 TD
+0.1245 Tw
+[(memory pageable.  Machines with hardware restrictions on address aliasing \(e.g. IBM PC/RT, HP-PA\))]TJ
+T*
+0.2294 Tw
+(may have to reload mappings to wired memory and flush caches if more than one virtual mapping)Tj
+T*
+0.0558 Tw
+[(corresponding to the same physical memory is used.  The mappings will usually be reloaded from a fast)]TJ
+T*
+0.0883 Tw
+(software cache, but if this overhead is a problem aliasing of wired memory should be avoided on these)Tj
+T*
+0 Tw
+(architectures.)Tj
+1.112 -2.567 TD
+0.2505 Tw
+(The kernel maintains an internal limit on how much memory may be wired to protect itself from)Tj
+-1.112 -1.426 TD
+0.0777 Tw
+[(attempts to wire all of physical memory or more.  Attempting to wire more memory than this limit allows)]TJ
+T*
+0.1291 Tw
+[(will fail.  The limit is a limit on address space, so wiring shared memory twice counts against the limit)]TJ
+T*
+0 Tw
+(twice.)Tj
+/TT2 1 Tf
+12 0 0 12 72 294.69 Tm
+(Returns)Tj
+/TT8 1 Tf
+10 0 0 10 109.04 275.97 Tm
+(KERN_SUCCESS)Tj
+/TT4 1 Tf
+8.896 0 TD
+(The call succeeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_INVALID_ARGUMENT)Tj
+8.896 -1.143 TD
+(host_priv)Tj
+/TT4 1 Tf
+5.756 0 TD
+0.0781 Tw
+(is not the privileged host port for)Tj
+/TT8 1 Tf
+15.055 0 TD
+0 Tw
+(task)Tj
+/TT4 1 Tf
+2.4004 0 TD
+0.079 Tw
+(ís host, or)Tj
+/TT8 1 Tf
+4.8496 0 TD
+0 Tw
+(task)Tj
+/TT4 1 Tf
+2.757 0 TD
+0.079 Tw
+(is not a)Tj
+-30.818 -1.143 TD
+0.182 Tw
+(task, or)Tj
+/TT8 1 Tf
+3.921 0 TD
+0 Tw
+(start)Tj
+/TT4 1 Tf
+3.46 0 TD
+(and)Tj
+/TT8 1 Tf
+2.128 0 TD
+(end)Tj
+/TT4 1 Tf
+2.26 0 TD
+0.1814 Tw
+(do not define a valid address range in)Tj
+/TT8 1 Tf
+18.405 0 TD
+0 Tw
+(task)Tj
+/TT4 1 Tf
+2.4004 0 TD
+0.181 Tw
+(, or)Tj
+/TT8 1 Tf
+-32.5744 -1.143 TD
+0 Tw
+(prot)Tj
+/TT4 1 Tf
+2.678 0 TD
+(is not a valid memory protection.)Tj
+/TT8 1 Tf
+-11.574 -1.626 TD
+(KERN_RESOURCE_SHORTAGE)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.1314 Tw
+(Some kernel resource limit, most likely that on the amount of memory that)Tj
+T*
+0 Tw
+(can be wired down, has been exceeded.)Tj
+/TT8 1 Tf
+-8.896 -1.626 TD
+(KERN_FAILURE)Tj
+/TT4 1 Tf
+8.896 0 TD
+(Some memory in the range from)Tj
+/TT8 1 Tf
+14.616 0 TD
+(start)Tj
+/TT4 1 Tf
+3.278 0 TD
+(to)Tj
+/TT8 1 Tf
+1.112 0 TD
+(end)Tj
+/TT4 1 Tf
+2.078 0 TD
+(does not exist.)Tj
+/TT8 1 Tf
+-29.98 -1.626 TD
+(KERN_PROTECTION_FAILURE)Tj
+/TT4 1 Tf
+8.896 -1.143 TD
+0.077 Tw
+(Some memory in the range from)Tj
+/TT8 1 Tf
+15.078 0 TD
+0 Tw
+(start)Tj
+/TT4 1 Tf
+3.355 0 TD
+(to)Tj
+/TT8 1 Tf
+1.189 0 TD
+(end)Tj
+/TT4 1 Tf
+2.155 0 TD
+0.0767 Tw
+(does not allow all accesses)Tj
+-21.777 -1.143 TD
+0 Tw
+(specified by)Tj
+/TT8 1 Tf
+5.558 0 TD
+(prot)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+122 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+124 0 obj
+<<
+/Length 1006
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(37)Tj
+12 0 0 12 72 711.25 Tm
+(Notes)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 696.26 Tm
+0.0034 Tw
+(The limit on wired memory should discount for sharing.  The kernel may choose to wire for write access)Tj
+-1.112 -1.426 TD
+0.197 Tw
+(even if that is not specified in)Tj
+/TT8 1 Tf
+14.497 0 TD
+0 Tw
+(prot)Tj
+/TT4 1 Tf
+2.875 0 TD
+0.1969 Tw
+[(causing unexpected copies to be made.  This behavior can be)]TJ
+-17.372 -1.426 TD
+0.0071 Tw
+[(avoided by setting the maximum protection on the memory to read-only.  Statistics interface to obtain wire)]TJ
+T*
+0 Tw
+(limit and count against that limit \()Tj
+/TT8 1 Tf
+14.562 0 TD
+(vm_wire_statistics)Tj
+/TT4 1 Tf
+10.8018 0 TD
+(\) not available yet.  Availability limited.)Tj
+/TT2 1 Tf
+12 0 0 12 72 633.62 Tm
+(See Also)Tj
+/TT8 1 Tf
+10 0 0 10 83.12 619.36 Tm
+(thread_wire, vm_wire_statistics, host_priv_self)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+125 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+127 0 obj
+<<
+/Length 761
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 304.61 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(i)Tj
+12 0 0 12 255.33 711.25 Tm
+(Table of Contents)Tj
+11 0 0 11 90.36 698.81 Tm
+[(1. Processor allocation primitives)-24369.3(1)]TJ
+10 0 0 10 110.92 687.3199 Tm
+(1.1. Concepts)Tj
+42.352 0 TD
+(1)Tj
+-42.352 -1.149 TD
+(1.2. Functionality)Tj
+42.352 0 TD
+(2)Tj
+-42.352 -1.149 TD
+(1.3. Uses)Tj
+42.352 0 TD
+(2)Tj
+11 0 0 11 90.36 651.9 Tm
+[(2. Scheduling primitives)-28260.7(24)]TJ
+10 0 0 10 110.92 640.41 Tm
+(2.1. Introduction)Tj
+41.796 0 TD
+(24)Tj
+-41.796 -1.149 TD
+(2.2. Priority)Tj
+41.796 0 TD
+(24)Tj
+-41.796 -1.149 TD
+[(2.3. Handoff Scheduling)-30406.4(25)]TJ
+T*
+(2.4. Wiring)Tj
+41.796 0 TD
+(26)Tj
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+128 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+130 0 obj
+<<
+/Length 2178
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(ii)Tj
+12 0 0 12 72 711.25 Tm
+(I. Summary of Kernel Calls)Tj
+/TT4 1 Tf
+10 0 0 10 83.12 692.53 Tm
+0.175 Tw
+(The following is a summary of calls to the)Tj
+8 0 0 8 284.49 692.53 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 312.57 692.53 Tm
+0.174 Tw
+[(kernel. )-452(The page on which the operation is fully)]TJ
+-24.057 -1.143 TD
+0 Tw
+(described appears within square brackets.)Tj
+/TT8 1 Tf
+0 -3.117 TD
+[([4])-1799.7(host_t host_self\(\))]TJ
+0 -5.155 TD
+[([4])-1799.7(host_priv_t host_priv_self\(\))]TJ
+T*
+[([5])-1799.7(kern_return_t host_processors\(host_priv, processor_list, processor_count)]TJ
+6 -1.031 TD
+4.8 Tw
+(host_priv_t host_priv;)Tj
+T*
+0 Tw
+[(processor_array_t )-1200(*processor_list; )-4200(/* out, ptr to array */)]TJ
+T*
+[(int )-9600(*processor_count; )-3600(/* out */)]TJ
+-6 -5.155 TD
+[([6])-1799.7(kern_return_t)]TJ
+3.6 -1.031 TD
+(host_processor_sets\(host, processor_set_list, processor_set_count\))Tj
+2.4 -1.031 TD
+9.6 Tw
+(host_t host;)Tj
+T*
+0 Tw
+[(processor_set_array_t )-600(*processor_set_list; /* out, ptr to array */)]TJ
+T*
+[(int )-11400(*processor_set_count; )-4200(/* out */)]TJ
+-6 -6.186 TD
+[([7])-1799.7(kern_return_t host_processor_set_priv\(host_priv, set_name, set\);)]TJ
+8.4 -1.031 TD
+7.2 Tw
+(host_priv_t host_priv;)Tj
+T*
+1.8 Tw
+(processor_set_name_t set_name;)Tj
+T*
+4.8 Tw
+(processor_set_t *set;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([8])-1799.7(kern_return_t host_info\(host, flavor, host_info, host_infoCnt\))]TJ
+8.4 -1.031 TD
+5.4 Tw
+(host_t host;)Tj
+T*
+7.2 Tw
+(int flavor;)Tj
+T*
+0 Tw
+[(host_info_t )-2400(host_info; )-3000(/* in and out */)]TJ
+T*
+[(unsigned int )-1800(*host_infoCnt; )-600(/* in and out */)]TJ
+-8.4 -5.155 TD
+[([10])-1199.6(kern_return_t host_kernel_version\(host, version\))]TJ
+8.4 -1.031 TD
+(host_t host;)Tj
+T*
+[(kernel_version_t *version; )-7800(/* out */)]TJ
+-8.4 -6.186 TD
+[([11])-1199.6(kern_return_t processor_assign\(processor, processor_set, wait\))]TJ
+8.4 -1.031 TD
+2.4 Tw
+(processor_t processor;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+T*
+3.6 Tw
+(boolean_t wait;)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+131 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT4 5 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+133 0 obj
+<<
+/Length 2219
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 301.83 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(iii)Tj
+/TT8 1 Tf
+-22.983 -3.495 TD
+[([11])-1199.6(kern_return_t processor_get_assignment\(processor, assigned_set_name\))]TJ
+8.4 -1.031 TD
+2.4 Tw
+(processor_t processor;)Tj
+T*
+0 Tw
+(processor_set_name_t assigned_set_name;)Tj
+-8.4 -5.155 TD
+[([12])-1199.6(kern_return_t processor_start\(processor\))]TJ
+8.4 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([12])-1199.6(kern_return_t processor_exit\(processor\))]TJ
+8.4 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([12])-1199.6(kern_return_t processor_control\(processor, cmd, count\))]TJ
+8.4 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+T*
+0 Tw
+[(int )-12000(*cmd; )-600(/* array of ints */)]TJ
+T*
+12 Tw
+(int count;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([13])-1199.6(/* the definition of processor_info_t from mach.h - sys/processor_info.h)]TJ
+3.6 -2.062 TD
+[(typedef int )-2400(*processor_info_t; )-3000(/* variable length array of int)]TJ
+T*
+(/* one interpretation of info is */)Tj
+1.8 -2.062 TD
+(struct processor_basic_info {)Tj
+3 -1.031 TD
+[(cpu_type_t )-3000(cpu_type; )-3600(/* cpu type */)]TJ
+T*
+[(cpu_subtype_t )-1200(cpu_subtype; )-1800(/* cpu subtype */)]TJ
+T*
+[(boolean_t )-3600(running; )-4200(/* is processor running? */)]TJ
+T*
+[(int )-7200(slot_num; )-3600(/* slot number */)]TJ
+T*
+[(boolean_t )-3600(is_master; )-3000(/* is this the master processor)]TJ
+-3 -1.031 TD
+(};)Tj
+-1.8 -1.031 TD
+[(typedef struct processor_basic_info )-7200(*processor_basic_info_t;)]TJ
+0 -4.124 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(processor_info\(processor, flavor, host, processor_info, processor_infoCn)Tj
+4.8 -1.031 TD
+7.2 Tw
+(processor_t processor;)Tj
+T*
+12 Tw
+(int flavor;)Tj
+T*
+10.2 Tw
+(host_t *host;)Tj
+T*
+0 Tw
+[(processor_info_t )-4200(processor_info; /* in and out */)]TJ
+T*
+[(unsigned int )-6600(*processor_infoCnt; )-2400(/* in and out */)]TJ
+-8.4 -5.155 TD
+[([15])-1199.6(kern_return_t processor_set_create\(host, new_set, new_name\))]TJ
+8.4 -1.031 TD
+10.2 Tw
+(host_t host;)Tj
+T*
+4.8 Tw
+(processor_set_t *new_set;)Tj
+T*
+1.8 Tw
+(processor_set_name_t *new_name;)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+134 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+137 0 obj
+<<
+/Length 2434
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 301.83 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(iv)Tj
+/TT8 1 Tf
+-22.983 -3.495 TD
+[([16])-1199.6(kern_return_t processor_set_default\(host, default_set\);)]TJ
+8.4 -1.031 TD
+10.2 Tw
+(host_t host;)Tj
+T*
+4.8 Tw
+(processor_set_t *default_set;)Tj
+-8.4 -6.186 TD
+0 Tw
+[([17])-1199.6(kern_return_t processor_set_destroy\(processor_set\))]TJ
+8.4 -1.031 TD
+4.8 Tw
+(processor_set_t processor_set;)Tj
+-8.4 -7.217 TD
+0 Tw
+[([18])-1199.6(/* the definition of processor_set_info_ from mach/processor_info.h  */)]TJ
+3.6 -2.062 TD
+[(typedef int )-2400(*processor_set_info_t; )-600(/* variable length array of int)]TJ
+T*
+(/* one interpretation of info is */)Tj
+1.8 -2.062 TD
+(struct processor_set_basic_info {)Tj
+3 -1.031 TD
+[(int )-7200(processor_count; )-4200(/* number of processors)]TJ
+T*
+[(int )-7200(task_count; )-7200(/* number of tasks */)]TJ
+T*
+[(int )-7200(thread_count; )-6000(/* number of threads */)]TJ
+T*
+[(int )-7200(load_average; )-6000(/* scaled load average *)]TJ
+T*
+[(int )-7200(mach_factor; )-6600(/* scaled mach factor */)]TJ
+-3 -1.031 TD
+(};)Tj
+-1.8 -1.031 TD
+[(typedef struct processor_set_basic_info )-4800(*processor_set_basic_inf)]TJ
+0 -2.062 TD
+(/* another interpretation of info is */)Tj
+T*
+(struct processor_set_sched_info {)Tj
+4.8 -1.031 TD
+[(int )-7200(policies; )-3600(/* allowed policies */)]TJ
+T*
+[(int )-7200(max_priority; )-1200(/* max priority for new threads)]TJ
+-4.8 -1.031 TD
+(};)Tj
+0 -2.062 TD
+(typedef struct processor_set_sched_info *processor_set_sched_info_t;)Tj
+0 -3.093 TD
+(kern_return_t)Tj
+0 -1.031 TD
+(processor_set_info\(processor_set, flavor, host, processor_set_info,)Tj
+2.4 -1.031 TD
+(processor_set_infoCnt\))Tj
+2.4 -1.031 TD
+1.8 Tw
+(processor_set_name_t processor_set;)Tj
+T*
+12 Tw
+(int flavor;)Tj
+T*
+10.2 Tw
+(host_t *host;)Tj
+T*
+0 Tw
+[(processor_set_info_t )-1800(processor_set_info; )-2400(/* in and out */)]TJ
+T*
+[(unsigned int )-6600(*processor_set_infoCnt; /* in and out */)]TJ
+-8.4 -6.186 TD
+[([20])-1199.6(kern_return_t processor_set_tasks\(processor_set, task_list, task_count\))]TJ
+8.4 -1.031 TD
+(processor_set_t processor_set;)Tj
+T*
+[(task_array_t )-1800(*task_list; )-2400(/* out, ptr to array */)]TJ
+T*
+[(int )-7200(*task_count; )-1800(/* out */)]TJ
+-8.4 -5.155 TD
+[([21])-1199.6(kern_return_t processor_set_threads\(processor_set, thread_list, thread_c)]TJ
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+138 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+140 0 obj
+<<
+/Length 1796
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 303.22 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(v)Tj
+/TT8 1 Tf
+-14.722 -3.495 TD
+(processor_set_t processor_set;)Tj
+0 -1.031 TD
+[(thread_array_t )-600(*thread_list; )-1200(/* out, ptr to array */)]TJ
+T*
+[(int )-7200(*thread_count; )-600(/* out */)]TJ
+-8.4 -5.155 TD
+[([22])-1199.6(kern_return_t)]TJ
+3.6 -1.031 TD
+(task_assign\(task, processor_set, assign_threads\))Tj
+4.8 -1.031 TD
+(task_t task;)Tj
+T*
+(processor_set_t processor_set;)Tj
+T*
+3.6 Tw
+(boolean_t assign_threads;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([22])-1199.6(kern_return_t)]TJ
+3.6 -1.031 TD
+(task_assign_default\(task, assign_threads\))Tj
+4.8 -1.031 TD
+5.4 Tw
+(task_t task;)Tj
+T*
+3.6 Tw
+(boolean_t assign_threads;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([22])-1199.6(kern_return_t)]TJ
+3.6 -1.031 TD
+(task_get_assignment\(task, processor_set\))Tj
+4.8 -1.031 TD
+5.4 Tw
+(task_t task;)Tj
+T*
+1.8 Tw
+(processor_set_name_t *processor_set;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([23])-1199.6(kern_return_t thread_assign\(thread, processor_set\))]TJ
+8.4 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+-8.4 -5.155 TD
+[([23])-1199.6(kern_return_t thread_assign_default\(thread\))]TJ
+8.4 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([23])-1199.6(kern_return_t thread_get_assignment\(thread, processor_set\))]TJ
+8.4 -1.031 TD
+9 Tw
+(thread_t thread;)Tj
+T*
+1.8 Tw
+(processor_set_name_t *processor_set;)Tj
+-8.4 -6.186 TD
+0 Tw
+[([27])-1199.6(kern_return_t task_priority\(task, priority, change_threads\))]TJ
+8.4 -1.031 TD
+5.4 Tw
+(task_t task;)Tj
+T*
+7.2 Tw
+(int priority;)Tj
+T*
+3.6 Tw
+(boolean_t change_threads;)Tj
+-8.4 -6.186 TD
+0 Tw
+[([28])-1199.6(kern_return_t thread_priority\(thread, priority, set_max\))]TJ
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+141 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+143 0 obj
+<<
+/Length 1810
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 301.83 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(vi)Tj
+/TT8 1 Tf
+-14.583 -3.495 TD
+4.2 Tw
+(thread_t thread;)Tj
+0 -1.031 TD
+7.2 Tw
+(int priority;)Tj
+T*
+3.6 Tw
+(boolean_t set_max)Tj
+-8.4 -5.155 TD
+0 Tw
+[([28])-1199.6(kern_return_t thread_max_priority\(thread, processor_set, priority\))]TJ
+8.4 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+T*
+7.2 Tw
+(int priority;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([30])-1199.6(kern_return_t thread_policy\(thread, policy, data\))]TJ
+8.4 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+7.2 Tw
+(int policy;)Tj
+T*
+(int data;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([31])-1199.6(kern_return_t)]TJ
+3.6 -1.031 TD
+(processor_set_max_priority\(processor_set, priority, change_threads\))Tj
+4.8 -1.031 TD
+4.8 Tw
+(processor_set_t task;)Tj
+T*
+12 Tw
+(int priority;)Tj
+T*
+8.4 Tw
+(boolean_t change_threads;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([32])-1199.6(kern_return_t)]TJ
+3.6 -1.031 TD
+(processor_set_policy_enable\(processor_set, policy\))Tj
+4.8 -1.031 TD
+(processor_set_t processor_set;)Tj
+T*
+7.2 Tw
+(int policy;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([32])-1199.6(kern_return_t)]TJ
+3.6 -1.031 TD
+(processor_set_policy_disable\(processor_set, policy, change_threads\))Tj
+4.8 -1.031 TD
+4.2 Tw
+(thread_t thread;)Tj
+T*
+0 Tw
+(processor_set_t processor_set;)Tj
+T*
+7.2 Tw
+(int change_threads;)Tj
+-8.4 -7.217 TD
+0 Tw
+[([33])-1199.6(kern_return_t thread_switch\(new_thread, option, time\))]TJ
+8.4 -1.031 TD
+4.2 Tw
+(thread_t new_thread;)Tj
+T*
+7.2 Tw
+(int option;)Tj
+T*
+(int time;)Tj
+-8.4 -5.155 TD
+0 Tw
+[([35])-1199.6(kern_return_t thread_wire\(host_priv, thread, wired\))]TJ
+8.4 -1.031 TD
+2.4 Tw
+(host_priv_t host_priv;)Tj
+T*
+4.2 Tw
+(thread_t thread;)Tj
+T*
+3.6 Tw
+(boolean_t wired;)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+144 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+146 0 obj
+<<
+/Length 438
+>>
+stream
+BT
+/TT2 1 Tf
+10 0 0 10 300.44 748.71 Tm
+0 g
+/GS1 gs
+0 Tc
+0 Tw
+(vii)Tj
+/TT8 1 Tf
+-22.844 -3.495 TD
+[([36])-1199.6(kern_return_t vm_wire \(host_priv, task, start, end, prot\))]TJ
+8.4 -1.031 TD
+2.4 Tw
+(host_priv_t host_priv;)Tj
+T*
+5.4 Tw
+(task_t task;)Tj
+T*
+1.8 Tw
+(vm_address_t start,end;)Tj
+T*
+3.6 Tw
+(vm_prot_t prot;)Tj
+/TT2 1 Tf
+8 0 0 8 72 36 Tm
+0 Tw
+(MACH)Tj
+10 0 0 10 269.32 36 Tm
+(13 August 1990)Tj
+8 0 0 8 515.9999 36 Tm
+(MACH)Tj
+ET
+endstream
+endobj
+147 0 obj
+<<
+/ProcSet [/PDF /Text ]
+/Font <<
+/TT2 4 0 R
+/TT8 12 0 R
+>>
+/ExtGState <<
+/GS1 6 0 R
+>>
+>>
+endobj
+6 0 obj
+<<
+/Type /ExtGState
+/SA false
+/SM 0.02
+/OP false
+/op false
+/OPM 1
+/BG2 /Default
+/UCR2 /Default
+/HT /Default
+/TR2 /Default
+>>
+endobj
+148 0 obj
+<<
+/Type /FontDescriptor
+/Ascent 770
+/CapHeight 718
+/Descent -229
+/Flags 262176
+/FontBBox [-170 -228 1003 962]
+/FontName /Helvetica-Bold
+/ItalicAngle 0
+/StemV 133
+/XHeight 532
+/StemH 140
+>>
+endobj
+149 0 obj
+<<
+/Type /FontDescriptor
+/Ascent 770
+/CapHeight 718
+/Descent -229
+/Flags 32
+/FontBBox [-166 -225 1000 931]
+/FontName /Helvetica
+/ItalicAngle 0
+/StemV 88
+/XHeight 523
+/StemH 88
+>>
+endobj
+150 0 obj
+<<
+/Type /FontDescriptor
+/Ascent 701
+/CapHeight 0
+/Descent -298
+/Flags 32
+/FontBBox [-167 -299 1094 827]
+/FontName /Symbol
+/ItalicAngle 0
+/StemV 0
+>>
+endobj
+151 0 obj
+<<
+/Type /FontDescriptor
+/Ascent 753
+/CapHeight 562
+/Descent -246
+/Flags 35
+/FontBBox [-28 -250 628 805]
+/FontName /Courier
+/ItalicAngle 0
+/StemV 51
+/XHeight 426
+/StemH 51
+>>
+endobj
+152 0 obj
+<<
+/Type /FontDescriptor
+/Ascent 770
+/CapHeight 718
+/Descent -229
+/Flags 96
+/FontBBox [-170 -225 1116 931]
+/FontName /Helvetica-Oblique
+/ItalicAngle -15
+/StemV 88
+/XHeight 523
+/StemH 88
+>>
+endobj
+4 0 obj
+<<
+/Type /Font
+/Subtype /TrueType
+/FirstChar 32
+/LastChar 121
+/Widths [278 0 0 0 0 0 0 0 0 0 0 0 0 0 278 0 
+556 556 556 556 556 556 556 556 556 556 333 0 0 0 0 0 
+0 722 0 722 722 667 611 0 722 278 0 722 0 833 722 0 
+667 0 722 667 611 722 667 944 0 0 0 0 0 0 0 556 
+0 556 611 556 611 556 333 611 611 278 0 556 278 889 611 611 
+611 0 389 556 333 611 556 778 556 556 ]
+/Encoding /WinAnsiEncoding
+/BaseFont /Helvetica-Bold
+/FontDescriptor 148 0 R
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /TrueType
+/FirstChar 32
+/LastChar 146
+/Widths [278 0 355 0 0 0 0 0 333 333 0 0 278 333 278 278 
+556 556 556 556 556 556 556 556 556 556 278 278 584 0 584 0 
+0 667 667 722 722 667 611 778 722 278 500 0 556 833 722 778 
+667 0 722 667 611 722 667 944 0 667 0 0 0 0 0 556 
+0 556 556 500 556 556 278 556 556 222 222 500 222 833 556 556 
+556 556 333 500 278 556 500 722 500 500 500 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 222 ]
+/Encoding /WinAnsiEncoding
+/BaseFont /Helvetica
+/FontDescriptor 149 0 R
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/Subtype /TrueType
+/FirstChar 149
+/LastChar 149
+/Widths [460 ]
+/Encoding /WinAnsiEncoding
+/BaseFont /Symbol
+/FontDescriptor 150 0 R
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/Subtype /TrueType
+/FirstChar 32
+/LastChar 125
+/Widths [600 0 0 600 0 0 0 0 600 600 600 0 600 600 600 600 
+600 600 600 600 600 600 600 600 600 0 600 600 600 0 600 600 
+0 600 600 600 600 600 600 600 600 600 0 600 600 600 600 600 
+600 0 600 600 600 600 600 600 600 600 0 600 0 600 0 600 
+0 600 600 600 600 600 600 600 600 600 0 600 600 600 600 600 
+600 600 600 600 600 600 600 600 600 600 600 600 600 600 ]
+/Encoding /WinAnsiEncoding
+/BaseFont /Courier
+/FontDescriptor 151 0 R
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/Subtype /TrueType
+/FirstChar 107
+/LastChar 110
+/Widths [500 0 0 556 ]
+/Encoding /WinAnsiEncoding
+/BaseFont /Helvetica-Oblique
+/FontDescriptor 152 0 R
+>>
+endobj
+1 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 3 0 R
+/Contents 2 0 R
+>>
+endobj
+8 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 10 0 R
+/Contents 9 0 R
+>>
+endobj
+13 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 15 0 R
+/Contents 14 0 R
+>>
+endobj
+17 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 19 0 R
+/Contents 18 0 R
+>>
+endobj
+20 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 22 0 R
+/Contents 21 0 R
+>>
+endobj
+23 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 25 0 R
+/Contents 24 0 R
+>>
+endobj
+26 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 28 0 R
+/Contents 27 0 R
+>>
+endobj
+29 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 31 0 R
+/Contents 30 0 R
+>>
+endobj
+32 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 34 0 R
+/Contents 33 0 R
+>>
+endobj
+35 0 obj
+<<
+/Type /Page
+/Parent 7 0 R
+/Resources 37 0 R
+/Contents 36 0 R
+>>
+endobj
+38 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 40 0 R
+/Contents 39 0 R
+>>
+endobj
+43 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 45 0 R
+/Contents 44 0 R
+>>
+endobj
+46 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 48 0 R
+/Contents 47 0 R
+>>
+endobj
+49 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 51 0 R
+/Contents 50 0 R
+>>
+endobj
+52 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 54 0 R
+/Contents 53 0 R
+>>
+endobj
+55 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 57 0 R
+/Contents 56 0 R
+>>
+endobj
+58 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 60 0 R
+/Contents 59 0 R
+>>
+endobj
+61 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 63 0 R
+/Contents 62 0 R
+>>
+endobj
+64 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 66 0 R
+/Contents 65 0 R
+>>
+endobj
+67 0 obj
+<<
+/Type /Page
+/Parent 42 0 R
+/Resources 69 0 R
+/Contents 68 0 R
+>>
+endobj
+70 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 72 0 R
+/Contents 71 0 R
+>>
+endobj
+74 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 76 0 R
+/Contents 75 0 R
+>>
+endobj
+77 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 79 0 R
+/Contents 78 0 R
+>>
+endobj
+80 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 82 0 R
+/Contents 81 0 R
+>>
+endobj
+83 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 85 0 R
+/Contents 84 0 R
+>>
+endobj
+86 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 88 0 R
+/Contents 87 0 R
+>>
+endobj
+89 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 91 0 R
+/Contents 90 0 R
+>>
+endobj
+92 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 94 0 R
+/Contents 93 0 R
+>>
+endobj
+95 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 97 0 R
+/Contents 96 0 R
+>>
+endobj
+98 0 obj
+<<
+/Type /Page
+/Parent 73 0 R
+/Resources 100 0 R
+/Contents 99 0 R
+>>
+endobj
+101 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 103 0 R
+/Contents 102 0 R
+>>
+endobj
+105 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 107 0 R
+/Contents 106 0 R
+>>
+endobj
+108 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 110 0 R
+/Contents 109 0 R
+>>
+endobj
+111 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 113 0 R
+/Contents 112 0 R
+>>
+endobj
+114 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 116 0 R
+/Contents 115 0 R
+>>
+endobj
+117 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 119 0 R
+/Contents 118 0 R
+>>
+endobj
+120 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 122 0 R
+/Contents 121 0 R
+>>
+endobj
+123 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 125 0 R
+/Contents 124 0 R
+>>
+endobj
+126 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 128 0 R
+/Contents 127 0 R
+>>
+endobj
+129 0 obj
+<<
+/Type /Page
+/Parent 104 0 R
+/Resources 131 0 R
+/Contents 130 0 R
+>>
+endobj
+132 0 obj
+<<
+/Type /Page
+/Parent 135 0 R
+/Resources 134 0 R
+/Contents 133 0 R
+>>
+endobj
+136 0 obj
+<<
+/Type /Page
+/Parent 135 0 R
+/Resources 138 0 R
+/Contents 137 0 R
+>>
+endobj
+139 0 obj
+<<
+/Type /Page
+/Parent 135 0 R
+/Resources 141 0 R
+/Contents 140 0 R
+>>
+endobj
+142 0 obj
+<<
+/Type /Page
+/Parent 135 0 R
+/Resources 144 0 R
+/Contents 143 0 R
+>>
+endobj
+145 0 obj
+<<
+/Type /Page
+/Parent 135 0 R
+/Resources 147 0 R
+/Contents 146 0 R
+>>
+endobj
+153 0 obj
+<<
+/S /D
+>>
+endobj
+154 0 obj
+<<
+/Nums [0 153 0 R ]
+>>
+endobj
+7 0 obj
+<<
+/Type /Pages
+/Kids [1 0 R 8 0 R 13 0 R 17 0 R 20 0 R 23 0 R 26 0 R 29 0 R 32 0 R 35 0 R]
+/Count 10
+/Parent 41 0 R
+>>
+endobj
+42 0 obj
+<<
+/Type /Pages
+/Kids [38 0 R 43 0 R 46 0 R 49 0 R 52 0 R 55 0 R 58 0 R 61 0 R 64 0 R 67 0 R]
+/Count 10
+/Parent 41 0 R
+>>
+endobj
+73 0 obj
+<<
+/Type /Pages
+/Kids [70 0 R 74 0 R 77 0 R 80 0 R 83 0 R 86 0 R 89 0 R 92 0 R 95 0 R 98 0 R]
+/Count 10
+/Parent 41 0 R
+>>
+endobj
+104 0 obj
+<<
+/Type /Pages
+/Kids [101 0 R 105 0 R 108 0 R 111 0 R 114 0 R 117 0 R 120 0 R 123 0 R 126 0 R 129 0 R]
+/Count 10
+/Parent 41 0 R
+>>
+endobj
+135 0 obj
+<<
+/Type /Pages
+/Kids [132 0 R 136 0 R 139 0 R 142 0 R 145 0 R]
+/Count 5
+/Parent 41 0 R
+>>
+endobj
+41 0 obj
+<<
+/Type /Pages
+/Kids [7 0 R 42 0 R 73 0 R 104 0 R 135 0 R ]
+/Count 45
+/MediaBox [0 0 612 792]
+>>
+endobj
+155 0 obj
+<<
+/CreationDate (D:20181201110945+08'00')
+/ModDate (D:20181201110945+08'00')
+/Producer (PSNormalizer.framework)
+>>
+endobj
+156 0 obj
+<<
+/Type /Catalog
+/Pages 41 0 R
+/PageLabels 154 0 R
+>>
+endobj
+xref
+0 157
+0000000000 65535 f 
+0000132461 00000 n 
+0000000016 00000 n 
+0000002169 00000 n 
+0000130596 00000 n 
+0000131057 00000 n 
+0000129488 00000 n 
+0000136358 00000 n 
+0000132541 00000 n 
+0000002275 00000 n 
+0000007790 00000 n 
+0000131601 00000 n 
+0000131767 00000 n 
+0000132622 00000 n 
+0000007921 00000 n 
+0000013588 00000 n 
+0000132276 00000 n 
+0000132705 00000 n 
+0000013732 00000 n 
+0000014017 00000 n 
+0000132788 00000 n 
+0000014124 00000 n 
+0000015822 00000 n 
+0000132871 00000 n 
+0000015941 00000 n 
+0000018519 00000 n 
+0000132954 00000 n 
+0000018638 00000 n 
+0000021272 00000 n 
+0000133037 00000 n 
+0000021391 00000 n 
+0000022868 00000 n 
+0000133120 00000 n 
+0000022987 00000 n 
+0000027706 00000 n 
+0000133203 00000 n 
+0000027825 00000 n 
+0000029243 00000 n 
+0000133286 00000 n 
+0000029362 00000 n 
+0000031565 00000 n 
+0000137026 00000 n 
+0000136493 00000 n 
+0000133370 00000 n 
+0000031684 00000 n 
+0000035545 00000 n 
+0000133454 00000 n 
+0000035664 00000 n 
+0000038641 00000 n 
+0000133538 00000 n 
+0000038760 00000 n 
+0000042390 00000 n 
+0000133622 00000 n 
+0000042509 00000 n 
+0000043865 00000 n 
+0000133706 00000 n 
+0000043984 00000 n 
+0000046644 00000 n 
+0000133790 00000 n 
+0000046763 00000 n 
+0000048456 00000 n 
+0000133874 00000 n 
+0000048575 00000 n 
+0000050358 00000 n 
+0000133958 00000 n 
+0000050477 00000 n 
+0000053587 00000 n 
+0000134042 00000 n 
+0000053706 00000 n 
+0000056982 00000 n 
+0000134126 00000 n 
+0000057101 00000 n 
+0000059291 00000 n 
+0000136631 00000 n 
+0000134210 00000 n 
+0000059410 00000 n 
+0000061693 00000 n 
+0000134294 00000 n 
+0000061812 00000 n 
+0000065386 00000 n 
+0000134378 00000 n 
+0000065505 00000 n 
+0000068966 00000 n 
+0000134462 00000 n 
+0000069085 00000 n 
+0000073437 00000 n 
+0000134546 00000 n 
+0000073544 00000 n 
+0000078287 00000 n 
+0000134630 00000 n 
+0000078406 00000 n 
+0000083236 00000 n 
+0000134714 00000 n 
+0000083355 00000 n 
+0000085938 00000 n 
+0000134798 00000 n 
+0000086057 00000 n 
+0000090566 00000 n 
+0000134882 00000 n 
+0000090685 00000 n 
+0000091152 00000 n 
+0000134967 00000 n 
+0000091272 00000 n 
+0000094384 00000 n 
+0000136769 00000 n 
+0000135055 00000 n 
+0000094504 00000 n 
+0000097164 00000 n 
+0000135143 00000 n 
+0000097284 00000 n 
+0000100481 00000 n 
+0000135231 00000 n 
+0000100601 00000 n 
+0000105956 00000 n 
+0000135319 00000 n 
+0000106076 00000 n 
+0000107786 00000 n 
+0000135407 00000 n 
+0000107906 00000 n 
+0000110614 00000 n 
+0000135495 00000 n 
+0000110734 00000 n 
+0000115414 00000 n 
+0000135583 00000 n 
+0000115534 00000 n 
+0000116594 00000 n 
+0000135671 00000 n 
+0000116714 00000 n 
+0000117528 00000 n 
+0000135759 00000 n 
+0000117625 00000 n 
+0000119857 00000 n 
+0000135847 00000 n 
+0000119977 00000 n 
+0000122250 00000 n 
+0000136918 00000 n 
+0000135935 00000 n 
+0000122359 00000 n 
+0000124847 00000 n 
+0000136023 00000 n 
+0000124956 00000 n 
+0000126806 00000 n 
+0000136111 00000 n 
+0000126915 00000 n 
+0000128779 00000 n 
+0000136199 00000 n 
+0000128888 00000 n 
+0000129379 00000 n 
+0000129628 00000 n 
+0000129835 00000 n 
+0000130031 00000 n 
+0000130198 00000 n 
+0000130390 00000 n 
+0000136287 00000 n 
+0000136316 00000 n 
+0000137140 00000 n 
+0000137273 00000 n 
+trailer
+<<
+/Size 157
+/Root 156 0 R
+/Info 155 0 R
+/ID [<3f229848c6a9f707779c64f00bb7858b><3f229848c6a9f707779c64f00bb7858b>]
+>>
+startxref
+137345
+%%EOF
