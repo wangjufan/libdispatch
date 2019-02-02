@@ -104,5 +104,4 @@
 #define OS_OBJECT_BRIDGE
 #define OS_OBJECT_USE_OBJC_RETAIN_RELEASE 0
 #endif
-
 #endif

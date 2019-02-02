@@ -1,0 +1,663 @@
+
+<!-- saved from url=(0039)http://newosxbook.com/articles/GCD.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><doctype html="">
+
+
+<title>GCD Internals</title>
+<meta name="keywords" content="iOS, OS X, GCD, pthread, Workqueue">
+<style>
+ .output { padding-left : 10px; padding-right: 10px; padding-top: 5px; padding-bottom : 5px; border : 1px solid black;  background-color : black ; color : #00FF00; overflow : auto; }
+ path { font-size: smaller;font-family : Verdana; }
+ .comment { font-weight :bold ; color :blue }
+
+.pb { page-break-after : always; } 
+ super {  font-size : smaller; vertical-align : super}
+ .typed { color : white }
+ .listing { padding-left : 10px; padding-right : 10px; padding-top: 2px; padding-bottom : 2px;overflow : auto;background-color : #ddebda; margin-left :auto; margin-right : auto; width : 90%}
+ .superscript { color : red  ;vertical-align : super; font-size : 8pt; }
+ .reference { color : red  ;vertical-align : super; font-size : 8pt; }
+ .footnote { color : red  ;vertical-align : super; font-size : 8pt; }
+ .note { border : 1px solid red; padding : 10px; width: 50%; margin-left: auto; margin-right : auto; background-color : yellow; box-shadow : 5px 5px 2px #888;}
+ .boxed { border : 1px solid black; padding : 2px;}
+ .padded {margin-left: auto; margin-right : auto;padding : 10px; }
+ figcaption { border-top : 1px solid white; margin-top : 10px; color : white; margin-left: auto; margin-right: auto; font-size : smaller;}
+ .black { color : black ; border-top: 1px solid black;}
+ .bordered { border : 1px solid black;}
+ .rowBordered { border-bottom : 1px solid black;}
+ .annotation { color : yellow ; }
+ .jtoolAnnotation { color : green ; }
+  
+
+ .listingCaption { border-top : 1px solid black; color : black;}
+.upperdash { border-top : 1px dashed;}
+
+ .leftPad { padding-left : 10px;}
+ .rightPad { padding-right : 10px;}
+ figure { border : 1px solid black ; padding: 5px;}
+ article { width : 90% ; margin-left : auto ; margin-right : auto;}
+ .boxeDiv { margin-left : auto; margin-right : auto; border : 1px solid black; background : silver; color : black; padding : 10px; width : 60%; margin-top : 20px; margin-bottom : 20px; box-shadow: 10px 10px 5px #888;}
+
+ h1 { margin-left: auto; margin-right : auto}
+ li { padding : 2px; padding-left: 20px;}
+</style>
+
+
+
+<article>
+<center>
+<h1>GCD Internals</h1>
+<h3>The undocumented side of the Grand Central Dispatcher</h3>
+<h4>Jonathan Levin, http://newosxbook.com/ - 02/15/14</h4>
+</center>
+<section>
+<center><h2>About</h2></center>
+<p>The book touches very little on Apple's Grand Central Dispatcher, which is becoming the de-facto standard for multi-threaded applications in OS X and iOS, as it pushes aside the venerable (and standard) pthread APIs. While I do discuss the kernel support for GCD (Chapter 14, pg. 550, "Work Queues"), the implementation has changed considerably as Apple has added a new SPI in Mountain Lion (XNU 2050)/iOS 6, and has completely externalized pthread functionality to the pthread kernel extension in Mavericks and iOS 7. The pthread support in user mode has also been moved (as of OS X 10.9) to <path>/usr/lib/system/libsystem_pthread.dylib</path> (from its former home in <path>libsystem_c</path>) into its own (closed source) project, and has been enhanced with a powerful introspection feature. </p>
+<p>On (yet another) flight to PVG, where I have to deliver a presentation on (among other things) GCD internals, I figured I might as well make public the information, in my attempt to keep the book as updated as possible for readers such as yourself. This article covers libdispatch versions 339.1.9 (OS X 10.9, for which the source is available), 354.3.1 (iOS 7, no source), and XNU 2050 (OS X 10.8) and 2423 (~ OS X 10.9/iOS 7).
+</p>
+ <h4>Why should you care? (Target Audience)</h4>
+<p>Arguably, most developers couldn't care less about the implementation of GCD, as it "magically" provides concurrency and scheduling support. I'm more of the view that all "magic" has a logical explanation, and this is what I aim to provide here. Unlike other articles I've posted thus far, which can come in quite handy when you develop apps, this article is more of a deep dive into the esoteric. So maybe you do care, or maybe you don't. That's for you to decide. Me, I still have 11 hours to kill.
+</p>
+
+
+
+</section>
+
+
+<section>
+<center><h2>I: User Mode (libdispatch)</h2></center>
+
+<p>The Grand Central Dispatcher is implemented in <path>/usr/lib/system/libdispatch.dylib</path>, which - like other libraries in its path - is reexported by <path>libSystem.B.dylib</path>. The GCD APIs are well documented by apple in the Concurrency Programming Guide <super><a href="http://newosxbook.com/articles/GCD.html#1">1</a></super>, libDispatch reference <super><a href="http://newosxbook.com/articles/GCD.html#2">2</a></super>, the header files (<code>&lt;dispatch/dispatch.h&gt;</code> and friends) and the man pages (q.v. <code>dispatch(3)</code>). The rest of this article builds on those references as a foundation, though in a nutshell, the process for using GCD can be summarized as follows:
+
+</p><ul>
+ <li>GCD offers the application several global <b>dispatch queues</b>, of different priorities: <code>DISPATCH_QUEUE_PRIORITY_HIGH</code> (2), <code>_DEFAULT</code> (0), <code>_LOW</code> (-2) and <code>_BACKGROUND</code> (-32768). The queues are scheduled in decreasing priority. The <code>_BACKGROUND</code> queue is also run on a background thread (i.e. priority of about 4), with I/O throttling. These queues are obtained by <code>dispatch_get_global_queue(<i>priority</i>, <i>flags</i>)</code>, with the only supported flag being <code>DISPATCH_QUEUE_OVERCOMMIT</code>. </li>
+
+ <li>An application also has a main thread queue, which can be obtained by a call to <code>dispatch_get_main_queue</code>. This is the queue served by the well known <code>CF/NSRunLoop</code> constructs.
+
+ </li><li>An application can create additional queues using <code>dispatch_queue_create (<i>label</i>, <i>attr</i>)</code>. The <i>label</i> is an optional name (which can be obtained by <code>dispatch_queue_get_label</code> and debugging tools), and <i>attr</i> is either <code>DISPATCH_QUEUE_SERIAL</code> (1-by-1, FIFO) or <code>DISPATCH_QUEUE_CONCURRENT</code> (parallelized execution) , controlling the execution of blocks. What Apple doesn't mention here is that (as of 10.9/7) there is also a <code>dispatch_queue_create_with_target</code>, specifying a third argument of an already existing queue, to serve as the target queue. <p></p>
+ </li><li>To schedule work, an application can call one of the following functions:
+   <ul>
+ 	<li><code>dispatch_async[_f]</code>: Sending a block or function (_f) to the queue specified. Execution is asynchronous, "as soon as possible". </li>
+ 	<li><code>dispatch_sync[_f]</code>: Sending a block or function (_f) to the queue specified, and blocking until exection completes. Note that this doesn't necessarily mean the block or function will be executed in the current thread context - only that the current thread will block (that is, hang) so as to synchronize execution with the block or function.`</li>
+
+   </ul>
+ </li>
+
+ <li>GCD also supports <b>dispatch sources</b>. These can be created with <code>dispatch_source_create</code>, which takes four arguments: a source type, a (type-dependent) handle, a (type-dependent) mask of events to handle, and a queue on which the handler will run. The handler itself is set with <code>dispatch_source_set_event_handler[_f]</code>, after which the source may be started with a call to <code>dispatch_resume</code>.
+
+</li></ul>
+
+<h3>The root and predefined queues</h3>
+ What the Apple documentation refers to as "global" queues (in the sense of being global to the application, requiring no initialization), libdispatch calls "root" queues. The queues are hard-coded in an array (<path>queue.c</path>) as shown in the following table:
+
+<center>
+<table border="1" cellpadding="5">
+<thead>
+<tr><th>Index</th><th>serial #</th><th>queue name</th>
+</tr></thead>
+<tbody>
+
+<tr><td>0</td><td>4</td><td>com.apple.root.low-priority</td></tr>
+<tr><td>1</td><td>5</td><td>com.apple.root.low-overcommit-priority</td></tr>
+<tr><td>2</td><td>6</td><td>com.apple.root.default-priority</td></tr>
+<tr><td>3</td><td>7</td><td>com.apple.root.default-overcommit-priority</td></tr>
+<tr><td>4</td><td>8</td><td>com.apple.root.high-priority</td></tr>
+<tr><td>5</td><td>9</td><td>com.apple.root.high-overcommit-priority</td></tr>
+<tr><td>6</td><td>10</td><td>com.apple.root.background-priority</td></tr>
+<tr><td>7</td><td>11</td><td>com.apple.root.background-overcommit-priority</td></tr>
+</tbody>
+</table>
+</center>
+
+<p>The implementation of <code>dispatch_get_global_queue</code> calls the internal <code>_dispatch_get_root_queue</code> with the same arguments, which returns the approriate queue from the <code>_dispatch_root_queues</code> array, mapping the priority code to an index of 0 (LOW),2 (DEFAULT),4(HIGH) or 6(BACKGROUND), or their off-by-one odd numbers if OVERCOMMIT was specified. Application created queues (i.e. <code>dispatch_queue_create</code>) are always mapped to the low priority queue (index 0), with the serial queues created with overcommit (index 1)</p>
+
+<p>Looking at the above table you might wonder about why the queues' serial numbers start at 4. This is because libdispatch also creates a queue for the application's main thread - <code>com.apple.main-thread</code> (Serial #1, from <code>init.c</code>), and uses internal queues for its own management: <code>com.apple.root.libdispatch-manager</code> (Serial #2), and <code>com.apple.libdispatch-manager</code> (Serial #3). Serial #0 is unused.</p>
+
+</section>
+
+<section>
+<h3>Dispatch Queue implementation</h3>
+<p>The dispatch queue is implemented is defined in <path>queue_internal.h</path>. It is defined using three macros, in a way that mimics what C++ would consider classes and subclasses.</p>
+
+
+<p>The dispatch queue starts by including the <code>DISPATCH_STRUCT_HEADER</code> - as all dispatch objects do. This common header consists of an <code>OS_OBJECT_HEADER</code>, (which provides the object operations table (vtable), and reference count), and several more fields, including the target queue (settable by dispatch_set_target_queue). The target queue is one of the root queues (usually the default one). Custom queues as well as dispatch sources thus eventually get coalesced into the root queues.</p>
+
+<p>Then dispatch queue then follows with its subclass fields: <code>DISPATCH_QUEUE_HEADER</code>, and the <code>DISPATCH_QUEUE_CACHELINE_PADDING</code>. The latter is used to ensure that the structure can fit optimally within the CPU's cache lines. The former (<code>DISPATCH_QUEUE_HEADER</code>) is used to maintain the queue metadata, including the "width" (# of threads in pool), label (for debugging), serial #, and work item list. The annotated header is shown below:
+</p>
+
+<figure style="min-width : 940px">
+Listing 1: The dispatch_queue_s
+<code>
+<pre>struct dispatch_queue_s {
+    /* <b>DISPATCH_STRUCT_HEADER</b>(queue)  - from queue_internal.h */
+
+        /* <b>_OS_OBJECT_HEADER</b>(const struct dispatch_queue_vtable_s *do_vtable, do_ref_cnt, do_xref_cnt);  */
+	/*  from os/object_private.h */
+	   const struct dispatch_queue_vtable_s *do_vtable;     <span class="comment">// object operations table</span>
+	   int volatile  do_ref_cnt;                            <span class="comment">// reference count</span>
+  	   int volatile  do_xref_cnt;                           <span class="comment">// cross reference count</span>
+
+        struct dispatch_queue_s *volatile do_next;              <span class="comment">// pointer to next object (i.e. linked list)</span>
+        struct dispatch_queue_s *do_targetq;               <span class="comment">// Actual target of object (one of the root queues)</span>
+        void *do_ctxt;                                     <span class="comment">// context</span>
+        void *do_finalizer;                                <span class="comment">// Set with dispatch_set_finalizer[_f]</span>
+        unsigned int do_suspend_cnt;                       <span class="comment">// increment/decrement with dispatch_queue_suspend/resume</span>
+
+    /* <b>DISPATCH_QUEUE_HEADER</b> */
+        uint32_t volatile dq_running;                      <span class="comment">// How many dispatch objects are currently running</span>
+        struct dispatch_object_s *volatile dq_items_head;  <span class="comment">// pointer to first item on dispatch queue (for remove)</span>
+        /* LP64 global queue cacheline boundary */ 
+        struct dispatch_object_s *volatile dq_items_tail;  <span class="comment">// pointer to last item on dispatch queue (for insert)</span>
+        dispatch_queue_t dq_specific_q;                    <span class="comment">// Used for dispatch_queue_set/get_specific</span>
+        uint32_t dq_width;                                 <span class="comment">// Concurrency "width" (how many objects run in parallel)</span>
+        unsigned int dq_is_thread_bound:1;                 <span class="comment">// true for main thread</span>
+        unsigned long dq_serialnum;                        <span class="comment">// Serial # (1-12)</span>
+        const char *dq_label;                              <span class="comment">// User-defined; obtain with get_label</span>
+        /* DISPATCH_INTROSPECTION_QUEUE_LIST */
+  	   TAILQ_ENTRY(dispatch_queue_s) diq_list	   <span class="comment">// introspection builds (-DDISPATCH_INTROSPECTION) only</span>
+        /* DISPATCH_QUEUE_CACHELINE_PADDING */
+	char _dq_pad[DISPATCH_QUEUE_CACHELINE_PAD];        <span class="comment">// pads to 64-byte boundary</span>
+
+};
+
+</pre>
+</code>
+</figure>
+
+
+<p>Note that <b>Queues are not threads!</b>. A single queue may be served by multiple worker threads, and vice versa. You can easily see the internals of GCD by using lldb on a sample program, say something as crude as:
+
+</p><figure class="listing" style="width : 800px">
+Listing 2: A simple GCD program
+<code>
+<pre>#include &lt;stdio.h&gt;
+#include &lt;dispatch/dispatch.h&gt;
+#include &lt;pthread.h&gt;
+
+int main (int arg,char **argv)
+{
+    // Using pthread_self() inside a block will show you the thread it
+    // is being run in. The interested reader might want to dispatch
+    // this block several times, and note that the # of threads can
+    // change according to GCD's internal decisions..
+
+    void (^myblock1) (void) = ^ { printf("%d Blocks are cool - 1 \n",
+                                  (int) pthread_self());  };
+    dispatch_queue_t q = 
+       dispatch_queue_create("com.technologeeks.demoq",  // Our name
+                             DISPATCH_QUEUE_CONCURRENT); // DISPATCH_QUEUE_SERIAL or CONCURRENT
+
+    dispatch_group_t g = dispatch_group_create();
+ 
+    dispatch_group_async(g, q, myblock1);
+        
+    int rc= dispatch_group_wait(g, DISPATCH_TIME_FOREVER);
+                                        
+}
+</pre>
+</code>
+</figure>
+
+<p></p>
+<p>By placing a breakpoint inside a block, you'll see something similar to:
+
+</p><figure class="output" style="width : 800px">
+Output 1: Debugging program from Listing 2 (10.8)
+<code>
+<pre>morpheus@Zephyr (~)$ <span class="typed">cc /tmp/a.c -o /tmp/a</span>
+morpheus@Zephyr (~)$ <span>lldb /tmp/a</span>
+Current executable set to '/tmp/a' (x86_64).
+(lldb) <span class="typed">b printf</span>
+Breakpoint 1: where = libsystem_c.dylib`printf, address = 0x0000000000080784
+(lldb) <span class="typed&gt;" r<="" span="">
+Process 9454 launched: '/tmp/a' (x86_64)
+Process 9454 stopped
+* thread #2: tid = 0xee5c1, 0x00007fff83232784 libsystem_c.dylib`printf, 
+   queue = 'com.technologeeks.demoq, stop reason = breakpoint 1.1
+    frame #0: 0x00007fff83232784 libsystem_c.dylib`printf
+libsystem_c.dylib`printf:
+-&gt; 0x7fff83232784:  pushq  %rbp
+   0x7fff83232785:  movq   %rsp, %rbp
+   0x7fff83232788:  pushq  %r15
+   0x7fff8323278a:  pushq  %r14
+(lldb) <span class="typed">bt all</span>
+<span class="annotation"># 
+# Main thread is blocking in dispatch_group_wait, which is basically like pthread_join
+#</span>
+  thread #1: tid = 0xee5b0, 0x00007fff86ff76c2 libsystem_kernel.dylib`semaphore_wait_trap + 10, 
+   queue = 'com.apple.main-thread
+    frame #0: 0x00007fff86ff76c2 libsystem_kernel.dylib`semaphore_wait_trap + 10
+    frame #1: 0x00007fff893d983b libdispatch.dylib`_dispatch_group_wait_slow + 154
+    frame #2: 0x0000000100000e54 a`main + 100
+    frame #3: 0x00007fff8621e7e1 libdyld.dylib`start + 1
+<span class="annotation"># 
+# Block is execution asynchronously on a worker thread, handled as a custom queue by libdispatch
+# Offsets on Mavericks/iOS7 are (naturally) different, and worker_thread2 calls root_queue_drain
+#</span>
+* thread #2: tid = 0xee5c1, 0x00007fff83232784 libsystem_c.dylib`printf, 
+   queue = 'com.technologeeks.demoq, stop reason = breakpoint 1.1
+    frame #0: 0x00007fff83232784 libsystem_c.dylib`printf
+    frame #1: 0x0000000100000e97 a`__main_block_invoke + 39
+    frame #2: 0x00007fff893d7f01 libdispatch.dylib`_dispatch_call_block_and_release + 15
+    frame #3: 0x00007fff893d40b6 libdispatch.dylib`_dispatch_client_callout + 8
+    frame #4: 0x00007fff893d9317 libdispatch.dylib`_dispatch_async_f_redirect_invoke + 117
+    frame #5: 0x00007fff893d40b6 libdispatch.dylib`_dispatch_client_callout + 8
+    frame #6: 0x00007fff893d51fa libdispatch.dylib`_dispatch_worker_thread2 + 304
+    frame #7: 0x00007fff831c8cdb libsystem_c.dylib`_pthread_wqthread + 404
+    frame #8: 0x00007fff831b3191 libsystem_c.dylib`start_wqthread + 13
+(lldb) 
+</span></pre>
+</code>
+</figure>
+
+When I tried this code in my 10.9 VM, the same breakpoint caught the main thread in the act of dispatching - before the <code>dispatch_group_wait</code>:
+
+<a id="output2">
+<figure class="output">
+Output 2: Debugging program from Listing 2, again
+<code>
+<pre>  thread #1: tid = 0x6231, 0x00007fff86bace6a libsystem_kernel.dylib`__workq_kernreturn + 10, 
+   queue = 'com.apple.main-thread
+    frame #0: 0x00007fff86bace6a libsystem_kernel.dylib`__workq_kernreturn + 10
+    frame #1: 0x00007fff8e96afa7 libsystem_pthread.dylib`pthread_workqueue_addthreads_np + 47
+    frame #2: 0x00007fff9432dba1 libdispatch.dylib`_dispatch_queue_wakeup_global_slow + 64
+    frame #3: 0x0000000100000e41 a`main + 81
+    frame #4: 0x00007fff911795fd libdyld.dylib`start + 1
+    frame #5: 0x00007fff911795fd libdyld.dylib`start + 1
+</pre>
+</code>
+</figure>
+</a>
+
+<p>This isn't due to 10.9's GCD being different - rather, it demonstrates the true asynchronous nature of GCD: The main thread has yet to return from requesting the worker (which it does by <code>pthread_workqueue_addthreads_np</code>, as I'll describe later), and already the worker thread has spawned and is mid execution, possibly on another CPU core. The exact state of the main thread with respect to the worker is largely unpredictable.</p>
+<p>Note another cool feature of GCD is that the queue name in thread #2 has been set to the custom queue. GCD renames the root queues when they are working on behalf of custom queues, like in this example), in a way that is visible to lldb. I'm working on adding this functionality to process explorer. In case you're wondering why "<code>dispatch_worker_thread2</code>" is used - that's because libdispatch defined three worker thread functions: the first, for use when compiled with <code>DISPATCH_USE_PTHREAD_POOL</code>. The second (this one), for use with <code>HAVE_PTHREAD_WORKQUEUE_SETDISPATCH_NP</code>, and the third for <code>HAVE_PTHREAD_WORKQUEUES</code>. The second also falls through to the third.</p>
+
+</section>
+<section>
+<h3>Dispatch Sources</h3>
+<p>A key function of dispatch queues is connecting them to <b>dispatch sources</b>. These enable an application to multiplex multiple event-listeners, much as would traditionally be provided by <code>select(2)</code>, but with a far wider support of event sources - from file descriptors, through sockets, mach ports, signals, process events, timers and event custom sources.</p>
+<p>All of the myriad sources are built on top of the kernel's kqueue mechanism. The <code>type</code> argument to <code>dispatch_source_create</code> is, in fact, a <code>struct dispatch_source_type_s</code> pointer, defined in <path>source_internal.h</path> as follows:
+</p>
+
+
+<figure style="min-width : 600px">
+Listing 3: The dispatch_source_type_s definition (from <path>source_internal.h</path>)
+<code>
+<pre>struct dispatch_source_type_s {
+        struct kevent64_s ke;
+        uint64_t mask;
+        void (*init)(dispatch_source_t ds, dispatch_source_type_t type,
+                        uintptr_t handle, unsigned long mask, dispatch_queue_t q);
+};
+</pre>
+</code>
+</figure>
+
+<p>A dispatch source can be thought of a special case of a queue. The two are closely related, and the former is a "subclass" of the latter, as can be seen by the definition:
+
+</p><figure style="min-width : 900px">
+Listing 4: The dispatch_source_s definition (from <path>source_internal.h</path>)
+<code>
+<pre>struct dispatch_source_s {
+     /* DISPATCH_STRUCT_HEADER(source); */      <span class="comment">// As per all other dispatch objects... </span>
+
+     /* DISPATCH_QUEUE_HEADER; */               <span class="comment">// as per dispatch_queue definition</span>
+
+     /* DISPATCH_SOURCE_HEADER(source);
+        dispatch_kevent_t ds_dkev; \            <span class="comment">// linked list of events and source refs</span>
+        dispatch_source_refs_t ds_refs; 
+        unsigned int ds_atomic_flags; \
+        unsigned int \
+                ds_is_level:1, \
+                ds_is_adder:1, \                      <span class="comment">// true for DISPATCH_SOURCE_ADD</span>
+                ds_is_installed:1, \                  <span class="comment">// true if source is installed on manager queue</span>
+                ds_needs_rearm:1, \                   <span class="comment">// true if needs rearmin on manager queue</span>
+                ds_is_timer:1, \                      <span class="comment">// true for timer sources only</span>
+                ds_cancel_is_block:1, \               <span class="comment">// true if data source cancel_handler is a block</span>
+                ds_handler_is_block:1, \              <span class="comment">// true if data source event_handler is a block</span>
+                ds_registration_is_block:1, \         <span class="comment">// true if data source registration handler is a block</span>
+                dm_connect_handler_called:1, \        <span class="comment">// used by mach sources only</span>
+                dm_cancel_handler_called:1; \         <span class="comment">// true if in the process of calling cancel block</span>
+        unsigned long ds_pending_data_mask;	      <span class="comment">// returned by dispatch_source_get_data_mask()</span>
+      unsigned long ds_ident_hack;                    <span class="comment">// returned by dispatch_source_get_handle()</span>
+      unsigned long ds_data;                          <span class="comment">// returned by dispatch_source_get_data()</span>
+      unsigned long ds_pending_data;
+};
+
+</pre>
+</code>
+</figure>
+
+<p>The <code>dispatch_source_create</code> function operation is straightforward: following validation of the <code>type</code> argument, it allocates and initializes a <code>dispatch_source_s</code> structure, in particular populating its ds_dkev with the kevent() parameters passed to the function.</p>
+
+<p>Internally, most (if not all) sources eventually get triggered by <code>kevent()</code>. I cover this important syscall in both chapter 2 (page 57) and 14 (500 pages later..). This means that most sources use the same kqueue. Most, with the exception of Mach sources, which use Mach's <code>request_notification</code> mechanism.
+
+</p><p>You can see this for yourself by using lldb on a program or daemon which uses dispatch sources. One example to debug is diskarbitration:
+
+</p><figure class="output" style="min-width : 900px">
+<code>
+</code><pre><code>bash-3.2# <span class="typed">ps -ef | grep diskarb</span>
+    0    16     1   0 Sun10AM ??         0:02.40 /usr/sbin/diskarbitrationd
+bash-3.2# lldb -p 16
+Attaching to process with:
+    process attach -p 16
+Process 16 stopped
+Executable module set to "/usr/sbin/diskarbitrationd".
+Architecture set to: x86_64-apple-macosx.
+(lldb) <span class="typed">thread backtrace all</span>
+<span class="annotation"># 
+# The CFRunLoop construct (which is also responsible for the main thread queue)
+# blocks on mach_msg_trap, which will return when a message is received
+#</span>
+* thread #1: tid = 0x0140, 0x00007fff86ff7686 libsystem_kernel.dylib`mach_msg_trap + 10, 
+   queue = 'com.apple.main-thread, stop reason = signal SIGSTOP
+    frame #0: 0x00007fff86ff7686 libsystem_kernel.dylib`mach_msg_trap + 10
+    frame #1: 0x00007fff86ff6c42 libsystem_kernel.dylib`mach_msg + 70
+    frame #2: 0x00007fff8be77233 CoreFoundation`__CFRunLoopServiceMachPort + 195
+    frame #3: 0x00007fff8be7c916 CoreFoundation`__CFRunLoopRun + 1078
+    frame #4: 0x00007fff8be7c0e2 CoreFoundation`CFRunLoopRunSpecific + 290
+    frame #5: 0x00007fff8be8add1 CoreFoundation`CFRunLoopRun + 97
+    frame #6: 0x00000001069d83e6 diskarbitrationd`___lldb_unnamed_function176$$diskarbitrationd + 2377
+    frame #7: 0x00007fff8621e7e1 libdyld.dylib`start + 1
+
+<span class="annotation">#
+# The manager queue (holds a kqueue() and blocks on kevent until a source "fires")
+#</span>
+  thread #2: tid = 0x0146, 0x00007fff86ff9d16 libsystem_kernel.dylib`kevent + 10, 
+   queue = 'com.apple.libdispatch-manager
+    frame #0: 0x00007fff86ff9d16 libsystem_kernel.dylib`kevent + 10
+    frame #1: 0x00007fff893d6dea libdispatch.dylib`_dispatch_mgr_invoke + 883
+    frame #2: 0x00007fff893d69ee libdispatch.dylib`_dispatch_mgr_thread + 54
+(lldb) detach
+Detaching from process 16
+Process 16 detached
+</code>
+</pre>
+</figure>
+<p>When a source does fire, the libdispatch-manager triggers the callback on another thread (via <code>dispatch_worker_thread2</code>, as usual, though it goes on to call dispatch_source_invoke, resulting in a slightly different stack). This way, the manager thread remains available to process events from other sources.
+</p></section>
+<section>
+<center><h2>II: Still in User Mode (pthread)</h2></center>
+
+<p>GCD, contrary to the impression one might get, does not <i>replace</i> threads - it builds on them. The underlying support for libdispatch is still the venerable POSIX threads library (pthread), though most of the support comes from non-POSIX compliant Apple extensions (which are easily identifiable by the <code>_np</code> suffix in function names. Most of those functions were silently introduced in Leopard (10.5), with others added in 10.6, as GCD was formerly introduced. The API, however, has undergone significant changes, making it a moving target.</p>
+
+<p>To exacerbate matters, though the Apple pthread implementation was formerly a part of LibC, (thus open source), this has changed as of OS X 10.9 (somewhere between <path>LibC-825</path> and <path>997</path>). Pthreads is now its own library (<path>libsystem_pthread.dylib</path>) and project (presently, <path>libpthread-53.1.4</path>). I'm not entirely clear why Apple decided to refactor it out, (and maybe the source <i>is</i> still somewhere on opensource.apple.com..) but the move also aligns with the one in kernel mode - having moved out all pthread support to <path>pthread.kext</path> (which is part of the above project, in <path>kern/kern_support.c</path>. Seeing as these were non POSIX extensions (and mostly <code>APPLE_PRIVATE</code> APIs) I guess they figure developers were forewarned.</p>
+<p>The last open source implementation of pthreads, therefore, is that of 10.8 (<path>LibC-825</path>), wherein Apple changed the API and added new <code>_np</code> calls. 10.9 changes the API further, and it seems like it might take a while before the dust settles. This is also evident in the code of libdispatch, in the sections defined <code>DISPATCH_USE_LEGACY_WORKQUEUE_FALLBACK</code>, though as of 10.8 the legacy interface has effectively been removed: Both libdispatch and pthreads check if the kernel supports the new interface (referred to as the "New SPIs"), and return an error if that is not the case.</p>
+
+<p>The non standard pthread extensions provided by Apple were, surprisingly enough, documented - not by Apple, but by FreeBSD man pages, since GCD has been ported to it. Apple, however, effectively drops almost of all those extensions in favor of new ones, as shown in the following figure:
+
+</p><figure class="output" style="min-width : 800px">
+<code>
+<pre><span class="annotation"># OS X 10.8 output:</span>
+morpheus@Zephyr$ <span class="typed">jtool -S -v /usr/lib/system/libsystem_c.dylib | grep pthread_workqueue</span>
+00000000000cfd80 d ___pthread_workqueue_pool_head
+0000000000015b39 T ___pthread_workqueue_setkill
+0000000000017230 T _pthread_workqueue_additem_np
+0000000000016fb7 T _pthread_workqueue_addthreads_np
+0000000000016aad T _pthread_workqueue_atfork_child
+0000000000016aa3 T _pthread_workqueue_atfork_parent
+0000000000016a99 T _pthread_workqueue_atfork_prepare
+00000000000167bb T _pthread_workqueue_attr_destroy_np
+0000000000016808 T _pthread_workqueue_attr_getovercommit_np
+00000000000167d1 T _pthread_workqueue_attr_getqueuepriority_np
+000000000001679f T _pthread_workqueue_attr_init_np
+0000000000016822 T _pthread_workqueue_attr_setovercommit_np
+00000000000167eb T _pthread_workqueue_attr_setqueuepriority_np
+0000000000016ff8 T _pthread_workqueue_create_np
+0000000000017848 T _pthread_workqueue_getovercommit_np
+000000000001683a T _pthread_workqueue_init_np
+0000000000016a56 T _pthread_workqueue_requestconcurrency
+0000000000016f26 T _pthread_workqueue_setdispatch_np     
+<span class="annotation"># OS X 10.9 output:</span>
+morpheus@simulacrum$ <span class="typed">jtool -S -v /usr/lib/system/libsystem_pthread.dylib | grep pthread_workqueue</span>
+0000000000002c0d t _pthread_workqueue_atfork_child         <span class="annotation"># survived, but made private</span>
+0000000000002371 T ___pthread_workqueue_setkill            <span class="annotation"># make thread killable by pthread_kill</span>
+0000000000002f78 T _pthread_workqueue_addthreads_np        <span class="annotation"># </span>
+0000000000002f19 T _pthread_workqueue_setdispatch_np       <span class="annotation"># q.v. below</span>
+0000000000002f12 T _pthread_workqueue_setdispatchoffset_np <span class="annotation">#</span>
+</pre>
+</code>
+</figure>
+
+<p>Since virtually the entire "legacy" API has been eradicated, let's focus on those functions which did make the cut:
+
+<table border="1" cellpadding="5">
+<thead>
+<tr><th>Function</th><th>Notes</th>
+</tr></thead><tbody>
+ <tr><td><code>pthread_workqueue_addthreads_np<br>(int queue_priority,<br> int options, <br>int numthreads)</code></td><td>Add <i>numthreads</i> to workqueue of priority <i>queue_priority</i>, according to <i>options</i>. The only options supported is <code>WORKQ_ADDTHREADS_OPTION_OVERCOMMIT</code>. As you could see in <a href="http://newosxbook.com/articles/GCD.html#output2">Output 2</a>, this call will asynchronously spawn the worker threads.</td></tr>
+ <tr><td><code>pthread_workqueue_setdispatch_np<br>(void (*worker_func)(int queue_priority, int options, void *ctxt))</code></td><td>- Sets the dispatch worker function (always worker_thread2)<br>- Makes sure new SPI is supported<br>- Calls <code>workq_open()</code></td></tr>
+
+<tr><td><code>pthread_workqueue_setdispatchoffset_np</code></td><td>A new addition to the API (10.9) Used by libdispatch when setting up the root queues, and passes the offset of the dq_serialnum member relative to the dispatch_queue_s struct.</td></tr>
+</tbody>
+</table>
+</p></section>
+
+<p>As you can see, there is no longer a way to manipulate most aspects of work queues via pthreads. Whereas before pthread exported an <code>_additem_np</code> (which would enable scheduling of a work item), this has been removed in favor of <code>_addthreads_np</code>, and the work function itself is set by <code>_setdispatch_np</code>, normally once per process instance, during libdispatch's <code>root_queue_init()</code>. This means that the actual work queue thread pool management is handled by the kernel.
+
+
+
+</p><h3>Work queue diagnostics</h3>
+
+<p>
+Apple's fantabulous yet undocumented <code>proc_info</code> syscall (#336), which I laud so much in the book, also has a <code>PROC_PIDWORKQUEUEINFO</code> code (#12). It provides a very high level view of the workqueue, as shown here:
+
+</p><figure>
+Listing 5: The proc_workqueueinfo (from &lt;sys/proc_info.h&gt;)
+<code>
+<pre>struct proc_workqueueinfo {
+        uint32_t        pwq_nthreads;           /* total number of workqueue threads */
+        uint32_t        pwq_runthreads;         /* total number of running workqueue threads */
+        uint32_t        pwq_blockedthreads;     /* total number of blocked workqueue threads */
+        uint32_t        pwq_state;
+};
+</pre>
+</code>
+</figure>
+
+<p>The latest version of my <a href="http://newosxbook.com/files/procexp.tar?v029&amp;ref=gcd">Process Explorer</a> (v0.2.9 and later) automatically displays associated work queue information, if work queues are detected in the process whose information you are querying.</p>
+
+<section>
+
+<center><h2>III: Kernel support (workqueues)</h2></center>
+<h3>System call interface</h3>
+As stated in the book<super><a href="http://newosxbook.com/articles/GCD.html#3">3</a></super>, Workqueues in the kernel are supported through two undocumented system calls - <code>workq_open</code> (#367) and <code>workq_kernreturn</code> (#368). Though the system calls remain constant, their implementation has changed with 10.8/6 and the introduction of the "new SPI". Beginning with 10.9/7, the implementation of the system calls has moved to the <path>pthread.kext</path>, leaving nothing but the shims in the kernel source. Another function of importance is <code>bsdthread_register</code>. You can find the definitions in <path>bsd/kern/syscalls.master</path>:<p></p>
+
+<figure style="min-width: 940px">
+Listing 6: Workqueue related system calls
+<code>
+<pre>366     AUE_NULL        ALL     { int bsdthread_register(user_addr_t threadstart, user_addr_t wqthread, int pthsize,
+                                  user_addr_t dummy_value, user_addr_t targetconc_ptr, uint64_t dispatchqueue_offset) 
+                                  NO_SYSCALL_STUB; } 
+367     AUE_WORKQOPEN   ALL     { int workq_open(void) NO_SYSCALL_STUB; }
+368     AUE_WORKQOPS    ALL     { int workq_kernreturn(int options, user_addr_t item, int affinity, int prio) 
+                                  NO_SYSCALL_STUB; }
+</pre>
+</code>
+</figure>
+
+
+<p>There's a reason why all three have <code>NO_SYSCALL_STUB</code>: Like other (crazy useful) syscalls in XNU, Apple doesn't want you to use them. If XNU weren't open source, nobody but Apple would like know how to use them, either.</p>
+
+<p></p>
+<p><code>workq_open</code> works in essentially the same way it has before. <code>workq_kernreturn</code>, however, has been completely modified: Rather than offering the <code>WQOPS</code> discussed in the book as options, the new SPI deprecates them all but <code>WQOPS_THREAD_RETURN</code>, and instead offers two new others: 
+</p><ul>
+<li><code>WQOPS_QUEUE_NEWSPISUPP</code> &nbsp;(0x10), which is used to check for SPI support - and merely returns 0 if supported.</li>
+<li><code> WQOPS_QUEUE_REQTHREADS</code>&nbsp;(0x20). This code requests the kernel to run n more (possibly overcommited) requests of a given priority. The value of "n" in passed in the "affinity" argument, with the <code>item</code> argument (formerly used to pass the user mode address to execute for <code>WQOPS_QUEUE_ADD</code>) is ignored.</li>
+</ul>
+
+
+
+<p></p>
+
+<p>
+</p><h3>The kernel workqueue implementation</h3>
+
+<p>Kernel workqueue support was in <path>bsd/sys/pthread_internal.h</path> - but has become opaque with v10.9. The last reported sighting of a workqueue in the wild (in the <path>xnu-2050.22.13</path> sources), looked like so (annotations added):
+<br>
+</p><figure style="min-width: 940px">
+Listing 7: The kernel workqueue implementation
+<code>
+<pre>struct workqueue {
+   proc_t          wq_proc;                          <span class="comment">// Owning process</span>
+   vm_map_t        wq_map;                           <span class="comment">// VM Map for work thread stacks</span>
+   task_t          wq_task;                          <span class="comment">// The owning process's task port (used to create thread)</span>
+   thread_call_t   wq_atimer_call;
+   int             wq_flags;                         <span class="comment">// WQ_EXITING, WQ_ATIMER_RUNNING, WQ_LIST_INITED,</span>
+   int             wq_lflags;                        <span class="comment">// WQL_ATIMER_BUSY, _WAITING</span>
+   uint64_t        wq_thread_yielded_timestamp;      <span class="comment">// set by workqueue_thread_yielded()</span>
+   uint32_t        wq_thread_yielded_count;          <span class="comment">// count of yielded threads, used with threshold</span>
+   uint32_t        wq_timer_interval;
+   uint32_t        wq_affinity_max;
+   uint32_t        wq_threads_scheduled;
+   uint32_t        wq_constrained_threads_scheduled;
+   uint32_t        wq_nthreads;                      <span class="comment">// # of threads in this workqueue</span>
+   uint32_t        wq_thidlecount;                   <span class="comment">// .. of which how many are idle</span>
+   uint32_t        wq_reqcount;                      <span class="comment">// # of current requests (incremented by WQOPS_QUEUE_REQTHREADS)</span>
+   TAILQ_HEAD(, threadlist) wq_thrunlist;            <span class="comment">// List of active threads</span>
+   TAILQ_HEAD(, threadlist) wq_thidlelist;           <span class="comment">// List of idle ("parked") threads</span>
+   uint16_t        wq_requests[WORKQUEUE_NUMPRIOS];  <span class="comment">// # of current requests, by priority</span>
+   uint16_t        wq_ocrequests[WORKQUEUE_NUMPRIOS];<span class="comment">// # of overcommitted requests, by priority</span>
+   uint16_t        wq_reqconc[WORKQUEUE_NUMPRIOS];           /* requested concurrency for each priority level */
+   uint16_t        *wq_thscheduled_count[WORKQUEUE_NUMPRIOS];
+   uint32_t        *wq_thactive_count[WORKQUEUE_NUMPRIOS];   /* must be uint32_t since we OSAddAtomic on these */
+   uint64_t        *wq_lastblocked_ts[WORKQUEUE_NUMPRIOS];
+};
+</pre>
+</code>
+</figure>
+
+
+<p></p>
+<p>@TODO: detail more about work queue implementation..</p>
+<h3>sysctl variables</h3>
+<p>The kernel exports several variables to control work queues. These are basically the same as those of FreeBSD, and are exported by the kernel proper (pre 10.9/7) or by <path>pthread.kext</path> (10.9/7 and later). The variables are shown in the following table:
+
+<!--
+  The FreeBSD Man:
+
+   kern.wq_yielded_threshold            Maxinum number of threads to yield
+                                          within the yielded window.
+
+     kern.wq_yielded_window_usecs         The yielded thread window size given
+                                          in microseconds.
+
+     kern.wq_stalled_window_usecs         The number of microseconds until a
+                                          thread is considered stalled.
+
+     kern.wq_reduce_pool_window_usecs     The number of microseconds while
+                                          a thread is idle until it is removed
+                                          from the thread pool.
+
+     kern.wq_max_timer_interval_usecs     The number of microseconds to wait
+                                          to check for stalled or idle
+                                          threads.
+!-->
+
+</p><center>
+<table border="1">
+<thead><tr><th>sysctl variable</th><th>controls</th></tr></thead>
+<tbody>
+<tr><td><code>kern.wq_yielded_threshold</code></td><td>Maximum # of threads that may be yielded</td></tr>
+<tr><td><code>kern.wq_yielded_window_usecs</code></td><td>Yielded window size</td></tr>
+<tr><td><code>kern.wq_stalled_window_usecs</code></td><td>Maximum # of usecs thread can not respond before it is deemed stalled</td></tr>
+<tr><td><code>kern.wq_reduce_pool_window_usecs</code></td><td>Maximum # of usecs thread can idle before the thread pool will be reduced</td></tr>
+<tr><td><code>kern.wq_max_timer_interval_usecs</code></td><td>Maximum # of usecs between thread checks</td></tr>
+<tr><td><code>kern.wq_max_threads</code></td><td>Maximum # of threads in the work queue</td></tr>
+</tbody>
+</table>
+</center>
+
+
+<!--
+<code>workqueue_thread_yielded</code> is called whenever a thread context switch occurs (i.e. from <code>thread_switch()</code>). However, it returns immediately if the owning process does not have a workqueue associated with it, or the workqueue has no requests (reqcount == 0). Otherwise, the workqueue maintains two fields: a <code>wq_thread_yielded_count</code>, and a <code>wq_thread_yielded_timestamp</code>.
+!-->
+<h3>kdebug codes</h3>
+<p>
+As with all kernel operations, the workqueue mechanism is laced with KERNEL_DEBUG macro calls, to mark function calls and arguments. Unlike other calls, however, the macros often define the debug codes as hex constants, rather than meaningful names. Unsurprisingly, the codes aren't listed in CoreProfile, either. I'm working on adding these to my kdebugView tool. I still need to delve into the "how" of kernel mode - so Updates will follow. Me, I need to get off this flight already.
+
+<br>
+
+<!--
+<center>
+<table border="1" cellpadding="5">
+<thead>
+<tr><th>Function</th><th>Code</th><th>Modifier</th><th>arg1</th><th>arg2</th><th>arg3</th><th>arg4</th></tr>
+</thead>
+<tbody>
+<tr><td rowspan="4"><code>workq_run_nextreq</td><td rowspan="4">0xefffd000</td><td>FUNC_START</td><td rowspan="4">wq</td><td>thread</td><td>idle thread count</td><td>request count</td></tr>
+<tr><td>---</td><td>busy count</td><td>start_timer</td><td>0</td></tr>
+<tr><td rowspan="2">FUNC_END</td><td rowspan="2">thread_tid</td><td>overcommit</td><td>1 - thread run</td></tr>
+<tr><td>0</td><td>2 - out of work/no thread</td></tr>
+
+
+<tr><td><code>workqueue_interval_timer_start</code></td><td>0xefffd110</td><td/><td>wq</td><td>request count</td><td>flags</td><td>timer interval</td></tr>
+
+<tr><td rowspan="3"><code>workqueue_add_timer</code></td><td rowspan="3">0xefffd108</td><td>FUNC_START</td><td>wq</td><td>wq_flags</td><td>wq_nthreads</td><td>wq_thidlecount</td></tr>
+<tr><td>--</td><td>wq</td><td>wq_reqcount</td><td>wq_thidlecount</td><td>wq_busycount</td></tr>
+<tr><td>FUNC_END</td><td>wq</td><td>start_timer</td><td>wq_nthreads</td><td>wq_thidlecount</td></tr>
+
+<tr><td rowspan="3"><code>workqueue_thread_yielded</code></td><td rowspan="3">0xefffd138</td><td>FUNC_START</td><td rowspan="3">wq</td><td rowspan="3">wq_thread_yielded_count</td><td rowspan="3">wq_reqcount</td><td>0</td></tr>
+<tr><td rowspan="2">FUNC_END</td><td>1 - workqueue_run_nextreq was run</td></tr>
+<tr><td>2 - no idle threads</td>
+
+
+
+<tr><td rowspan="2"><code>workqueue_callback</code><td rowspan="2">0xefffd020</td><td>FUNC_START<br/><font size="-2">(type=SCHED_CALL_BLOCK)</font></td><td rowspan="2">wq</td><td>old_activecount</td><td rowspan="2">th_priority</td><td rowspan="2>th_affinity_tag</td><td rowspan="2">thread_tid</td></tr>
+<tr><td>FUNC_END <font size="-2">(type=SCHED_CALL_UNBLOCK)</font></td><td>wq_threads_scheduled</td></tr>
+
+<tr><td rowspan="2"><code>workqueue_removethread</code><td>0xefffd014</td><td>FUNC_END<br/><font size="-2">(th_flags & TH_LIST_SUSPENDED)</font></td><td rowspan="2">wq</td><td rowspan="2">tid(current_thread)</td><td rowspan="2">nq_nthreads</td><td rowspan="2>0xdead</td><td rowspan="2">tid(tl->th_thread)</td></tr>
+
+<tr><td>0xefffd018</td></td><td>FUNC_END <font size="-2">(else)</font></td></tr>
+
+<tr><td><code>workqueue_addnewthread</code></td><td>0xefffd014</td><td>FUNC_START</td><td>wq</td><td>wq_nqthreads</td><td>0</td><td>tid(current_thread</td></tr>
+
+<tr><td rowspan="3"><code>workq_kernreturn<br/>(WQOPS_QUEUE_REQTHREADS)</code></td><td>0xefffd008</td><td>FUNC_NONE<br/><font size="-2">overcommit == FALSE</font></td><td rowspan="3">wq</td><td rowspan="3">priority</td> <td rowspan="3">wq_requests[priority]</td><td rowspan="3">reqcount</td></tr>
+<tr><td>0xefffd13c</td><td>FUNC_NONE<br/><font size="-2">overcommit</font></td></tr>
+<tr><td>0xefffd140</td><td>FUNC_NONE<br/><font size="-2">overcommit &&<br/> need to overcommit </font></td></tr>
+<tr><td><code>workq_kernreturn<br/>(WQOPS_THREAD_RETURN)</code></td><td>0xefffd004</td><td>FUNC_END<br/></td><td>wq</td><td>0</td><td>0</td><td>0</td></tr>
+
+<tr><td rowspan="2"><code>workqueue_mark_exiting</code></td><td rowspan="2">0x9008088</td><td>FUNC_START</td><td>p_wqptr</td><td rowspan="2">0</td><td rowspan="2">0</td><td rowspan="2">0</td></tr>
+<tr><td>FUNC_END</td><td>0</td></tr>
+
+<tr><td rowspan="2"><code>workqueue_exit</code></td><td rowspan="2">0x900808c</td><td>FUNC_START</td><td>p_wqptr</td><td rowspan="2">0</td><td rowspan="2">0</td><td rowspan="2">0</td></tr>
+<tr><td>FUNC_END</td><td>0</td></tr>
+
+<!-- continue from here
+<tr><td rowspan="5"><code>workqueue_run_nextreq</code></td><td rowspan="5">efffd000</td><td>FUNC_START</td><td>wq</td><td>thread</td><td rowspan="2">wq_thidlecount</td><td rowspan="2">wq_reqcount</td></tr>
+<tr><td></td></tr>
+<tr><td></td></tr>
+<tr><td></td></tr>
+<tr><td>FUNC_END</td></tr>
+!-->
+
+
+
+
+
+
+</p>
+
+<div style="width : 500px;border : 1px solid black; padding : 20px;">
+@TODO
+<ul>
+ <li>Usage of sysctl vars inside pthread_synch</li>
+ <li>flow of <code>workqueue_run_nextreq</code></li>
+ <li><code>wq_runreq</code> and <code>setup_wqthread</code></li>
+ <li>Kdebug constants..</li>
+</ul></div>
+
+</section>
+<section>
+<h2>References</h2>
+<ol>
+ <a id="1"><li>Concurrency Programming Guide:</li></a>
+ <a id="2"><li>GCD Reference:</li></a>
+ <a id="3"><li>My book</li></a>
+
+</ol>
+</section></article>
+
+
+
+
+</doctype></body></html>
