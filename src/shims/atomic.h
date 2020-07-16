@@ -124,7 +124,7 @@
 #endif
 #endif
 #undef _dispatch_hardware_pause
-#define _dispatch_hardware_pause() __asm__("pause")
+#define _dispatch_hardware_pause() __asm__("pause")//That is just a ordinary NOP with a useless prefix-byte. The processor will wait a cycle or two and then continue without altering the processor state in any way. You will not get the performance and power benefits from using PAUSE but the program will still work as expected.
 #undef _dispatch_debugger
 #define _dispatch_debugger() __asm__("int3")
 

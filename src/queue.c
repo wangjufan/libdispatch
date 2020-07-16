@@ -2259,21 +2259,21 @@ _dispatch_main_queue_drain(void)
 	uint64_t start = _dispatch_absolute_time();
 #endif
 	dispatch_queue_t old_dq = _dispatch_thread_getspecific(dispatch_queue_key);
-	_dispatch_thread_setspecific(dispatch_queue_key, dq);
+	_dispatch_thread_setspecific(dispatch_queue_key, dq);//设置运行队列
 
 	struct dispatch_object_s *dc = NULL, *next_dc = NULL;
 	while (dq->dq_items_tail) {
 		while (!(dc = fastpath(dq->dq_items_head))) {
-			_dispatch_hardware_pause();
+			_dispatch_hardware_pause();//__asm__("pause")//That is just a ordinary NOP with a useless prefix-byte. The processor will wait a cycle or two and then continue without altering the processor state in any way. You will not get the performance and power benefits from using PAUSE but the program will still work as expected.
 		}
 		dq->dq_items_head = NULL;
 		do {
 			next_dc = fastpath(dc->do_next);
-			if (!next_dc &&
-					!dispatch_atomic_cmpxchg2o(dq, dq_items_tail, dc, NULL)) {
+			if (!next_dc
+				&& !dispatch_atomic_cmpxchg2o(dq, dq_items_tail, dc, NULL)) {
 				// Enqueue is TIGHTLY controlled, we won't wait long.
 				while (!(next_dc = fastpath(dc->do_next))) {
-					_dispatch_hardware_pause();
+					_dispatch_hardware_pause();//__asm__("pause")
 				}
 			}
 			if (dc == dmarker) {
@@ -2283,7 +2283,7 @@ _dispatch_main_queue_drain(void)
 				}
 				goto out;
 			}
-			_dispatch_continuation_pop(dc);
+			_dispatch_continuation_pop(dc);//执行任务
 			_dispatch_workitem_inc();
 		} while ((dc = next_dc));
 	}

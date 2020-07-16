@@ -18,8 +18,9 @@
  * @APPLE_APACHE_LICENSE_HEADER_END@
  */
 
-// Contains exported global data and initialization & other routines that must
-// only exist once in the shared library even when resolvers are used.
+// Contains exported global data and initialization
+// & other routines that must only exist once in the shared library
+// even when resolvers are used.
 
 #include "internal.h"
 
